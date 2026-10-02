@@ -1,0 +1,326 @@
+#+TITLE: Nygard Architecture Decision Records — Reference
+#+STARTUP: overview
+
+Not a project document. This records what the source material actually says, so
+that when the project borrows a form or a term we can check the borrowing.
+Paraphrased from the sources listed at the end, with the load-bearing sentences quoted.
+
+*What it establishes.* Michael Nygard's 2011 blog post proposed the
+Architecture Decision Record (ADR): a short, numbered text file, kept in the
+project's repository, that records one architecturally significant decision
+under five headings — Title, Context, Decision, Status, Consequences. A record
+is never deleted; a decision that is reversed is marked superseded and points
+at the record that replaced it. The form has since been catalogued and
+extended (MADR, Y-statements) and sits beside an older, heavier template
+(Tyree and Akerman, 2005). This entry gives what Nygard wrote, how the
+variants differ, and what practitioners report goes wrong, so a record
+written "in Nygard format" can be checked against the original.
+
+* An ADR exists because the motivation behind a decision is lost
+Nygard opens on the problem of lost rationale:
+
+#+begin_quote
+One of the hardest things to track during the life of a project is the
+motivation behind certain decisions.
+#+end_quote
+
+A newcomer who meets a decision without its reason has, in his telling, two
+options, both bad: blindly accept it, or blindly change it. Accepting it may
+keep a choice whose reasons no longer hold; changing it may break something
+the original decision was protecting. He says it is better to avoid either.
+
+* Large documents fail; small records are read
+Nygard rejects the large architecture document as the remedy:
+
+#+begin_quote
+Large documents are never kept up to date.
+#+end_quote
+
+and argues for small, modular records instead:
+
+#+begin_quote
+Bite sized pieces are easier for for all stakeholders to consume.
+#+end_quote
+
+(The doubled "for" is in the original.) He also says, in paraphrase, that
+nobody reads large documents either, and that agile methods are opposed not
+to documentation but only to documentation without value.
+
+* An ADR records one architecturally significant decision
+The post is itself written as a decision, and its central sentence is:
+
+#+begin_quote
+We will keep a collection of records for "architecturally significant"
+decisions: those that affect the structure, non-functional characteristics,
+dependencies, interfaces, or construction techniques.
+#+end_quote
+
+So the test for significance is effect, not size: a decision belongs in an
+ADR when it shapes structure, a quality attribute, a dependency, an interface,
+or the way the system is built. adr.github.io states the same idea in its own
+vocabulary: an architectural decision is a justified design choice that
+addresses an architecturally significant requirement, one with a measurable
+effect on the architecture and quality of the system (paraphrased). Each ADR
+records one such decision; the set of them is the project's /decision log/.
+
+Nygard's examples of what an ADR is about are technology and pattern
+choices — his sample titles are "ADR 1: Deployment on Ruby on Rails 3.0.10"
+and "ADR 9: LDAP for Multitenant Integration".
+
+* The format is five sections: Title, Context, Decision, Status, Consequences
+** Title names the decision as a short noun phrase
+Each record has a short noun-phrase name, prefixed by its number, as in the
+two examples above. The title names the decision, not the problem.
+
+** Context states the forces, neutrally
+The Context section describes the forces at play:
+
+#+begin_quote
+This section describes the forces at play, including technological,
+political, social, and project local.
+#+end_quote
+
+Nygard notes that these forces are probably in tension and should be called
+out as such, and that:
+
+#+begin_quote
+The language in this section is value-neutral.
+#+end_quote
+
+It states facts. It does not argue for the outcome; the argument belongs in
+the Decision.
+
+** Decision states the response, in active voice
+#+begin_quote
+This section describes our response to these forces. It is stated in full
+sentences, with active voice.
+#+end_quote
+
+The convention, shown in the post's own text, is that the decision begins
+"We will …". The post's own decisions read "We will keep a collection of
+records…", "We will keep ADRs in the project repository…", "We will write
+each ADR as if it is a conversation with a future developer."
+
+** Status says where the decision stands
+#+begin_quote
+A decision may be "proposed" if the project stakeholders haven't agreed with
+it yet, or "accepted" once it is agreed.
+#+end_quote
+
+#+begin_quote
+If a later ADR changes or reverses a decision, it may be marked as
+"deprecated" or "superseded" with a reference to its replacement.
+#+end_quote
+
+** Consequences records everything that follows, good and bad
+#+begin_quote
+This section describes the resulting context, after applying the decision.
+#+end_quote
+
+#+begin_quote
+All consequences should be listed here, not just the "positive" ones.
+#+end_quote
+
+Nygard adds, in paraphrase, that a decision may have positive, negative and
+neutral consequences, and that all of them affect the team and the project
+in the future. The Consequences of one record are therefore likely to become
+the Context of a later one.
+
+* A record is one or two pages, written for a future developer
+#+begin_quote
+The whole document should be one or two pages long.
+#+end_quote
+
+#+begin_quote
+We will write each ADR as if it is a conversation with a future developer.
+#+end_quote
+
+He asks for full sentences organised into paragraphs; bullets are acceptable
+for visual style, not as an excuse for writing sentence fragments
+(paraphrased).
+
+* Records are numbered once, and the number is never reused
+#+begin_quote
+ADRs will be numbered sequentially and monotonically. Numbers will not be
+reused.
+#+end_quote
+
+The number is the record's identity. Because a superseded record is kept, its
+number stays taken.
+
+* Records live in the repository, beside the code
+#+begin_quote
+We will keep ADRs in the project repository under doc/arch/adr-NNN.md
+#+end_quote
+
+He suggests a lightweight text format such as Markdown or Textile. The
+ThoughtWorks Technology Radar, which rated "Lightweight Architecture Decision
+Records" Trial in November 2016 and Adopt from November 2017, gives the
+reason:
+
+#+begin_quote
+We recommend storing these details in source control, instead of a wiki or
+website, as then they can provide a record that remains in sync with the code
+itself.
+#+end_quote
+
+Tools vary the path: adr-tools defaults to =doc/adr= with files named
+=NNNN-slug.md= (four digits, zero-padded); MADR defaults to =docs/decisions/=
+with the same naming.
+
+* A superseded record stays, and points at its successor
+#+begin_quote
+If a decision is reversed, we will keep the old one around, but mark it as
+superseded.
+#+end_quote
+
+Nygard's reason, in paraphrase: it is still relevant to know that it /was/
+the decision, even after it stopped being so. Superseding is therefore a new
+record, not an edit: the old record's Status changes to superseded with a
+reference to the new one, and its other sections stand as written.
+
+Nat Pryce's adr-tools makes the link two-way. =adr new -s 9 <title>= creates
+the new record with a "Supersedes" link to record 9, and rewrites record 9's
+Status to "Superseded by" the new one (the tool's own text spells it
+"Superceded"). =adr new -l "5:Amends:Amended by" <title>= creates any other
+two-way relation the same way. =adr init= creates the log with record 1,
+"Record architecture decisions", which itself cites Nygard's post.
+
+Martin Fowler's bliki entry (March 2026) states the rule that follows from
+this, as a practice rather than Nygard's own wording:
+
+#+begin_quote
+Once an ADR is accepted, it should never be reopened or changed - instead it
+should be superseded.
+#+end_quote
+
+Nygard names /deprecated/ and /superseded/ side by side and defines neither
+apart from the other; the post gives no rule for choosing between them. In
+common use, superseded means another record replaced this one, and
+deprecated means the decision was withdrawn — that reading is practice, not
+Nygard's text.
+
+* The variants differ in how much reasoning they make explicit
+| Form | Origin | Sections | What it adds to Nygard |
+|------+--------+----------+------------------------|
+| Nygard | Cognitect blog, 2011 | Title, Context, Decision, Status, Consequences | — |
+| MADR 4.0.0 | adr.github.io, 2024 | Title; Context and Problem Statement; Considered Options; Decision Outcome (mandatory). Status, date, decision-makers, consulted, informed; Decision Drivers; Consequences; Confirmation; Pros and Cons of the Options; More Information (optional) | Explicit options with pros and cons; drivers; how compliance is confirmed |
+| Y-statement | Zimmermann, SATURN 2012 | One sentence: context, facing, decided for, neglected, to achieve, accepting that (optionally because) | Fits a decision in one sentence; names rejected options and accepted downside |
+| Tyree/Akerman | IEEE Software 22(2), 2005 | Issue, Decision, Status, Group, Assumptions, Constraints, Positions, Argument, Implications, Related decisions, Related requirements, Related artifacts, Related principles, Notes | Assumptions, constraints, considered positions and traceability; much heavier |
+
+Notes on each:
+
+- *MADR* stands for "Markdown Architectural Decision Records" in its current
+  version, having briefly stood for "Markdown Any Decision Records". Its
+  Context and Problem Statement is described as two or three sentences or an
+  illustrative story (paraphrased). The main difference from Nygard is that
+  the options considered are a required section, where Nygard leaves them to
+  the Context if at all.
+- *Y-statement.* The template, as adr.github.io gives it, reads: "In the
+  context of <use case/user story>, facing <concern>, we decided for <option>
+  and neglected <other options>, to achieve <system qualities>, accepting
+  <downside>, because <rationale>." Zimmermann's worked example decides for
+  the Database Session State pattern, neglecting client and server session
+  state, to achieve cloud elasticity, accepting that a session database must
+  be designed and replicated. The "because" clause is a later extension; the
+  original six parts end at "accepting that".
+- *Tyree and Akerman* predate Nygard and come from enterprise architecture.
+  Their Issue field is to leave no doubt why the issue is being addressed
+  now; Positions lists the viable alternatives; Argument says why one was
+  chosen; Implications corresponds to Nygard's Consequences (all
+  paraphrased). Field list taken from the template as reproduced in Joel
+  Parker Henderson's ADR collection, not from the paper itself.
+- *ISO/IEC/IEEE 42010* also specifies information items for a decision
+  record in an annex; adr.github.io lists it, and it is not covered here.
+
+* Practitioners report the same handful of failures
+Collected from Zimmermann's catalogue of ADR anti-patterns (2023), Fowler's
+bliki entry, and the adr.github.io material. Names are Zimmermann's.
+
+- *One-sided consequences* ("Fairy Tale", "Free Lunch Coupon") — only the
+  benefits are listed, or the hard and long-term costs are left out. This is
+  the failure Nygard's "not just the positive ones" sentence forbids.
+- *Advocacy in place of context* ("Sales Pitch") — marketing language and
+  unsupported claims. It breaks the value-neutral Context.
+- *Straw-man or single option* ("Dummy Alternative", "Sprint/Rush") — an
+  unworkable alternative set up to lose, or only one option considered with
+  only short-term effects.
+- *Narrow view* ("Tunnel Vision") — the decision considered in one local
+  context, ignoring wider system effects or other stakeholders.
+- *Off-topic content* ("Maze") — the title promises one decision and the
+  text discusses something else.
+- *A policy dressed as a decision* ("Blueprint/Policy in Disguise") — the
+  record reads as a prescriptive cookbook rather than a report of a choice
+  and its reasons.
+- *Overgrowth* ("Mega-ADR", "Novel/Epic") — diagrams, specifications and
+  narrative piled into the record until it becomes the large document Nygard
+  argued against. Fowler's advice is to link supporting material rather
+  than include it.
+- *Editing an accepted record* — rewriting history rather than superseding;
+  the reason the old decision held is lost, which is the problem ADRs exist
+  to solve (Fowler, Nygard).
+- *Recording too much or too little* — Zimmermann advises choosing by
+  significance and priority, and not deferring decisions that are costly to
+  undo; he also recommends stating one's confidence in the decision.
+
+* A worked example
+/Own illustration, not from any source./ A record in Nygard's form:
+
+#+begin_example
+ADR 7: Message queue for job notifications
+
+Status: Accepted. Supersedes ADR 3.
+
+Context
+Jobs finish on worker hosts and the web front end must learn of it.
+ADR 3 chose polling the jobs table every five seconds. At the current
+volume of 40,000 jobs a day, polling accounts for a third of database
+load. The team already operates a RabbitMQ cluster for billing. Two
+consumers besides the front end, the audit log and the mailer, now
+also want completion events.
+
+Decision
+We will publish a message to a "job.finished" topic when a job
+completes, and the front end, the audit log and the mailer will
+subscribe to it. We will stop polling the jobs table.
+
+Consequences
+Database load from the front end falls to near zero for this path.
+New consumers subscribe without changes to the worker. Delivery now
+depends on the RabbitMQ cluster: when it is down, completions are not
+seen until it recovers, so workers must retry publishing. A message
+delivered twice must be harmless, so every consumer must be idempotent.
+The team takes on monitoring of queue depth.
+#+end_example
+
+ADR 3's Status would change to "Superseded by ADR 7", with its text
+otherwise untouched.
+
+* Sources
+- Michael Nygard, "Documenting Architecture Decisions", Cognitect blog,
+  15 November 2011. All quotations attributed to Nygard above.
+  https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions
+- Architectural Decision Records (adr.github.io) — definitions of AD, ASR,
+  ADR, decision log. https://adr.github.io/
+- ADR templates catalogued by adr.github.io, including the Y-statement
+  template wording. https://adr.github.io/adr-templates/
+- MADR (Markdown Architectural Decision Records), version 4.0.0.
+  https://adr.github.io/madr/
+- Nat Pryce, adr-tools. https://github.com/npryce/adr-tools — supersede and
+  link behaviour read from
+  https://raw.githubusercontent.com/npryce/adr-tools/master/src/adr-new
+- ThoughtWorks Technology Radar, "Lightweight Architecture Decision Records".
+  https://www.thoughtworks.com/en-us/radar/techniques/lightweight-architecture-decision-records
+- Jeff Tyree and Art Akerman, "Architecture Decisions: Demystifying
+  Architecture", IEEE Software 22(2), March/April 2005, pp. 19–27.
+  https://dblp.org/rec/journals/software/TyreeA05.html — field list from
+  Joel Parker Henderson's collection,
+  https://github.com/joelparkerhenderson/architecture-decision-record
+- Olaf Zimmermann, "Architectural Decisions — The Making Of" (Y-statements,
+  SATURN 2012 example), 27 April 2020.
+  https://ozimmer.ch/practices/2020/04/27/ArchitectureDecisionMaking.html
+- Olaf Zimmermann, "How to create Architectural Decision Records (ADRs) — and
+  how not to", 3 April 2023.
+  https://ozimmer.ch/practices/2023/04/03/ADRCreation.html
+- Martin Fowler, "Architecture Decision Record", bliki, 24 March 2026.
+  https://martinfowler.com/bliki/ArchitectureDecisionRecord.html

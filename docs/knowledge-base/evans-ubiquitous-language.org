@@ -1,0 +1,419 @@
+#+TITLE: Evans's Ubiquitous Language — Reference
+#+STARTUP: overview
+
+Not a project document. This records what the source material actually says, so
+that when the project borrows a form or a term we can check the borrowing.
+Paraphrased from the sources listed at the end, with the load-bearing sentences quoted.
+
+*What it establishes.* Eric Evans named the Ubiquitous Language in
+/Domain-Driven Design/ (2003), chapter 2: one language, built on the domain
+model, that developers and domain experts use alike in speech, writing,
+diagrams and code, so that nobody has to translate. A change in that language
+is a change in the model, and is carried into the code by renaming. The
+language holds only inside one bounded context; across contexts the same word
+may mean different things, and a context map records how they translate.
+Evans treats documents and diagrams as supports for the language rather than
+as its home: the code and the spoken language carry the model, and a document
+that stops shaping either is left behind. This entry gives what Evans wrote,
+what Fowler and Vernon added, what practitioners report going wrong, and —
+marked as analysis — how a register of terms with the rules listed in the
+last section compares.
+
+A note on the quotations. Chapter 2 is quoted from Evans's /final manuscript/
+(dated 15 April 2003), whose wording may differ slightly from the printed book;
+page numbers given are where the printed book's section starts, taken from its table of contents
+and index. The /Domain-Driven Design Reference/ (2015) is quoted from the PDF
+Evans publishes, and its page numbers are that PDF's.
+
+* The ubiquitous language is a language structured around the domain model
+The Reference's glossary defines it in one sentence (p. vi):
+
+#+begin_quote
+ubiquitous language: A language structured around the domain model and used
+by all team members within a bounded context to connect all the activities of
+the team with the software.
+#+end_quote
+
+Evans's three-point summary of DDD puts it third: "Speak a ubiquitous language
+within an explicitly bounded context" (Reference, p. 1). The book frames the
+language as the model seen from another side (ch. 2, printed pp. 24–27):
+
+#+begin_quote
+A model can be viewed as a language. The vocabulary includes the names of
+classes and prominent operations. The language provides the means to discuss
+rules that have been made explicit in the model.
+#+end_quote
+
+The vocabulary is therefore not only nouns. It includes operations and rules,
+and Evans adds that it is "supplemented with terms from high-level organizing
+principles imposed on the model" (context maps, large-scale structure) and
+"enriched with the names of patterns the team commonly applies to the domain
+model". Fowler's summary (2006) adds why it must be rigorous: the language is
+"based on the Domain Model used in the software - hence the need for it to be
+rigorous, since software doesn't cope well with ambiguity."
+
+* The problem it solves is the cost of translation
+Without a shared language, Evans says, every conversation crosses a divide,
+and someone translates (ch. 2, "Ubiquitous Language", printed p. 24):
+
+#+begin_quote
+On a project without a common language, developers have to translate for
+domain experts. Domain experts translate between developers and still other
+domain experts. Translation is always inaccurate and hides disconnects in
+understanding between the domain experts and developers, between different
+developers and between different domain experts. Translation muddles model
+concepts, which leads to destructive refactoring of code.
+#+end_quote
+
+He names two further costs. The few people who become bilingual "become
+bottlenecks of information flow, and their translations are inexact". And
+"the indirectness of communication conceals the formation of schisms, where
+different team members use terms differently but don't realize it". The
+pattern's problem statement, as the Reference gives it (p. 3):
+
+#+begin_quote
+Translation blunts communication and makes knowledge crunching anemic.
+
+Yet none of these dialects can be a common language because none serves all
+needs.
+#+end_quote
+
+The answer is not the domain experts' jargon adopted wholesale, nor the
+developers' design vocabulary: it is a third thing built from the model, "a
+common language that is more than the lowest common denominator".
+
+* The language is used everywhere: code, speech, diagrams and writing
+The pattern's resolution, as printed in the Reference (p. 4):
+
+#+begin_quote
+Use the model as the backbone of a language. Commit the team to exercising
+that language relentlessly in all communication within the team and in the
+code. Within a bounded context, use the same language in diagrams, writing,
+and especially speech.
+#+end_quote
+
+Speech is singled out. The section "Modeling Out Loud" (printed p. 30) argues
+that people have "a genius for spoken language", that "rough edges are easy to
+hear", and that a team should "describe scenarios out loud using the elements
+and interactions of the model, combining concepts in ways allowed by the
+model. Find easier ways to say what you need to say and then take those new
+ideas back down to the diagrams and code." The domain experts are bound by it
+too: they will speak outside it to give context, "but within its scope, they
+should use it, and raise concerns when they find it awkward or incomplete… or
+wrong."
+
+* A change in the language is a change in the model
+The 2015 Reference states this as a sentence of its own in the pattern's
+resolution (p. 4):
+
+#+begin_quote
+Recognize that a change in the language is a change to the model.
+#+end_quote
+
+The book carries the same claim in the body of the section rather than in the
+resolution (printed pp. 24–27):
+
+#+begin_quote
+Persistent use of the language will force its weaknesses into the open. The
+team will experiment and find alternatives to awkward terms or structure. As
+gaps are found, new words will enter the discussion. With a commitment to the
+model-based language, these changes will be recognized as changes in the
+domain model and will lead to updates of class diagrams and renaming of
+classes and methods in the code.
+#+end_quote
+
+The converse is in "Model-Driven Design" (Reference, p. 6): "The code becomes
+an expression of the model, so a change to the code may be a change to the
+model. Its effect must ripple through the rest of the project's activities
+accordingly." "Hands-on Modelers" (p. 7) warns that developers who do not
+realise "that changing code changes the model" will weaken it by refactoring.
+
+* The language evolves by experiment, and the code is refactored to follow
+Evans gives the sequence in the resolution (Reference, p. 4):
+
+#+begin_quote
+Iron out difficulties by experimenting with alternative expressions, which
+reflect alternative models. Then refactor the code, renaming classes,
+methods, and modules to conform to the new model. Resolve confusion over terms
+in conversation, in just the way we come to agree on the meaning of ordinary
+words.
+#+end_quote
+
+Each side has a duty. "Domain experts should object to terms or structures
+that are awkward or inadequate to convey domain understanding; developers
+should watch for ambiguity or inconsistency that will trip up design" (p. 3).
+Agreement is reached the way ordinary words are agreed — by use — and not by a
+declared approval step; Evans names no one who ratifies a term. Old material
+must follow: "As the new language evolves, the domain experts must make the
+extra effort to adopt it, and retrofit any old documents that are still
+important" (ch. 2, "One Team, One Language", printed p. 32). The stopping
+condition is fluency (same section):
+
+#+begin_quote
+By using it pervasively and not being satisfied until it flows, we approach a
+model that is complete and comprehensible, made up of simple elements that
+combine to express complex ideas.
+#+end_quote
+
+Fowler stresses the same evolution: the language and model "should evolve as
+the team's understanding of the domain grows" (paraphrased; his wording was
+not reproduced verbatim by the fetch).
+
+* One team speaks one language, and technical vocabulary is an extension of it
+"One Team, One Language" (printed p. 32) rejects keeping a separate language
+for business experts ("Too abstract for them" — "Forget them") and says "If
+sophisticated domain experts don't understand the model, there is something
+wrong with the model." The model's terms are the experts' jargon "cleaned up",
+with "sharper, narrower, definitions", which experts should learn and "object
+if these definitions diverge from the meanings in the field".
+
+Evans does not forbid jargon on either side; he fixes its status (section from printed
+p. 32):
+
+#+begin_quote
+Multiplicity of language is often necessary, but the division should never be
+between the domain experts and the developers.
+#+end_quote
+
+#+begin_quote
+But these are extensions to the language. These dialects should not contain
+alternative vocabularies for the same domain that reflect distinct models.
+#+end_quote
+
+Figure 2.3, "Ubiquitous Language is Cultivated in the Intersection of
+Jargons", places domain model terms, the names of bounded contexts, the
+terminology of large-scale structure and many pattern names in the language,
+and puts business terms developers don't understand, business terms that
+don't appear in the design, and purely technical aspects of design outside it.
+(The figure's exact layout could not be checked from the extracted text; the
+labels are certain, the regions they sit in are inferred from the caption.)
+
+* The language holds only inside a bounded context
+"A UBIQUITOUS LANGUAGE based on the domain model assumes there is just one
+model in play" (ch. 2, end of the "Ubiquitous Language" section). Where several models exist, each has a
+boundary (Reference, p. 2):
+
+#+begin_quote
+Model expressions, like any other phrase, only have meaning in context.
+#+end_quote
+
+#+begin_quote
+Explicitly define the context within which a model applies. [...] Apply
+Continuous Integration to keep model concepts and terms strictly consistent
+within these bounds, but don't be distracted or confused by issues outside.
+#+end_quote
+
+Inside the boundary, consistency is kept actively: "Relentlessly exercise the
+ubiquitous language to hammer out a shared view of the model as the concepts
+evolve in different people's heads" (Continuous Integration, p. 5). Fowler's
+"BoundedContext" (2014) gives the standard illustration: in an electricity
+utility, "meter" meant different things to different departments, and "time
+and time again I see this confusion recur with polysemes like 'Customer' and
+'Product'." Vernon is categorical: "There is one Ubiquitous Language per
+Bounded Context", and "If you try to apply a single Ubiquitous Language to an
+entire enterprise, or worse, universally among many enterprises, you will
+fail."
+
+* A context map names each context and the translation between them
+Across boundaries, Evans keeps the language honest by naming the boundaries
+themselves (Reference, "Context Map", p. 29):
+
+#+begin_quote
+Identify each model in play on the project and define its bounded context.
+[...] Name each bounded context, and make the names part of the ubiquitous
+language.
+
+Describe the points of contact between the models, outlining explicit
+translation for any communication, highlighting any sharing, isolation
+mechanisms, and levels of influence.
+#+end_quote
+
+Translation, which the language eliminates inside a context, is thus kept and
+made explicit between contexts. "Map the existing terrain. Take up
+transformations later."
+
+* Two words for one concept and one word for two concepts are the signs of a split model
+Chapter 14, "Recognizing Splinters Within a Bounded Context", says "the early
+warning sign is usually a confusion of language", and names two forms:
+
+#+begin_quote
+Combining elements of distinct models causes two categories of problems:
+duplicate concepts and false cognates.
+#+end_quote
+
+Duplicate concepts are "two model elements (and attendant implementations)
+that actually represent the same concept", which drift apart because the
+reanalysis that should follow each change "doesn't happen in reality". False
+cognates are "when two people who are using the same term (or implemented
+object) think they are talking about the same thing, but really are not" —
+"slightly less common, but more insidiously harmful". Evans does not state a
+rule "no synonyms" in those words; the rule follows from duplicate concepts
+and from "these dialects should not contain alternative vocabularies". His
+chapter 1 example credits a good model with having "consolidated many synonyms
+and slight variations in descriptions", and his recipe for merging two
+contexts includes "the hard work of identifying synonyms and mapping any
+terms that are not already being translated".
+
+* The model is not the diagram, and the code carries the detail
+"Documents and Diagrams" (printed p. 35) holds that UML conveys relationships
+but not "two of the most important aspects of a model: the meaning of
+concepts it represents, and what they are meant to do". Diagrams serve best
+when minimal. Then (same section):
+
+#+begin_quote
+The vital detail about the design is captured in the code. A well-written
+implementation should transparently reveal the model underlying it.
+#+end_quote
+
+#+begin_quote
+Always remember that the model is not the diagram. The diagram's purpose is to
+help communicate and explain the model.
+#+end_quote
+
+Evans prefers "a text document illustrated with selective and simplified
+diagrams" to a diagram annotated with text.
+
+* A document earns its place by shaping the language, or it is left behind
+"Written Design Documents" (printed p. 37) opens on decay: "Once a document
+takes on a persistent form, it often loses its connection with the flow of
+the project. It is left behind by the evolution of the code, or it is left
+behind by the evolution of the language of the project." Evans gives two
+tests. First, "a document shouldn't try to do what the code already does
+well"; documents should "illuminate meaning, [...] give insight into
+large-scale structures, and [...] focus attention on core elements". Second
+(same section):
+
+#+begin_quote
+The second criterion is that a document must be involved in project
+activities. The easiest way to judge this is to observe its interaction with
+the UBIQUITOUS LANGUAGE. Is the document written in the language people speak
+on the project (now)? Is it written in the language embedded in the code?
+#+end_quote
+
+#+begin_quote
+If the terms explained in a design document don't start showing up in
+conversations and code, it is not fulfilling its purpose.
+#+end_quote
+
+A document the language has moved past "could actually create confusion and
+hurt the project", and keeping it current "through sheer will and discipline
+wastes effort, if the document isn't playing an important role". Code is not
+a safe harbour either ("Executable Bedrock", printed p. 40): "a method name can
+be ambiguous, misleading, or out of date with the internals of the method."
+
+Evans also allows /explanatory models/ (printed p. 41) — pictures or models
+used only to teach the domain — on condition that "everyone must be conscious
+of the distinction" from the model that drives the design.
+
+* Vernon treats a glossary as a starting point, not the language
+Vernon (/Implementing Domain-Driven Design/, ch. 1, section "How to Do DDD")
+defines the language as "a shared language developed by the team—a team
+comprised of both domain experts and software developers", and says it is
+"not just a bunch of business jargon being forced on developers". Among the
+first steps he lists: "Create a glossary of terms with simple definitions.
+List alternative terms including the ones that show promise and the ones that
+didn't work, and why." He then says such artifacts are "only the genesis to
+the development of the Ubiquitous Language that will very soon be expressed
+in your system's source code", and:
+
+#+begin_quote
+That's why in the end it is team speech and the model in the code that is the
+most enduring and the only guaranteed current denotation of the Ubiquitous
+Language.
+#+end_quote
+
+* Practitioners report the same handful of failures
+- /Fractured language/ — expert jargon, developer jargon and code names drift
+  apart; Evans's own problem statement (above).
+- /Glossary and document rot/ — a written glossary falls behind speech and
+  code. Evans (documents "left behind") and Vernon (speech and code are "the
+  only guaranteed current denotation") both predict it. Jovanović (2026)
+  prescribes the remedy many teams use: "Keep the agreed terms in a glossary
+  next to the code [...] When a term changes or a new one appears, update the
+  glossary in the same pull request that renames the code."
+- /Synonyms/ — Ducin (2024): "Don't introduce synonyms. In Ubiquitous
+  Language, if two different phrases are used - it has to mean two
+  semantically different concepts." Evans's "duplicate concepts" is the
+  structural form of the same failure.
+- /False cognates and polysemes/ — one word, two meanings, unnoticed (Evans
+  ch. 14; Fowler's "meter", "Customer", "Product").
+- /Technical vocabulary displacing the domain's/ — CRUD verbs where the domain
+  has its own ("Create order" for "Place order"; Jovanović), or developers
+  shielding experts from the model, which Evans rejects outright.
+- /Vague expert words/ — "The order is done": paid, shipped, delivered?
+  (Jovanović). Evans's "cleaned up", "sharper, narrower" definitions answer it.
+- /One language for the whole enterprise/ — Vernon: "you will fail".
+- /Unmanaged change/ — Esposito (2024) treats the gap as debt and change as a
+  business decision: "a gap between business language and code is, strictly
+  speaking, a form of technical debt", and "Any change to the language is a
+  business-level decision."
+
+* Analysis, not source material: the register's rules against Evans
+This section is the entry's own reading, not a report of the sources. It
+compares the four register rules given when this entry was commissioned.
+
+- /One word per concept, no synonyms./ Follows Evans in substance: duplicate
+  concepts, "alternative vocabularies for the same domain", and his praise of
+  a model that consolidated synonyms. The flat rule is practitioners' wording
+  (Ducin) more than Evans's. Evans scopes it to one bounded context; a
+  register that notes another vocabulary's word beside its own is doing what
+  a context map does — explicit translation at a boundary — and is faithful
+  so long as the noted word is never used inside.
+- /No new term written anywhere before the user agrees to it./ The project's
+  own addition. Evans wants terms tried freely out loud and argued over by
+  experts and developers, with agreement reached by use, and names no
+  approver. The rule is compatible with that if it governs /writing/ rather
+  than /speaking/: proposing candidates in conversation is Evans's
+  "experimenting with alternative expressions"; the gate on writing is the
+  project's way of making "domain experts should object" happen before the
+  word spreads. Esposito's "a business-level decision" is the nearest source.
+- /A renamed or redefined term is swept through records, code, tests and
+  comments in one pass./ Follows Evans: "refactor the code, renaming classes,
+  methods, and modules", "retrofit any old documents that are still
+  important", and "a change in the language is a change to the model". The
+  single pass, and naming comments and tests explicitly, are the project's
+  sharpening; Jovanović's same-pull-request rule is the closest practice.
+- /A word that survives a change of implementation is language; one that
+  would retire with it belongs in an architectural decision./ The project's
+  own test. Evans draws a related line — technical jargon is an "extension",
+  not the language — but his language is broader than this register: it
+  includes "prominent operations", "rules", and pattern names applied to the
+  model, so implementation-flavoured words can be ubiquitous in Evans's sense.
+  The test is a stricter, project-chosen boundary.
+- /What each word means, nothing about behaviour./ Narrower than Evans, whose
+  language "provides the means to discuss rules". Faithful if the register is
+  read as the glossary of the language, with behaviour carried by the
+  project's other records; the language in Evans's sense is all of them
+  together, plus the code and speech.
+- /The register as authority./ Evans and Vernon both rank a written glossary
+  below code and speech as a carrier of the model, and predict it will rot.
+  A register declared authoritative departs from that; the sweep rule is what
+  keeps the departure safe, by making Evans's "involved in project
+  activities" test pass by construction.
+
+* Sources
+- Eric Evans, /Domain-Driven Design: Tackling Complexity in the Heart of
+  Software/, Addison-Wesley, 2003. ISBN 0-321-12521-5. Chapter 2,
+  "Communication and the Use of Language" (printed pp. 23–43); chapter 14,
+  "Maintaining Model Integrity" (from p. 331). Wording quoted from the final
+  manuscript dated 15 April 2003; printed page numbers from the publisher's
+  sample pages (table of contents and index):
+  https://ptgmedia.pearsoncmg.com/images/9780321125217/samplepages/0321125215.pdf
+- Eric Evans, /Domain-Driven Design Reference: Definitions and Pattern
+  Summaries/, Domain Language, Inc., 2015.
+  https://www.domainlanguage.com/wp-content/uploads/2016/05/DDD_Reference_2015-03.pdf
+- Martin Fowler, "UbiquitousLanguage", bliki, 31 October 2006.
+  https://martinfowler.com/bliki/UbiquitousLanguage.html
+- Martin Fowler, "BoundedContext", bliki, 15 January 2014.
+  https://martinfowler.com/bliki/BoundedContext.html
+- Vaughn Vernon, /Implementing Domain-Driven Design/, Addison-Wesley, 2013,
+  ch. 1, as excerpted in "Getting Started with Domain-Driven Design: How To
+  Do DDD", InformIT.
+  https://www.informit.com/articles/article.aspx?p=1944876&seqNum=3
+- Tomasz Ducin, "Speaking Ubiquitous Language", 3 December 2024.
+  https://ducin.dev/ddd-speaking-ubiquitous-language
+- Milan Jovanović, "Ubiquitous Language in DDD: A Practical Guide",
+  22 September 2026. https://milanjovanovic.tech/blog/ubiquitous-language-ddd
+- Dino Esposito, /Clean Architecture with .NET/, Microsoft Press, 2024,
+  "The ultimate gist of DDD".
+  https://www.microsoftpressstore.com/articles/article.aspx?p=3192407&seqNum=2

@@ -20,6 +20,13 @@ This project keeps these registers. Adapt the list to the project; the
 - **User workflows** (UW-n) — `docs/user-workflows.org`
 - **Message catalog** (MSG-n) — `docs/message-catalog.org`
 
+Where a register borrows its form, the knowledge base records the source, so
+the borrowing can be checked:
+
+- Ubiquitous language — `docs/knowledge-base/evans-ubiquitous-language.org`
+- Architectural decisions — `docs/knowledge-base/nygard-architecture-decision-records.org`
+- User workflows — `docs/knowledge-base/cockburn-use-cases.org`
+
 ## Creating/updating a record
 
 When modifying, be brief. Define by defining: state what something is; do not

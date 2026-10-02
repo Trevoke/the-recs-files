@@ -1,0 +1,524 @@
+#+TITLE: Cockburn Use Cases — Reference
+#+STARTUP: overview
+
+Not a project document. This records what the source material actually says, so
+that when the project borrows a form or a term we can check the borrowing.
+Paraphrased from the sources listed at the end, with the load-bearing sentences quoted.
+
+*What it establishes.* Alistair Cockburn's use case is a text form: a contract
+for the behaviour of one system under discussion, organised around the goal of
+one primary actor, written as a main success scenario plus extensions keyed to
+its steps. Every use case is labelled with a design scope and a goal level;
+the levels are summary (cloud / kite), user goal (sea level) and subfunction
+(fish / clam). Cockburn publishes two templates, casual and fully dressed, and
+says which to use is a project standard rather than a matter of right and
+wrong.
+
+*On the sources.* The published book (Addison-Wesley, 2001) was not available
+to read. Its text is quoted here from two of Cockburn's own pre-publication
+drafts that circulate online: draft #3 of 2000-02-21 (abridged, but with the
+published book's chapter structure), cited as [d3 p.N], and a fuller 1999
+draft, cited as [d99 p.N]. Page numbers are the drafts', not the book's.
+Where the two drafts differ, draft #3 is the later word and is preferred.
+Cockburn's site, alistair.cockburn.us, returned 404 for the "Basic Use Case
+Template" and "Structuring Use Cases with Goals" pages; both documents were
+read from mirrors instead (see Sources).
+
+* A use case is a contract for the behaviour of the system under discussion
+
+The use case states how one system behaves when one stakeholder, the primary
+actor, asks it for something, and how it protects every other stakeholder
+while doing so. Its scenarios are the different ways that request can unfold.
+
+#+begin_quote
+A use case captures a contract between the stakeholders of a system about its
+behavior. The use case describes the system's behavior under various
+conditions as it responds to a request from one of the stakeholders, called
+the primary actor. The primary actor initiates an interaction with the system
+to accomplish some goal. The system responds, protecting the interests of all
+the stakeholders. [d3 p.15, §1.1]
+#+end_quote
+
+The four summary definitions that open Part 1 of the book:
+
+#+begin_quote
+An actor is anyone or anything with behavior.
+A stakeholder is someone or something with a vested interest in the behavior
+of the system under discussion (SuD).
+The primary actor is the stakeholder who or which initiates an interaction
+with the SuD to achieve a goal.
+The use case is a contract for the behavior of the SuD. [d3 p.33]
+#+end_quote
+
+The earlier, goal-only definition from the 1995/1997 paper remains the core:
+
+#+begin_quote
+A use case is a collection of possible scenarios between the system under
+discussion and external actors, characterized by the goal the primary actor
+has toward the system's declared responsibilities, showing how the primary
+actor's goal might be delivered or might fail. [Structuring Use Cases with Goals]
+#+end_quote
+
+- *Every use case has two exits.* Some scenarios end in success, some in goal
+  failure; the "striped trousers" image has a success leg and a failure leg
+  [d3 p.38–39]. A use case "starts at the triggering event, and continues
+  until the goal is delivered or abandoned" [d3 p.38].
+- *The system under discussion is itself an actor*, named in the scope field
+  and referred to by name or as "the system" in the steps [d3 p.54, §4.4].
+- *A supporting actor* (formerly "secondary") provides a service to the SuD;
+  Cockburn changed the term because "people found the term confusing"
+  [d3 p.54, §4.3].
+
+* Stakeholders and interests decide what a use case must contain
+
+The Stakeholders & Interests model, new in the book, extends the Actors &
+Goals model. Off-stage stakeholders (owners, regulators) never act in the
+steps, but the system acts on their behalf, and that is what puts
+validations, logging and state changes into the text.
+
+#+begin_quote
+Every sentence in a use case is there because it describes an action that
+protects or furthers some interest of some stakeholder. [d3 p.34, ch.2]
+#+end_quote
+
+#+begin_quote
+The use case, as the contract for behavior, captures all and only the
+behaviors related to satisfy the stakeholders' interests. [d3 p.40, §2.2]
+#+end_quote
+
+Every action is one of three sorts: an interaction between two actors, a
+validation to protect a stakeholder, or an internal state change on behalf of
+a stakeholder [d3 p.41]. The procedural change is small: list the
+stakeholders and their interests first, then use the list to check the body
+[d3 p.41]. Cockburn's anecdote: a team that listed its stakeholders' interests
+after delivery found its first year of change requests in that list
+[d3 p.53–54; d99 p.124].
+
+* Design scope names the system under discussion, and is drawn as an icon
+
+Scope is "the extent of what we consider to be designed by us" [d3 p.44].
+Functional scope (which services) is managed by the actor-goal list; design
+scope (which system) must be labelled on every use case, because readers
+cannot infer it:
+
+#+begin_quote
+The only answer I have found is to label each and every use case with its
+design scope, using specific names for the most significant design scopes.
+[d3 p.49, §3.2]
+#+end_quote
+
+Three named scopes, each written with the real name in the field:
+enterprise (the organisation, e.g. "MyInsCo"), system (the hardware/software
+being built), subsystem (a piece of it opened up) [d3 p.49]. A *black-box*
+use case does not mention the insides of the SuD; a *white-box* use case does
+[d3 p.49]. Requirements are written black-box; business-process designs are
+often white-box [d3 p.20].
+
+Scope icons, placed to the left of the title [d3 p.1 "Icons", p.49–50]:
+
+| Icon                  | Meaning                     |
+|-----------------------+-----------------------------|
+| building, grey        | organisation, black-box     |
+| building, white       | organisation, white-box     |
+| box, grey             | system, black-box           |
+| box, white            | system, white-box           |
+| bolt (threaded screw) | component / subsystem       |
+
+Cockburn adds the *outermost use case*: for each use case, widen the scope
+until widening further would bring the primary actor inside, and write a
+summary use case at that scope; there are typically only 2–5 of these
+[d3 p.50, §3.3].
+
+The 1999 draft used other icons (house; "person at a computer"; "donut" for
+components) [d99 p.52]. Draft #3 replaced them; the table above is the later
+set.
+
+* Goal levels are summary, user goal and subfunction, named by altitude
+
+Goals nest without limit ("fleas on the fleas", [d3 p.35]), so a writer faces
+"What level of goal shall I describe?" at every sentence [d3 p.56]. Cockburn
+names three levels, with an altitude and a colour for each [d3 ch.5]:
+
+| Level       | Colour        | Altitude icon       | Meaning                                          |
+|-------------+---------------+---------------------+--------------------------------------------------|
+| summary     | white         | cloud (very high), kite | involves multiple user goals; hours to years  |
+| user goal   | blue          | waves (sea level)   | one person, one sitting, primary actor's goal    |
+| subfunction | indigo, black | fish; clam (too low) | needed to carry out user goals                  |
+
+#+begin_quote
+In keeping with the altitude nomenclature, I separate five altitudes. You will
+only use the middle three, in most situations. [d3 p.60, §5.4]
+#+end_quote
+
+- *Cloud* is for "that rarest of occasions, when you see that the steps in the
+  use case are themselves white goals"; *kite* "is for most summary use
+  cases, whose steps are blue goals" [d3 p.60].
+- *Clam*: "Some subfunctions (black) should never be written. Use a clam ...
+  to mark a use case that needs to be merged with its calling use case"
+  [d3 p.60].
+- Goal-level icons go to the top right of the title; as a text alternative,
+  append "+" to summary names, "!" or nothing to user-goal names, "-" to
+  subfunction names [d3 p.1 "Icons", p.60].
+- Summary use cases serve three purposes: they show the context in which user
+  goals operate, show life-cycle sequencing of related goals, and give a
+  table of contents for lower use cases [d3 p.58, §5.2].
+- A subfunction still has a primary actor outside the system; it "follows all
+  the rules for use cases" [d3 p.60].
+- Terminology: earlier writing used "strategic"; the book chose "summary"
+  because it "causes the least confusion" [d3 p.58, footnote]. The 1998
+  template calls the middle level "Primary task" [TR96 p.2]; the 1999 draft
+  calls it "task" or "user-goal" [d99 p.47–49].
+
+* The user-goal level is found with the coffee-break test
+
+#+begin_quote
+A user goal addresses the question, "Can the primary actor go away happy after
+having done this?" For a clerk, it would be, "Does your job performance depend
+on how many of these you do today?" or the coffee break test: "After I get done
+with this, I can take a coffee break." In most circumstances, it passes the
+test: One person, one sitting (2-20 minutes). [d3 p.57, §5.1]
+#+end_quote
+
+"Log on" fails (logging on 42 times does not satisfy a job responsibility);
+"Complete an on-line auction purchase" fails the single-sitting test;
+"Register a new customer" and "Buy a book" are likely user goals [d3 p.57].
+The 1999 draft phrases the same tests as "Can I go to lunch as soon as this
+goal is completed?" and "Can I ask for a raise if I do many of these?"
+[d99 p.47].
+
+#+begin_quote
+The sea-level / blue / user goals are incredibly important. ... You justify the
+existence of the system by the user goals it supports of various primary
+actors. [d3 p.58]
+#+end_quote
+
+* "Why" moves a goal up a level, "how" moves it down
+
+#+begin_quote
+That figure also shows that to find a higher goal level for your goal phrase,
+you answer the question "Why is the actor doing this?". [d3 p.60]
+#+end_quote
+
+The use case's goal sits one level above its steps' goals; asking "why" of a
+step yields the use case's goal, asking "how" of the use case yields its
+steps ("Figure: Ask 'why' to shift levels", [d3 p.76; d99 p.127]). The
+remedy for a step that barely moves the process forward:
+
+#+begin_quote
+Whenever you feel that perhaps the action is not moving sufficiently forward,
+ask the question: "Why is this actor doing that?" The answer to your question
+is the higher-level goal of that actor, the goal you probably should be writing
+in the sentence. [d99 p.58]
+#+end_quote
+
+Worked there: "User hits tab key" → why? to reach the address field → why? to
+enter name and address → so the step is "User enters name and address"
+[d99 p.58]. The reminder card puts it as "Ask 'why' to find a next-higher
+level goal" [d3 p.1].
+
+* Casual and fully dressed are two templates, chosen per project
+
+#+begin_quote
+I have come to the conclusion that it is incorrect to publish just one use case
+template. There must be at least two, a casual one for low-ceremony projects,
+and a fully dressed one for higher-ceremony projects. [d3 p.22, §1.2]
+#+end_quote
+
+- *Casual*: "written in simple, paragraph, prose style. It is likely to be
+  missing project information associated with the use case, and is likely to
+  be less rigorous in its description than a fully dressed use case"
+  [d3 glossary p.236]. It "short circuits" the template [d3 p.20].
+- *Fully dressed*: "written with one of the full templates, identifying
+  actors, scope, level, trigger condition, precondition, and all the rest of
+  the template header information, plus project annotation information"
+  [d3 glossary p.236]; it uses "the full use case template and step numbering
+  scheme" [d3 p.20].
+- Cockburn's preferred fully dressed style is one column of text, numbered
+  steps, no /if/ statements, and the 2a / 2a1 extension numbering [d3 p.68].
+- Neither is wrong; "A use case valid on one project is not a valid use case on
+  another project" — a project must say which form, which fields are
+  mandatory, and how much variation it tolerates [d3 p.24]. Scope and level
+  are labelled in both: "The use of symbols are completely optional. Labeling
+  the scope and level are not." [d3 p.16].
+
+The fully dressed template (draft #3, "Use Case 24/7", [d3 p.68–69]):
+
+| Field                            | Template text                                                   |
+|----------------------------------+-----------------------------------------------------------------|
+| name                             | "the goal as a short active verb phrase"                        |
+| Context of use                   | "a longer statement of the goal, if needed, its normal occurrence conditions" |
+| Scope                            | "design scope, what system is being considered black-box under design" |
+| Level                            | "one of: Summary, User-goal, Subfunction"                       |
+| Primary Actor                    | "a role name for the primary actor, or description"             |
+| Stakeholders & Interests         | "list of stakeholders and key interests in the use case"        |
+| Precondition                     | "what we expect is already the state of the world"              |
+| Minimal Guarantees               | "how the interests are protected under all exits"               |
+| Success Guarantees               | "the state of the world if goal succeeds"                       |
+| Trigger                          | "what starts the use case, may be time event"                   |
+| Main Success Scenario            | "the steps of the scenario from trigger to goal delivery, and any cleanup after" |
+| Extensions                       | "<step altered> <condition>: <action or sub-use case>"           |
+| Technology and Data Variations List | "the variations that will cause eventual bifurcation in the scenario" |
+| Related Information              | "whatever your project needs for additional information"        |
+
+Older names for the same fields: "Goal in Context", "Success End Condition",
+"Failed End Condition", "Sub-Variations" [TR96 p.2]; "Failed End Protection",
+"I/O Variations" [d99 p.65]. TR96 also lists optional Priority, Performance
+Target, Frequency, Superordinate/Subordinate Use Cases, Channels, Secondary
+Actors, Open Issues and Schedule, and advises filling the template in several
+passes rather than at once [TR96 p.2, p.8].
+
+* Preconditions are guaranteed by the system and never re-checked
+
+#+begin_quote
+The precondition names something that you want the SuD to ensure has happened
+before the use case starts. ... because these are the conditions that will
+never be checked during the steps in the use case. [d99 p.132]
+#+end_quote
+
+If an extension handles the failure of a precondition, one of the two is a
+writing error; if the use case can technically start without it, the
+precondition is a writing error [d99 p.132]. Things that are usually but not
+necessarily true belong in Context of use, not Precondition [d99 p.55].
+
+- *Minimal guarantee*: "how the interests are protected under all exits"
+  [d3 p.68]; typically that the system logged how far it got [d99 p.55–56].
+  Example: "sufficient logging information that PAF can detect that something
+  went wrong and can ask the user to provide details" [d3 p.17].
+- *Success guarantee*: what interests are satisfied at successful
+  completion; pass/fail test, "Are all stakeholders interests satisfied?"
+  [d3 pass/fail #14].
+- *Trigger*: what starts the use case, "may be time event" [d3 p.68]. Three
+  kinds: the primary actor initiating, the primary actor using an
+  intermediary, or "a time- or state-based initiation" [d3 p.42].
+
+Writing the guarantees first is recommended: the failure protection "often
+turns up a missing element in the main success scenario" [d99 p.124, p.133].
+
+* The main success scenario is 3–9 goal-achieving steps, with no UI detail
+
+#+begin_quote
+The main success scenario is the one written in full, from trigger to
+completion, including goal delivery and any bookkeeping that happens after. It
+is a typical and illustrative success scenario, even though it may not be the
+only success path. [d3 glossary p.235]
+#+end_quote
+
+Step count: "Use 3 to 9 steps to meet all interests and guarantees"
+[d3 p.2, Writing Process step 8]; pass/fail test #17 "Does it have 3 - 9
+steps?" [d3]. Elsewhere the same draft says "Use 3-10 steps per use case"
+[d3 p.61, §5.5]; the 1999 draft said 3–11 [d99 p.12]. The consistent
+claim is "not much more than nine".
+
+The step guidelines of chapter 7 (titles from [d3 TOC, §7.2]):
+
+1. It uses simple grammar — "Noun... verb... direct object... prepositional
+   phrase." [d99 p.58]
+2. It shows clearly "who has the ball" — the actor is the subject, usually the
+   first or second word.
+3. It is written from a bird's eye point of view, not "inside looking out".
+4. It shows the process moving distinctly forward.
+5. It shows the actor's intent, not movements ("semantics, not dialog",
+   [d99 p.59]).
+6. It contains a "reasonable" set of actions (one transaction has four parts:
+   request, validate, change state, reply).
+7. It doesn't "check whether", it "validates".
+8. It optionally mentions the timing.
+9. Idiom: "User has System A kick System B".
+10. Idiom: "Do steps x-y until condition".
+
+#+begin_quote
+There is only one style of sentence used in writing action steps in a use case:
+a sentence in the present tense, with an active verb in the active voice,
+describing an actor successfully achieving a goal that moves the process
+forward. [d99 p.122]
+#+end_quote
+
+Numbers are labels for reference, not a claim of strict order: "The numbering
+serves only so that we can refer to a step, not because the step occurs in
+that sequence" [d99 p.62]. Unnumbered notes between steps ("Steps 3-5 can
+happen in any order") are allowed [d99 p.62].
+
+* Extensions are numbered by the step at which the condition is detected
+
+#+begin_quote
+The numbers in the extensions refer to the step numbers in the main success
+scenario at which each different situation gets detected (for instance, steps
+4a and 4b indicate two different conditions that could show up at step 4).
+[d3 p.16]
+#+end_quote
+
+Numbering conventions [d99 p.74–76]:
+
+- Letter after the step number for each condition at that step: 2a, 2b.
+- Colon after the condition, to mark where it ends: "2a. Insufficient funds:".
+- Handling steps are indented and numbered under the condition: 2a1, 2a2.
+- A condition possible at several steps names the range: "2-5a. User quit
+  suddenly:".
+- A condition possible at any time uses an asterisk, listed first:
+  "*a. Network goes down:".
+- Failures within failures continue the scheme (6a1a, 6a1b); at about four
+  levels of indentation or three pages, break the fragment out into a sub use
+  case [d99 p.76–77].
+
+An extension has two parts, the *condition* and the *handling*, and they are
+written in two passes: brainstorm every condition first, then write the
+handling, because handling "takes much more energy" [d3 p.30, §1.5].
+
+#+begin_quote
+Guideline 11: The condition says what was detected. [d3 TOC, §8.1]
+#+end_quote
+
+Conditions are phrases or short past-tense sentences ("Invalid PIN:",
+"Network is down:") [d99 p.74], restricted to what the system can detect and
+must handle: "Include all that the system can detect and must handle" [d3 p.2].
+
+#+begin_quote
+Each will ends back in the MSS, at a separate success exit, or in failure.
+[d3 p.2, Writing Process step 10]
+#+end_quote
+
+So a handling fragment either repairs the step and rejoins, retries the step,
+or abandons the goal ("the use case ends", "Fail!"); "go to step N" is
+written only when the return point is not obvious [d99 p.75–76]. Extensions
+include alternative *success* paths as well as failures [d99 p.72]. A failed
+sub use case rolls up into one condition in its caller: "The outer, or
+calling, use case simply builds on the success or failure of the step naming
+the sub use case" [d3 p.39].
+
+Extensions are not variations. "Write these into the Technology and Data
+Variations List section of the use case, not in the Extensions section"
+[d3 p.65, ch.9] — variations record that /how/ differs while /what/ is the
+same (pay by cheque, transfer or credit).
+
+* Sub use cases are linked by naming them in a step
+
+"An action step can be a simple step or the name of another use case"; the
+called use case's name is underlined or italicised [d3 p.66, §10.1]. This is
+UML's /include/. Cockburn treats /extends/ use cases as rare (asynchronous
+interrupting services, locked requirements) and advises against /generalizes/
+and published extension points [d3 p.66–67, App. A]. Use cases are
+"fundamentally a text form"; the diagram is only a table of contents
+[d3 p.15, p.202–203].
+
+* Cockburn names the mistakes he sees most often
+
+#+begin_quote
+The most common mistakes in writing are leaving out the subjects of sentences,
+making assumptions about the user interface design, and using goal levels that
+are too low. [d3 p.149, ch.19]
+#+end_quote
+
+Chapter 19 "Mistakes Fixed" lists: no system; no primary actor; too many user
+interface details; very low goal levels; purpose and content not aligned
+[d3 TOC]. Others named elsewhere in the drafts:
+
+- *Too much precision too early*: "The mistake is getting too caught up in
+  precision and rigor, when it is not needed" [d3 p.21]; work breadth-first
+  through four precision levels — actors and goals, brief or main success
+  scenario, extension conditions, extension handling [d3 p.1, p.30].
+- */If/ statements in the scenario* instead of extensions [d99 p.69, p.136].
+- *"Checks" instead of "validates"* [d99 p.59].
+- *Writing from the system's point of view* ("Get ATM card and PIN") instead
+  of the bird's eye view [d99 p.59].
+- *Preconditions that the system cannot guarantee* [d99 p.54, p.132].
+- *Treating the UML ellipses as the use cases* ("The Great Drawing Hoax",
+  [d3 p.202–203]).
+- *Writing too many low-level use cases*: one team replaced over a hundred
+  pages of indigo use cases with six sea-level ones [d3 p.58].
+
+The 31 pass/fail questions at the back of draft #3 (title, scope, level,
+primary actor, preconditions, guarantees, each step, extension conditions,
+variations) are the closest thing to a checklist the source offers [d3, final
+two pages].
+
+* Worked example, casual form (own illustration)
+
+Not quoted; written for this entry to show the shape. Cockburn's own matched
+pair is "Use Case 4: Buy Something (Casual version)" and "Use Case 5: Buy
+Something (Fully dressed version)" [d3 p.22–24].
+
+#+begin_example
+Use Case: Renew a borrowed book  (system, black-box; user goal / sea level)
+Primary actor: Borrower.   Scope: LendingLibrary system.   Level: User goal.
+
+The Borrower identifies themselves and picks the loan to renew. The system
+validates that the loan is renewable — not overdue past the grace period, not
+reserved by another borrower, under the renewal limit — sets the new due date,
+and records the renewal against the loan. The Borrower sees the new due date.
+
+If another borrower has reserved the book, the system refuses the renewal and
+tells the Borrower the original due date stands. If the renewal limit is
+reached, the system refuses and says so. At any time the Borrower can stop
+without changing the loan.
+#+end_example
+
+* Worked example, fully dressed form (own illustration)
+
+Not quoted; same use case, laid out on the draft #3 template.
+
+#+begin_example
+Use Case 12: Renew a borrowed book
+Context of use: A Borrower wants to keep a book past its due date. Usually done
+  online in the days before the due date.
+Scope: LendingLibrary system (black-box)
+Level: User goal
+Primary Actor: Borrower
+Stakeholders & Interests:
+  Borrower - keeps the book longer without a fine.
+  Reserving borrower - gets the book when it is due back.
+  Library - every loan's due date and renewal count are accurate.
+Precondition: The Borrower is identified to the system.
+Minimal Guarantees: The loan is unchanged unless the renewal was recorded.
+Success Guarantees: The loan has a new due date and an incremented renewal
+  count; the Borrower has been shown the new due date.
+Trigger: The Borrower asks to renew a loan.
+
+Main Success Scenario:
+1. Borrower selects the loan to renew.
+2. System validates that the loan is renewable.
+3. System sets the new due date and records the renewal.
+4. System shows the Borrower the new due date.
+
+Extensions:
+*a. Borrower abandons the request:
+    *a1. System leaves the loan unchanged; the use case ends.
+2a. Another borrower has reserved the book:
+    2a1. System tells the Borrower the renewal is refused and the original
+         due date stands; the use case ends in failure.
+2b. Renewal limit reached:
+    2b1. System tells the Borrower the limit and the original due date;
+         the use case ends in failure.
+2c. Loan is overdue beyond the grace period:
+    2c1. System tells the Borrower to Return a borrowed book (UC 9);
+         the use case ends in failure.
+
+Technology and Data Variations List:
+1. Borrower may renew online, by phone through staff, or at a kiosk.
+#+end_example
+
+Points the example is built to show: name is an active verb phrase naming the
+primary actor's goal; four steps, each with an actor as subject; step 2
+"validates" rather than "checks", so its failures attach to it as 2a–2c; the
+step numbers in the extensions are where each condition is detected; "*a"
+covers a condition possible at any step; 2c names a sub use case in a step;
+the minimal guarantee protects the library's interest on every exit.
+
+* Sources
+
+- Cockburn, Alistair. /Writing Effective Use Cases/. Addison-Wesley, 2001
+  (Crystal series; ISBN 0-201-70225-8). Primary source; not read directly.
+- Cockburn, Alistair. /Writing Effective Use Cases/, pre-publication draft #3,
+  edit date 2000-02-21, Humans and Technology (abridged; chapters 1–5, 11, 19
+  partly, reminders, glossary, pass/fail tests). Cited [d3].
+  https://kurzy.kpi.fei.tuke.sk/zsi/resources/CockburnBookDraft.pdf
+- Cockburn, Alistair. /Writing Effective Use Cases/, draft "in preparation for
+  Addison-Wesley Longman, Q3 2000", ©1999, 204 pp. Cited [d99].
+  https://people.inf.elte.hu/molnarba/Informaciorendszerek_ELTE/Writing_effective_Use_cases_Cockburn.pdf
+- Cockburn, Alistair. "Basic Use Case Template", Humans and Technology
+  technical report TR.96.03a, version 2, 1998-10-26. Cited [TR96].
+  https://www.cs.helsinki.fi/u/mluukkai/ohmas09/usecase.pdf
+  (originally at http://alistair.cockburn.us; the site page returned 404)
+- Cockburn, Alistair. "Structuring Use Cases with Goals", HaT Technical Report
+  1995.01; published in /Journal of Object-Oriented Programming/, Sep–Oct and
+  Nov–Dec 1997. https://www.cs.otago.ac.nz/coursework/cosc461/usecases.htm
+  (the alistair.cockburn.us page returned 404)
