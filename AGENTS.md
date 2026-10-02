@@ -1,13 +1,16 @@
 # How to work with this project
 
-This project keeps records as its source of truth, and uses strict taxonomy and
+This project keeps records as the source of truth for its code, and uses strict taxonomy and
 terminology. Speak using this language, refer to these concepts. Where a concept
 or a word is missing, first attempt to combine existing concepts, or build on
 top of it (e.g. if there is a "refund policy" and we must make sure this refund
 policy is followed, before saying "checker" try "refund policy validator").
 
-The records are the core truth of this project. Do not modify them on your own.
-Only do so on the request of the user.
+The records are the source of truth for the code. The people working on the
+project, and their context, are the source of truth for the records; a record
+goes out of date when they move on and it does not, and bringing it back is
+theirs to direct. Do not modify records on your own. Only do so on the request
+of the user.
 
 ## The registers
 
