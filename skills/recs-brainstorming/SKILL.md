@@ -9,7 +9,7 @@ description: "Use when starting any creative work - creating features, building 
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue, grounded in the project's records.
 
-Start by reading the project's records, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far. Then route each validated decision to the register it belongs in.
+Start by reading the project's records, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far. Then route each validated decision to the projection it belongs in.
 
 ## The Process
 
@@ -48,9 +48,9 @@ This holds during the dialogue too: candidate words are discussed freely in conv
 
 ## After the Design
 
-**Routing decisions to their registers:**
+**Routing decisions to their projections:**
 
-Walk each validated decision through the placement tests and route it to its register:
+Walk each validated decision through the placement tests and route it to its projection:
 
 | The decision is... | It routes to... |
 |---|---|
@@ -60,7 +60,7 @@ Walk each validated decision through the placement tests and route it to its reg
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
 
-Propose each record change to the user - by register, with the record number and title where it amends an existing record - and wait. A change that amends a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the user's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
+Propose each record change to the user - by projection, with the record number and title where it amends an existing record - and wait. A change that amends a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the user's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
 
 **Documenting what remains:**
 - What routing leaves behind - purely implementation-level decisions - goes to `docs/plans/YYYY-MM-DD-<topic>-design.md`
@@ -82,5 +82,5 @@ Propose each record change to the user - by register, with the record number and
 - **Explore alternatives** - Always propose 2-3 approaches before settling
 - **Incremental validation** - Present design in sections, validate each
 - **The project's word, or no word** - Candidate terms land in no file until agreed
-- **Route, then propose** - Every validated decision finds its register; an amendment is proposed with what it falsifies, and record changes are never written unbidden
+- **Route, then propose** - Every validated decision finds its projection; an amendment is proposed with what it falsifies, and record changes are never written unbidden
 - **Be flexible** - Go back and clarify when something doesn't make sense

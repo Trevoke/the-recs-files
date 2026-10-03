@@ -16,7 +16,7 @@ Evans treats documents and diagrams as supports for the language rather than
 as its home: the code and the spoken language carry the model, and a document
 that stops shaping either is left behind. This entry gives what Evans wrote,
 what Fowler and Vernon added, what practitioners report going wrong, and —
-marked as analysis — how a register of terms with the rules listed in the
+marked as analysis — how a projection of terms with the rules listed in the
 last section compares.
 
 A note on the quotations. Chapter 2 is quoted from Evans's /final manuscript/
@@ -348,15 +348,15 @@ Language.
   speaking, a form of technical debt", and "Any change to the language is a
   business-level decision."
 
-* Analysis, not source material: the register's rules against Evans
+* Analysis, not source material: the projection's rules against Evans
 This section is the entry's own reading, not a report of the sources. It
-compares the four register rules given when this entry was commissioned.
+compares the four projection rules given when this entry was commissioned.
 
 - /One word per concept, no synonyms./ Follows Evans in substance: duplicate
   concepts, "alternative vocabularies for the same domain", and his praise of
   a model that consolidated synonyms. The flat rule is practitioners' wording
   (Ducin) more than Evans's. Evans scopes it to one bounded context; a
-  register that notes another vocabulary's word beside its own is doing what
+  projection that notes another vocabulary's word beside its own is doing what
   a context map does — explicit translation at a boundary — and is faithful
   so long as the noted word is never used inside.
 - /No new term written anywhere before the user agrees to it./ The project's
@@ -376,23 +376,23 @@ compares the four register rules given when this entry was commissioned.
 - /A word that survives a change of implementation is language; one that
   would retire with it belongs in an architectural decision./ The project's
   own test. Evans draws a related line — technical jargon is an "extension",
-  not the language — but his language is broader than this register: it
+  not the language — but his language is broader than this projection: it
   includes "prominent operations", "rules", and pattern names applied to the
   model, so implementation-flavoured words can be ubiquitous in Evans's sense.
   The test is a stricter, project-chosen boundary.
 - /What each word means, nothing about behaviour./ Narrower than Evans, whose
-  language "provides the means to discuss rules". Faithful if the register is
+  language "provides the means to discuss rules". Faithful if the projection is
   read as the glossary of the language, with behaviour carried by the
   project's other records; the language in Evans's sense is all of them
   together, plus the code and speech.
-- /The register as authority./ Evans and Vernon both rank a written glossary
+- /The projection as authority./ Evans and Vernon both rank a written glossary
   below code and speech as a carrier of the model, and predict it will rot.
-  The project agrees, and divides the authority in two: the register is the
+  The project agrees, and divides the authority in two: the projection is the
   source of truth for the code, tests and comments, and the people who speak
-  the language, with their context, are the source of truth for the register.
-  That keeps Evans's ranking. The register goes out of date as he predicts,
+  the language, with their context, are the source of truth for the projection.
+  That keeps Evans's ranking. The projection goes out of date as he predicts,
   and bringing it back is the people's to direct; an agent that notices drift
-  between the register and how the language is spoken raises it rather than
+  between the projection and how the language is spoken raises it rather than
   deferring to the stale entry. The sweep rule then carries each correction
   into the code in one pass, so that Evans's "involved in project activities"
   test passes by construction.

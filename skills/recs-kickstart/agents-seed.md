@@ -12,18 +12,19 @@ goes out of date when they move on and it does not, and bringing it back is
 theirs to direct. Do not modify records on your own. Only do so on the request
 of the user.
 
-## The registers
+## The projections
 
-This project keeps these registers. Adapt the list to the project; the
+This project keeps these projections. Adapt the list to the project; the
 `recs-writing-records` skill carries the starting set.
 
+- **Vision** — `docs/vision.org`, a single file: no projection file, no numbered records
 - **Ubiquitous language** — `docs/ubiquitous-language.org`
 - **Architectural decisions** (ADR-n) — `docs/architectural-decisions.org`
 - **Features** (F-n) — `docs/features.org`
 - **User workflows** (UW-n) — `docs/user-workflows.org`
 - **Message catalog** (MSG-n) — `docs/message-catalog.org`
 
-Where a register borrows its form, the knowledge base records the source, so
+Where a projection borrows its form, the knowledge base records the source, so
 the borrowing can be checked:
 
 - Ubiquitous language — `docs/knowledge-base/evans-ubiquitous-language.org`
@@ -78,12 +79,12 @@ X-1: Use pub/sub for job notifications
 X-1: The job notifies by message and keeps none
 ```
 
-A record lives in a file of its own under its register's directory —
+A record lives in a file of its own under its projection's directory —
 `docs/features/f-12-<slug>.org` — headed `* F-12 <title>`, the slug made from
-the title. The register's file, `docs/features.org`, lists every record as
+the title. The projection's file, `docs/features.org`, lists every record as
 `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in number order, beside
-the register's preamble and any section that belongs to the register rather
-than to one record. A record's file, its line in the register's file, and its
+the projection's preamble and any section that belongs to the projection rather
+than to one record. A record's file, its line in the projection's file, and its
 heading change together: a retitle renames the file, rewrites the line and the
 heading, and sweeps every pointer that cites the old title (the source tree, and
 `docs/` outside `docs/plans/`, whose plans keep the titles they were written
@@ -119,8 +120,9 @@ carry for the rest of it. A session that edits a record therefore reads its own
 superseded text from the moment it saves. Cite what the file on disk says
 rather than what this one quotes.
 
-# Which register a record belongs in
+# Which projection a record belongs in
 
+- **Vision** what the system is for, who it serves, the domain it works in and its bounded contexts.
 - **Ubiquitous language** is taxonomy: what a word means, in a sentence or two, and nothing about behaviour.
 - **Architectural decisions** a pattern the codebase follows, and why.
 - **Features** the surface behavior: what a thing takes, what it produces, and what a user may do next.
@@ -256,16 +258,3 @@ a development branch, git worktrees — use the `recs-*` one.
 `superpowers:dispatching-parallel-agents` and `superpowers:writing-skills` have
 no `recs-*` counterpart and are used as-is. A new record, and any sweep of an
 agreed term, goes through `recs-writing-records`.
-
-These skills are meant to be reused across projects, so they stay generic: no
-project vocabulary, branch name, file name or tool command is baked into one,
-and project facts live in each project's AGENTS.md. A language may appear in an
-ecosystem example list beside npm, cargo and pytest.
-
-# Testing a change to a skill
-
-A subagent inherits the project's skill list, so a control arm told not to use
-the skill under test can still load it on its own initiative. Forbid that skill
-by name, forbid every other skill, and read the run's own tool calls to confirm
-it loaded none. Check the outcome against the fixture directly; an agent's
-report of its own run is not evidence.

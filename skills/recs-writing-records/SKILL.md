@@ -11,14 +11,15 @@ In a records-driven project, the records are the source of truth and the code fo
 
 **Core principle:** A record changes only at the user's direction, in words the user has agreed to — and when a word changes, every sentence written under the old one changes with it, in one pass.
 
-The project's AGENTS.md says which registers exist and where each lives. Read it first.
+The project's AGENTS.md says which projections exist and where each lives. Read it first.
 
-## The Registers
+## The Projections
 
-A starting point, to adopt or adapt. A project may keep fewer registers, more, or the same ones under other names; its AGENTS.md is what holds.
+A starting point, to adopt or adapt. A project may keep fewer projections, more, or the same ones under other names; its AGENTS.md is what holds.
 
-| Register | What it holds | Format | Example ids |
+| Projection | What it holds | Format | Example ids |
 |----------|---------------|--------|-------------|
+| Vision | What the system is for, who it serves, its domain and bounded contexts. | A single file; no projection file, no numbers | — |
 | Ubiquitous language | What a word means, in a sentence or two, and nothing about behaviour. One definition per term — a term needing two is two terms. | One term, one short definition; layout per project | The term itself |
 | Architectural decisions | A pattern the codebase follows, and why. | Nygard (context, decision, consequences) | ADR-12 |
 | Features | The surface: what a thing takes, what it produces, and what a user may do next. | Per project | F-7 |
@@ -39,19 +40,19 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
 - **Define by defining.** State what something is; never define by contrast with what it isn't. "A quote offers, it does not oblige" helps no one. "A quote is the price offered for a set of line items, valid until its expiry date, before anything is reserved" is a definition.
 - **Be brief.** A record is a sentence or a short paragraph, not an essay.
 - **Address by number and title.** "ADR-12: One retry queue per provider", never a bare "ADR-12".
-- **Match the register's format.** Read two neighbouring records before drafting; yours should be indistinguishable in shape.
+- **Match the projection's format.** Read two neighbouring records before drafting; yours should be indistinguishable in shape.
 
 ## The Flow
 
-1. **Place it.** Pick the register using the placement tests. Check the existing records — this may be an amendment to one rather than a new one. Search by the words the record would use, not just by topic.
+1. **Place it.** Pick the projection using the placement tests. Check the existing records — this may be an amendment to one rather than a new one. Search by the words the record would use, not just by topic.
 2. **Amending? Read the title against the amended body.** A title that now states half of what the record decides means the record was deciding two things. Split it rather than retitle it, and grep the old record's citations to see which half each one meant — that is what decides which number keeps its meaning.
-3. **Draft it.** Number, title, body, in the register's format.
+3. **Draft it.** Number, title, body, in the projection's format.
 4. **New term needed?** Stop before drafting around it:
    - First try combining existing terms: if the project has a "refund policy" and something must enforce it, try "refund policy enforcer" before inventing "guard".
    - Check each candidate against words the taxonomy already owns — a candidate that collides is out.
    - Propose the candidates to the user and wait. Never write a new term into any file — a record, a comment, a plan, a sketch — before the user has agreed to that specific word.
 5. **Name the words it moves, then find what each falsifies.** List every word whose definition this change alters — the ones keeping their spelling included, and the ones that merely lose a clause. In a batch of changes that list is what the sweep works from, and a word nobody names is a word nobody sweeps. Then run steps 1–3 of the sweep (below) on each word in it, before anything is shown; they produce the consequent sentences, each with the wording that replaces it.
-6. **Show the draft and the consequent list together. Wait for agreement.** Records change only at the user's direction; agreement covers the words, the number, the register, and every consequent sentence. Look for them after agreement instead and every hit is an edit nobody agreed to, leaving no move that is not a partial sweep or an unbidden edit.
+6. **Show the draft and the consequent list together. Wait for agreement.** Records change only at the user's direction; agreement covers the words, the number, the projection, and every consequent sentence. Look for them after agreement instead and every hit is an edit nobody agreed to, leaving no move that is not a partial sweep or an unbidden edit.
 7. **Write it — the record and its consequences in one pass.** Then close the sweep (below).
 
 ## Sweeps
