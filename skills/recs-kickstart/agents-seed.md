@@ -155,10 +155,14 @@ each by number and title. Then state the situation, and only then the problem.
 
 ```
 We are working on `UW-X: Frobnicate the widget`.
+
 `Section 1b: whirl first` says the user frobnicates after having whirled.
+
 `F-Y: Frobnication` says that we must whirl only after whooping.
 
 At the moment, we must whirl before we pool because....
+
+[example]
 ```
 
 The workflow comes first because it is what the user is trying to achieve; the
