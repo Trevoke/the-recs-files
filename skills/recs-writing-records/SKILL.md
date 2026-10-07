@@ -1,6 +1,6 @@
 ---
 name: recs-writing-records
-description: Use when a decision, definition, workflow, feature, or exact failure text needs to enter a project's records, when a record needs amending or retiring, or when an agreed term must be swept across the codebase — for projects that keep records as their source of truth.
+description: Use when a decision, definition, workflow, feature, or exact failure text needs to enter a project's records, when a record needs superseding or retiring, or when an agreed term must be swept across the codebase — for projects that keep records as their source of truth.
 ---
 
 # Writing Records
@@ -44,8 +44,8 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
 
 ## The Flow
 
-1. **Place it.** Pick the projection using the placement tests. Check the existing records — this may be an amendment to one rather than a new one. Search by the words the record would use, not just by topic.
-2. **Amending? Read the title against the amended body.** A title that now states half of what the record decides means the record was deciding two things. Split it rather than retitle it, and grep the old record's citations to see which half each one meant — that is what decides which number keeps its meaning.
+1. **Place it.** Pick the projection using the placement tests. Check the existing records — this may supersede one rather than stand beside it. Search by the words the record would use, not just by topic.
+2. **Superseding? Read the old record against the change.** A change that falsifies only part of what the old record decides means the record was deciding two things. Supersede it with two records, one for each half, the half that holds carried over in its own words; then grep the old record's citations to see which half each one meant — that is what decides which successor each one repoints to.
 3. **Draft it.** Number, title, body, in the projection's format.
 4. **New term needed?** Stop before drafting around it:
    - First try combining existing terms: if the project has a "refund policy" and something must enforce it, try "refund policy enforcer" before inventing "guard".
@@ -53,7 +53,18 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
    - Propose the candidates to the user and wait. Never write a new term into any file — a record, a comment, a plan, a sketch — before the user has agreed to that specific word.
 5. **Name the words it moves, then find what each falsifies.** List every word whose definition this change alters — the ones keeping their spelling included, and the ones that merely lose a clause. In a batch of changes that list is what the sweep works from, and a word nobody names is a word nobody sweeps. Then run steps 1–3 of the sweep (below) on each word in it, before anything is shown; they produce the consequent sentences, each with the wording that replaces it.
 6. **Show the draft and the consequent list together. Wait for agreement.** Records change only at the user's direction; agreement covers the words, the number, the projection, and every consequent sentence. Look for them after agreement instead and every hit is an edit nobody agreed to, leaving no move that is not a partial sweep or an unbidden edit.
-7. **Write it — the record and its consequences in one pass.** Then close the sweep (below).
+7. **Write it — the record and its consequences in one pass.** A new record — each successor included — also takes its line in the projection's file, in the place and shape AGENTS.md gives; a record missing from that file is missing from the projection for anyone reading it. Then close the sweep (below).
+
+## Superseding and Retiring a Record
+
+A record is never deleted, and its number is never reused: it is still worth knowing what the record said, after it stopped being so. Every projection keeps this rule, not only architectural decisions.
+
+- **Superseded** — another record replaces it. The replacement is a new record, written through the flow above, and its status says "Supersedes F-7: Export takes a date range". The old record's status becomes "Superseded by F-12: Export takes a saved filter".
+- **Retired** — it is withdrawn and nothing replaces it. Its status becomes "Retired", with the reason in a sentence.
+
+Either way, the status is the only change to the old record; the rest of it stands as written. Its line in the projection's file stays, and carries the same status. Superseding or retiring is a record change like any other: propose it together with the sentences it falsifies, wait for agreement, then sweep its identifier (step 5 below) — citations move to the successor, or go where there is none.
+
+A sweep is the one other way a standing record's text changes. It may rewrite a standing record's sentences to carry an agreed word change, or repoint a citation to a successor, because the record still decides what it decided; a change to what a record decides supersedes it. Superseded and retired records are never swept: their text stands as written, old words and old citations included.
 
 ## Sweeps
 
@@ -61,7 +72,7 @@ A word means the same thing in every file, or it means nothing. Sweep when:
 
 - a term is agreed or renamed;
 - a term is redefined — the word stays right in every sentence and some of those sentences go wrong;
-- a record is retired, renumbered, or superseded.
+- a record is superseded or retired.
 
 **A rename and a redefinition are swept differently.** A rename changes a word's spelling and keeps its meaning: every occurrence is replaced, and grep finds them all. A redefinition changes its meaning and keeps its spelling: there is nothing to replace, so nothing announces itself, and each hit has to be judged rather than substituted.
 
@@ -70,9 +81,9 @@ Steps 1–3 are what the flow runs before it shows a draft; 4–8 are the rest.
 1. Grep the word's stem, so every inflection lands — `approv` catches approve, approved, approval — and grep every synonym that crept in. One concept often hides under three names ("cutoff" here, "deadline" there, "due date" in a test name). Never grep the phrase you have in mind: `at approval` finds only the sentences you already thought of.
 2. Count the hits. That number is the checklist, and the sweep is not finished until every one of them has a verdict.
 3. For a redefinition, write the rule that tells a false sentence from a true one *before* reading any of them — one sentence, in the project's words: *where a record says something is declared "at approval" it means where that thing is written, which is now the order form; where "at approval" names the moment, it stands.* Then give each hit its verdict against the rule: the wording that replaces it, or *stands*, with the reason. "Almost all of them are still true" is a verdict on nothing.
-4. Change every occurrence in one pass: records, code, comments, tests, plans, docs.
-5. For a retired or renumbered record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint or remove each.
-6. Re-grep the stem and the old identifier, and re-count. Every remaining hit is one you judged *stands* — anything else is unfinished work.
+4. Change every occurrence in one pass: standing records, code, comments, tests, plans, docs. Superseded and retired records are left as written.
+5. For a superseded or retired record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint each to its successor, or remove it where there is none.
+6. Re-grep the stem and the old identifier, and re-count. Every remaining hit is one you judged *stands*, or sits in a superseded or retired record — anything else is unfinished work.
 7. Nothing is committed while a sentence you know to be false is still standing. A hit that falls outside what was agreed goes back to the user *before* the commit: asking costs one message, and committing around it costs a second commit and leaves the records wrong in between.
 8. One commit whose message names the change — Tim Pope rules: imperative subject around 50 characters, blank line, body saying why. Conventional-commit types are welcome.
 
@@ -123,6 +134,7 @@ def refund(order): ...
 | "Almost all the remaining hits are still true" | "Almost" names no sentence. Every hit gets its own verdict — the new wording, or *stands* and why. |
 | "I swept for the new words the change introduces" | The words that falsify sentences are the ones the change took something *away* from, and they read fine in every sentence they are in. Name every word the change redefines, and sweep each. |
 | "That one wasn't in what the user agreed to, so I left it" | Sweeping exists to turn up sentences nobody has agreed to yet. Take them back before the commit; leaving one behind ships a record you know is false. |
+| "Nothing cites this record any more, so I'll delete it" | A retired record stays, marked, and its number stays taken. Deleting it loses why it once held. |
 | "ADR-12" (bare) | Number and title, always — the title is what makes the reference readable. |
 
 **All of these mean: stop, and do it the record way.**

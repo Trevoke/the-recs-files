@@ -52,7 +52,7 @@ This holds during the dialogue too: candidate words are discussed freely in conv
 
 Before routing, walk every step and extension of each user workflow the design touches. Each step or extension where the system takes something from the user, gives something back, or opens what the user may do next is a feature, and the workflow names it. For each one:
 
-- A feature already covers it → the workflow names that feature. If the design changes what the feature takes, produces, or offers next, that is an amendment to it.
+- A feature already covers it → the workflow names that feature. If the design changes what the feature takes, produces, or offers next, that is a new feature record superseding it.
 - No feature covers it → propose a new feature record.
 
 One feature may serve steps in several workflows, so search the features by the words the surface would use before proposing a new one. An interface no user meets is not a feature; it stays in the design document.
@@ -69,7 +69,7 @@ Walk each validated decision through the placement tests and route it to its pro
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
 
-Propose each record change to the user - by projection, with the record number and title where it amends an existing record - and wait. A change that amends a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the user's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
+Propose each record change to the user - by projection, with the number and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the user's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
 
 **Documenting what remains:**
 - What routing leaves behind - purely implementation-level decisions - goes to `docs/plans/YYYY-MM-DD-<topic>-design.md`
@@ -92,5 +92,5 @@ Propose each record change to the user - by projection, with the record number a
 - **Incremental validation** - Present design in sections, validate each
 - **The project's word, or no word** - Candidate terms land in no file until agreed
 - **Workflows yield features** - Every step and extension the design touches is checked for the feature it names
-- **Route, then propose** - Every validated decision finds its projection; an amendment is proposed with what it falsifies, and record changes are never written unbidden
+- **Route, then propose** - Every validated decision finds its projection; a superseding record is proposed with what it falsifies, and record changes are never written unbidden
 - **Be flexible** - Go back and clarify when something doesn't make sense

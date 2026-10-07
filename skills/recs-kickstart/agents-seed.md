@@ -85,10 +85,8 @@ the title. The projection's file, `docs/features.org`, lists every record as
 `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in number order, beside
 the projection's preamble and any section that belongs to the projection rather
 than to one record. A record's file, its line in the projection's file, and its
-heading change together: a retitle renames the file, rewrites the line and the
-heading, and sweeps every pointer that cites the old title (the source tree, and
-`docs/` outside `docs/plans/`, whose plans keep the titles they were written
-under).
+heading carry the same title, and the title does not change: a record that needs
+a new title is superseded by one that has it.
 
 ## Relationships between records
 

@@ -27,7 +27,7 @@ source (kept in `docs/knowledge-base/` so the borrowing can be checked):
 - `recs-kickstart`: start here in an existing codebase. Interviews you,
   analyzes the code, and writes a thin first slice of records with your
   agreement, plus the project's AGENTS.md.
-- `recs-writing-records`: adds, amends, retires a record, and sweeps a word
+- `recs-writing-records`: adds, supersedes, retires a record, and sweeps a word
   across the codebase.
 - `recs-brainstorming`, `recs-writing-plans`, `recs-executing-plans`,
   `recs-subagent-driven-development`, `recs-test-driven-development`,
