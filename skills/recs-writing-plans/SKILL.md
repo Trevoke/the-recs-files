@@ -15,6 +15,8 @@ A plan is built against the project's records — commonly user workflows, archi
 
 **Standing rule:** Where the plan and a record disagree, the record wins. The plan stops at the point of disagreement and the disagreement is raised with the user. Never plan around a record, and never "fix" a record to fit the plan — records change only at the user's direction.
 
+**A missing record stops the plan too.** A task that builds surface — something a user gives the system, gets back, or may do next — cites the feature record for it. Where no feature covers that surface, the plan stops there and the gap is raised with the user, to be routed through recs-brainstorming and written with recs-writing-records. Never cite a neighbouring record to fill the gap, and never plan the surface from the design document alone.
+
 **Announce at start:** "I'm using the recs-writing-plans skill to create the implementation plan."
 
 **Context:** This should be run in a dedicated worktree (created by the recs-brainstorming skill; see recs-using-git-worktrees).
@@ -124,7 +126,7 @@ If no task touches cataloged text, the section says so in one line — its prese
 
 ## Task Structure
 
-Every task names the records it implements, by number and title.
+Every task names the records it implements, by number and title. A task that builds surface names its feature.
 
 ```markdown
 ### Task N: [Component Name]
@@ -196,6 +198,7 @@ For a task on cataloged text, Step 1's test asserts the catalog record's exact c
 - Every task cites its records by number and title
 - The project's words, exactly; coin nothing
 - A record that disagrees with the plan stops the plan
+- Surface with no feature record stops the plan
 - Reference relevant skills with @ syntax
 - DRY, YAGNI, TDD, frequent commits
 

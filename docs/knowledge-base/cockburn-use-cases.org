@@ -400,6 +400,61 @@ and published extension points [d3 p.66–67, App. A]. Use cases are
 "fundamentally a text form"; the diagram is only a table of contents
 [d3 p.15, p.202–203].
 
+* A use case's steps break into features, and an XP user story can be one
+
+The book gives this its own section, §17.2 "Use Cases to Task or Feature
+Lists", with a worked "Feature list for Capture Trade-in" [d3 TOC, p.167–170].
+Draft #3 lists the section but omits its body; the text below is from the
+1999 draft's earlier version, "Use cases to detailed requirements (engineering
+tasks)" [d99 p.100–101], and from a 2002 article.
+
+The derivation, as a practitioner reported it to Cockburn:
+
+#+begin_quote
+we essentially used the name of each use case as a feature set, and each step
+within the scenarios as features. [d99 p.100]
+#+end_quote
+
+The same correspondent found that "the exact text from the scenarios doesn't
+stand on its own very well as a line-item feature", and kept rewording it
+[d99 p.101]. Cockburn's reply locates the tension: designers work "on a
+single line item buried in one use cases - or maybe, the same line repeated
+across multiple use cases", while buyers, users and testers "want to see the
+application in full flow, delivering value" [d99 p.101]. The pieces are units
+of work:
+
+#+begin_quote
+Each piece becomes a program "feature" or "mechanism" or "design task" that
+will be assigned, tracked, and checked off. [d99 p.101]
+#+end_quote
+
+He would rather not keep the list as a document of its own:
+
+#+begin_quote
+When I get my preferences, I prefer to write use cases, and generate the task
+list informally, rather than creating and maintaining two official documents,
+one usage-centered and one feature-centered. [d99 p.101]
+#+end_quote
+
+#+begin_quote
+Use cases have a basic mismatch with feature lists. The same system feature is
+likely to show up as a line item in multiple use cases. ... Anyone who
+requires both use cases and feature lists is asking for double work.
+[Ten Years Later]
+#+end_quote
+
+Cockburn places the XP user story at the same grain as a line of that list:
+
+#+begin_quote
+An XP user story, in its brevity, may look either like the use case briefs
+described in "A sample of use case briefs" on page 47, or a system feature as
+described in "Feature list for Capture Trade-in" on page 170. [d3 p.148, ch.18]
+#+end_quote
+
+A story is "a sort of promissory note to have a further discussion about the
+requirements around a small piece of functionality", and works where "the
+usage and business experts sit right with the developers" [d3 p.148].
+
 * Cockburn names the mistakes he sees most often
 
 #+begin_quote
@@ -522,3 +577,6 @@ the minimal guarantee protects the library's interest on every exit.
   1995.01; published in /Journal of Object-Oriented Programming/, Sep–Oct and
   Nov–Dec 1997. https://www.cs.otago.ac.nz/coursework/cosc461/usecases.htm
   (the alistair.cockburn.us page returned 404)
+- Cockburn, Alistair. "Use Cases, Ten Years Later", /STQE/, Mar–Apr 2002.
+  Cited [Ten Years Later].
+  https://www.dsc.ufcg.edu.br/~garcia/cursos/ger_processos/seminarios/Crystal/Use%20Cases,%20Ten%20Years%20Later.htm
