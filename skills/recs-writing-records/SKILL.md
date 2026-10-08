@@ -1,6 +1,6 @@
 ---
 name: recs-writing-records
-description: Use when a decision, definition, workflow, feature, or exact failure text needs to enter a project's records, when a record needs superseding or retiring, or when an agreed term must be swept across the codebase — for projects that keep records as their source of truth.
+description: Use when a decision, definition, workflow, feature, or exact failure text needs to enter a project's records, when a record needs superseding, merging, splitting or retiring, or when an agreed term must be swept across the codebase — for projects that keep records as their source of truth.
 ---
 
 # Writing Records
@@ -82,7 +82,7 @@ Steps 1–3 are what the flow runs before it shows a draft; 4–8 are the rest.
 2. Count the hits. That number is the checklist, and the sweep is not finished until every one of them has a verdict.
 3. For a redefinition, write the rule that tells a false sentence from a true one *before* reading any of them — one sentence, in the project's words: *where a record says something is declared "at approval" it means where that thing is written, which is now the order form; where "at approval" names the moment, it stands.* Then give each hit its verdict against the rule: the wording that replaces it, or *stands*, with the reason. "Almost all of them are still true" is a verdict on nothing.
 4. Change every occurrence in one pass: standing records, code, comments, tests, plans, docs. Superseded and retired records are left as written.
-5. For a superseded or retired record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint each to its successor, or remove it where there is none.
+5. For a superseded or retired record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint each to its successor, or remove it where there is none. A plan keeps the citations it was written under: it is the work as planned against the records then standing.
 6. Re-grep the stem and the old identifier, and re-count. Every remaining hit is one you judged *stands*, or sits in a superseded or retired record — anything else is unfinished work.
 7. Nothing is committed while a sentence you know to be false is still standing. A hit that falls outside what was agreed goes back to the user *before* the commit: asking costs one message, and committing around it costs a second commit and leaves the records wrong in between.
 8. One commit whose message names the change — Tim Pope rules: imperative subject around 50 characters, blank line, body saying why. Conventional-commit types are welcome.
@@ -134,6 +134,7 @@ def refund(order): ...
 | "Almost all the remaining hits are still true" | "Almost" names no sentence. Every hit gets its own verdict — the new wording, or *stands* and why. |
 | "I swept for the new words the change introduces" | The words that falsify sentences are the ones the change took something *away* from, and they read fine in every sentence they are in. Name every word the change redefines, and sweep each. |
 | "That one wasn't in what the user agreed to, so I left it" | Sweeping exists to turn up sentences nobody has agreed to yet. Take them back before the commit; leaving one behind ships a record you know is false. |
+| "The plan cites the old record too, so I repointed it" | A plan is the work as planned against the records then standing. Its citations stay as written. |
 | "Nothing cites this record any more, so I'll delete it" | A retired record stays, marked, and its number stays taken. Deleting it loses why it once held. |
 | "ADR-12" (bare) | Number and title, always — the title is what makes the reference readable. |
 
