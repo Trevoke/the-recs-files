@@ -1,0 +1,28 @@
+#+TITLE: Vision
+
+* What the recs files are for
+The recs files are a set of skills that instruct an agent to keep the truth
+of a system in records. Each record belongs to a category, and each
+category's records are read through a projection named after it. The
+system need not be code. The recs files are reused across projects; each
+project's own facts live in its AGENTS.md.
+
+* Who they serve
+The record keeper: the person or team whose job is to manage a project's
+records, whether a developer or a product owner. Records change only at the
+record keeper's direction. The agent is what the skills instruct.
+
+* The domain
+A project's records: short, numbered statements of what its system does and
+why. The records are the truth for the system; the record keeper is the
+truth for the records.
+
+* Bounded contexts
+- Record management :: making record changes (creating, superseding,
+  retiring a record) and sweeping a word through the project.
+- Code implementation :: taking a project from brainstorming to code,
+  reading and citing its records along the way.
+
+* Open questions
+- Code implementation's language is not yet adopted. Its skills are largely
+  borrowed, and its words are not defined here until it is.
