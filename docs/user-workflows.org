@@ -1,0 +1,4 @@
+#+TITLE: User workflows
+
+- UW-1 :: [[./user-workflows/uw-1-create-a-record.org][Create a record]]
+- UW-2 :: [[./user-workflows/uw-2-supersede-a-record.org][Supersede a record]]
