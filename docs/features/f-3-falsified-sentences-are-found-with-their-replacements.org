@@ -1,0 +1,14 @@
+* F-3 Falsified sentences are found with their replacements
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+1. When the agent drafts a record change, the agent shall find every
+   sentence the change falsifies before showing the draft.
+2. When the agent drafts a record change, the agent shall name every term
+   whose meaning the change moves, those that keep their spelling included.
+3. When the agent searches for a term, the agent shall search by its stem
+   and by every synonym, never by a phrase.
+4. The agent shall give each falsified sentence the wording that replaces
+   it.
+5. The agent shall treat no sentence in a withdrawn record, a rejected
+   record or a plan as falsified.

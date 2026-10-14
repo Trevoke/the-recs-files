@@ -1,0 +1,15 @@
+* F-1 A record is placed in one category
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+1. The agent shall place every record in exactly one category.
+2. When a record is to be created, the agent shall choose its category by
+   the placement tests.
+3. If the placement tests do not settle a record's category, then the agent
+   shall show the record keeper what each test found and leave the choice
+   of category to the record keeper.
+4. When the agent places a record, the agent shall search the standing
+   records, by the words the record would use, for one that already
+   decides it.
+5. If a standing record already decides it, then the agent shall propose
+   superseding that record instead of creating another beside it.
