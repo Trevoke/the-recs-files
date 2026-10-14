@@ -1,6 +1,6 @@
 * F-1 A record is placed in one category
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. The agent shall place every record in exactly one category.
 2. When a record is to be created, the agent shall choose its category by

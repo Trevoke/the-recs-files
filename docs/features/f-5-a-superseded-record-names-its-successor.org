@@ -1,6 +1,6 @@
 * F-5 A superseded record names its successor
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When a supersede is agreed, the agent shall set the old record's status
    to name its successor by number and title.

@@ -1,6 +1,5 @@
 #+TITLE: Features
 
-* Proposed
 - F-1 :: [[./features/f-1-a-record-is-placed-in-one-category.org][A record is placed in one category]]
 - F-2 :: [[./features/f-2-a-record-change-is-agreed-before-it-stands.org][A record change is agreed before it stands]]
 - F-3 :: [[./features/f-3-falsified-sentences-are-found-with-their-replacements.org][Falsified sentences are found with their replacements]]

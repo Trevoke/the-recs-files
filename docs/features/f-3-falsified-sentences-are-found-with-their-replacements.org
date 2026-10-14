@@ -1,6 +1,6 @@
 * F-3 Falsified sentences are found with their replacements
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When the agent drafts a record change, the agent shall find every
    sentence the change falsifies before showing the draft.

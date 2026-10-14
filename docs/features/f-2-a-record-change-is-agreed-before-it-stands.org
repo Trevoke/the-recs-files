@@ -1,6 +1,6 @@
 * F-2 A record change is agreed before it stands
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. The agent shall let no record change stand before the record keeper
    agrees to it.
