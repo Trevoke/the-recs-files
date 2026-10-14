@@ -1,0 +1,23 @@
+#+TITLE: Ubiquitous language
+
+* Record management
+The bounded context of record changes and of sweeping words through a
+project.
+** Record keeper
+The person or team who directs a project's record changes.
+** Record
+A short, numbered statement of one truth about a system, with a title that
+states its substance. Every record belongs to one category.
+** Category
+The kind a record is. It gives the record its form and the prefix of its
+number.
+** Projection
+The listing of every record in one category, in number order, named after
+the category.
+** Standing record
+A record that is neither superseded nor retired.
+** Record change
+Creating, superseding, retiring or clarifying a record.
+** Citation
+A reference to a record by its number and title, or to a heading of the
+knowledge base.
