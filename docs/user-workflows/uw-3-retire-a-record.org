@@ -1,6 +1,6 @@
 * UW-3 Retire a record
 :PROPERTIES:
-:STATUS: Standing
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: User goal
@@ -9,7 +9,7 @@
 The record keeper decides that what a standing record decides no longer
 holds, and nothing replaces it.
 ** Minimal guarantee
-Nothing is written before the record keeper agrees to it.
+Nothing stands before the record keeper agrees to it.
 ** Success guarantee
 The record's status is Retired, with the reason in a sentence, and that is
 the only change to it; its line stays in its projection, carrying the same

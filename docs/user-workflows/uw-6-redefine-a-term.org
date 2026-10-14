@@ -1,6 +1,6 @@
 * UW-6 Redefine a term
 :PROPERTIES:
-:STATUS: Standing
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: User goal
@@ -9,7 +9,7 @@
 The record keeper decides that a term's meaning changes and its spelling
 stays.
 ** Minimal guarantee
-Nothing is written before the record keeper agrees to it.
+Nothing stands before the record keeper agrees to it.
 ** Success guarantee
 The term's record states its new meaning; every falsified sentence outside
 superseded and retired records and plans is replaced, and every other

@@ -1,6 +1,6 @@
 * UW-4 Clarify a record
 :PROPERTIES:
-:STATUS: Standing
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: User goal
@@ -9,7 +9,7 @@
 The record keeper finds that a standing record's wording falls short of its
 intent.
 ** Minimal guarantee
-Nothing is written before the record keeper agrees to it.
+Nothing stands before the record keeper agrees to it.
 ** Success guarantee
 The record's wording, and its title where the record keeper agreed to a
 new one, are changed in place; its number and intent are unchanged; every

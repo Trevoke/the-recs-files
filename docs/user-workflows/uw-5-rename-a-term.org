@@ -1,6 +1,6 @@
 * UW-5 Rename a term
 :PROPERTIES:
-:STATUS: Standing
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: User goal
@@ -9,7 +9,7 @@
 The record keeper decides that a term is to be spelled differently, its
 meaning kept.
 ** Minimal guarantee
-Nothing is written before the record keeper agrees to it.
+Nothing stands before the record keeper agrees to it.
 ** Success guarantee
 The new spelling stands wherever the old one stood, except in superseded
 and retired records and in plans, which stay as written.
