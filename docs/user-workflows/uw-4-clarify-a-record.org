@@ -1,0 +1,31 @@
+* UW-4 Clarify a record
+:PROPERTIES:
+:STATUS: Standing
+:ACTOR: Record keeper
+:SCOPE: The recs files
+:LEVEL: User goal
+:END:
+** Trigger
+The record keeper finds that a standing record's wording falls short of its
+intent.
+** Minimal guarantee
+Nothing is written before the record keeper agrees to it.
+** Success guarantee
+The record's wording, and its title where the record keeper agreed to a
+new one, are changed in place; its number and intent are unchanged; every
+citation of it outside a plan carries its title.
+** Main success scenario
+*** 1. Record keeper asks the agent for an in-place edit of a record
+*** 2. Agent drafts the new wording, and assesses whether the record's intent is kept, and how it changes if not, naming each citation that would read wrong after the edit
+*** 3. Agent shows the record keeper the draft and the assessment, with the rule: if the intent doesn't change, then it might be the same record
+*** 4. Record keeper decides the intent is kept, and agrees to the wording
+*** 5. Agent writes the new wording into the record
+** Extensions
+*** 2a. The edit gives the record a new title
+**** 2a1. Agent finds every citation of the record outside a plan, each with the new title in place of the old; continue at 3
+*** 4a. Record keeper decides the intent changes
+**** 4a1. Supersede a record (UW-2: Supersede a record); the use case ends
+*** 4b. Record keeper rewords the draft
+**** 4b1. Agent redrafts; back to 3
+*** 4c. Record keeper declines
+**** 4c1. Nothing is written; the use case ends

@@ -1,0 +1,34 @@
+* UW-6 Redefine a term
+:PROPERTIES:
+:STATUS: Standing
+:ACTOR: Record keeper
+:SCOPE: The recs files
+:LEVEL: User goal
+:END:
+** Trigger
+The record keeper decides that a term's meaning changes and its spelling
+stays.
+** Minimal guarantee
+Nothing is written before the record keeper agrees to it.
+** Success guarantee
+The term's record states its new meaning; every falsified sentence outside
+superseded and retired records and plans is replaced, and every other
+occurrence stands.
+** Main success scenario
+*** 1. Record keeper tells the agent the term and its new meaning
+*** 2. Agent drafts the successor to the record that defines the term
+*** 3. Agent names every other term whose meaning the change moves
+*** 4. Agent finds every occurrence of each term, its stem and its synonyms, and counts them
+*** 5. Agent writes the rule that tells a false sentence from a true one, and gives each occurrence a verdict: its replacement, or stands and why
+*** 6. Agent shows the record keeper the successor, the rule and every verdict
+*** 7. Record keeper agrees
+*** 8. Agent supersedes the term's record, writes every replacement in one pass, and counts again
+** Extensions
+*** 1a. The meaning stays, and only the definition's wording falls short
+**** 1a1. Clarify a record (UW-4: Clarify a record); the use case ends
+*** 6a. Record keeper rewords the successor, the rule or a verdict
+**** 6a1. Agent redrafts; back to 6
+*** 7a. Record keeper declines
+**** 7a1. Nothing is written; the use case ends
+*** 8a. The count finds a false sentence not shown at 6
+**** 8a1. Agent shows it to the record keeper; back to 7

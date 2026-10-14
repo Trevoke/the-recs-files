@@ -2,3 +2,7 @@
 
 - UW-1 :: [[./user-workflows/uw-1-create-a-record.org][Create a record]]
 - UW-2 :: [[./user-workflows/uw-2-supersede-a-record.org][Supersede a record]]
+- UW-3 :: [[./user-workflows/uw-3-retire-a-record.org][Retire a record]]
+- UW-4 :: [[./user-workflows/uw-4-clarify-a-record.org][Clarify a record]]
+- UW-5 :: [[./user-workflows/uw-5-rename-a-term.org][Rename a term]]
+- UW-6 :: [[./user-workflows/uw-6-redefine-a-term.org][Redefine a term]]
