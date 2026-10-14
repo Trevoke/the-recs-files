@@ -5,6 +5,9 @@ The bounded context of record changes and of sweeping words through a
 project.
 ** Record keeper
 The person or team who directs a project's record changes.
+** Agent
+The model that the recs files instruct, which drafts and writes record
+changes at the record keeper's direction.
 ** Record
 A short, numbered statement of one truth about a system, with a title that
 states its substance. Every record belongs to one category.
