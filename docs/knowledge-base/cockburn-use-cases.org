@@ -400,6 +400,82 @@ and published extension points [d3 p.66–67, App. A]. Use cases are
 "fundamentally a text form"; the diagram is only a table of contents
 [d3 p.15, p.202–203].
 
+* Use cases are the hub of the requirements, and the rest are spokes
+
+Use cases hold the behavioural requirements and nothing else. What is not
+behaviour lives elsewhere, and the use case links to it.
+
+#+begin_quote
+They really are requirements. You shouldn't have to convert them into some
+other form of behavioral requirements. Properly written, they accurately
+detail what the system must do.
+
+They are not all of the requirements. They don't detail external interfaces,
+data formats, business rules and complex formulae. They constitute only a
+fraction (perhaps a third) of all the requirements you need to collect - a
+very important fraction, but still only a fraction. [d3 p.26, §1.3]
+#+end_quote
+
+Cockburn's requirements file outline, adapted from Robertson and Robertson,
+puts use cases in one chapter of six [d3 p.26–27]:
+
+#+begin_quote
+The thing to note is that use cases only occupy chapter 3 of the
+requirements. They are not all of the requirements. They are only but all of
+the behavioral requirements. Business rules, glossary, performance targets,
+process requirements, and many other things simply do not fall in the
+category of behavior. They need their own chapters. [d3 p.27]
+#+end_quote
+
+The figure that follows, "'Hub-and-spoke' model of requirements", puts Use
+Cases at the centre with Performance, UI requirements, I/O formats &
+protocols, Data formats and Business Rules around it [d3 p.28; d99 p.89]:
+
+#+begin_quote
+Use cases connect many other requirements details. ... While not in the use
+cases, all these are connected to the use cases. The use cases act as the hub
+of a wheel, and the other information acts as spokes leading in different
+directions. [d3 p.28]
+#+end_quote
+
+The link runs from the use case, which names a need, to the spoke that
+details it:
+
+#+begin_quote
+I/O data formats are not part of the use case, but the use case names the
+need for the data, and so we can hyperlink from the use case to the data
+description. Complex business rules do not fit neatly into the use case
+narrative, but again, we can link to a page containing the business rule.
+This sort of hub-and-spoke linking makes the use cases the center of the
+requirements document, even for many of the non-functional requirements.
+[d99 p.89]
+#+end_quote
+
+- *What a use case leaves out*: "They do not contain performance
+  requirements, business rules, user interface design, data descriptions,
+  finite state machine behavior, priority, and probably some other
+  information" [d3 p.146, ch.16]. The 1999 draft calls use cases "chapter
+  two" of the requirements document [d99 p.88]; draft #3 says "chapter
+  three", matching its outline.
+- *Not everything is a use case*: "Use cases are for describing
+  interactions. ... A two-tape merge operation is best described using
+  algebraic or tabular forms, not use cases! Perhaps 25% of the entire
+  requirements file is suited to for describing in use case form, the other
+  75% will be written using other forms" [d99 p.89].
+- *Data stays a nickname in the use case.* Steps name data at the first
+  level of precision, "Customer supplies name and address", and field lists
+  and field checks go elsewhere [d3 p.1 "Reminders"; d99 p.89–90]. Writing
+  more "would slow down the requirements gathering, make the use cases much
+  longer and harder to read, and make them also more brittle (sensitive to
+  changes in the data requirements)"; since many use cases name the same
+  data, "it is better to break the details out of the use case, and simply
+  link to those descriptions from all of the use cases that reference it"
+  [d99 p.90].
+- *Some of it may ride along.* Priority, frequency, performance demand,
+  delivery date, secondary actors and open issues "can be placed at the end of
+  the use case", or kept in a spreadsheet with one row per use case
+  [d99 p.88].
+
 * A use case's steps break into features, and an XP user story can be one
 
 The book gives this its own section, §17.2 "Use Cases to Task or Feature

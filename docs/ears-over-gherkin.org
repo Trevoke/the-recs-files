@@ -1,0 +1,82 @@
+#+TITLE: Why feature records are written in EARS, not Gherkin
+
+* The decision
+
+Feature records (F-n) are written as lists of EARS requirements: one sentence
+each, in one of Mavin's five patterns. They are not written in Gherkin, and
+not in a mix of the two.
+
+* What a feature record has to be
+
+- *A definition of behaviour, never run.* Feature records describe what the
+  system does; they are not test inputs.
+- *One feature.* "Authenticating as an admin", "printing a tax report": a
+  feature holds several behaviours.
+- *A spoke of a user workflow.* Cockburn's use case is the hub of the
+  requirements. It holds the actor, the goal, the order of steps, and every way
+  the goal succeeds or fails. Business rules, data formats and state behaviour
+  are spokes it links to. A feature record is one of those spokes. It must
+  hold what a step names, and must never retell the steps.
+- *Superseded, not edited.* What changed between a record and its successor
+  must be plain to whoever agrees to it.
+- *Drafted by an agent, agreed by the record keeper*, who may not be a
+  developer, for a system that may not be code.
+
+* Why EARS
+
+1. *It cannot retell the workflow.* An EARS sentence has a trigger and a
+   response, with no actor and no sequence. A feature written in it has no way
+   to duplicate its user workflow, which is the double work Cockburn warns
+   against. A Gherkin scenario's Given/When/Then is a small sequence. Its own
+   authors warn that it drifts into scripts of "form submissions and link
+   clicking", and that drift would turn feature records into copies of
+   workflows.
+2. *One sentence, one behaviour.* EARS allows one trigger to a sentence, so a
+   feature is a list of separate lines, and a supersede shows exactly which
+   lines changed. In Stone, F-49 superseded F-36 with at least five changes, each buried
+   mid-paragraph. Written in EARS, each would have been a one-line change.
+3. *Refusals get a pattern of their own.* "If <condition>, then the system
+   shall <response>" is where a feature cites its message catalog entry. That
+   makes messages spokes of features, as features are spokes of workflows.
+4. *It is built for text, not execution.* EARS came from airworthiness
+   regulations and needs "no specialist tool". Gherkin is built to run: doc
+   strings, data tables, Background and Scenario Outlines exist to feed step
+   definitions. Feature records will never run, so that machinery would be
+   ceremony.
+5. *It brings no clashing words.* Gherkin's ~Feature:~ is our projection's
+   name, and means a file of many rules rather than one feature. Its
+   ~Scenario~ is Cockburn's word inside user workflows. Every sweep for either
+   word would land on every feature file.
+6. *Less text for the same precision.* The record keeper reads what an agent
+   drafts, and a sentence per behaviour is the shortest form that still pins
+   the behaviour down.
+
+* What we give up
+
+- *Examples in the form itself.* Gherkin pairs every rule with examples;
+  without them, "a rule may be ambiguous" (Rose). We keep examples optional:
+  plain prose under the one requirement each illustrates. Since an example
+  decides nothing its requirement does not, adding or rewording one changes
+  the record without superseding it.
+- *Executability*, which we do not want.
+- *A familiar voice.* In EARS the system is always the subject ("the library
+  shall…"), never the user ("a user can…"). What a user may do is the user
+  workflow's to say.
+- *Fit for format specifications.* A record that is mostly how something
+  renders, such as Stone's F-29 on validation failures, is awkward as a list of
+  "shall" sentences. Cockburn would put it on a data-format spoke; it may need
+  examples more than most.
+
+* Sources
+
+- ~docs/knowledge-base/mavin-ears.org~: the patterns, the one-trigger rule, the
+  origin and aims.
+- ~docs/knowledge-base/wynne-example-mapping.org~: Rule and Example in Gherkin,
+  and what examples are for.
+- ~docs/knowledge-base/cockburn-use-cases.org~: "Use cases are the hub of the
+  requirements, and the rest are spokes"; "A use case's steps break into
+  features" (the double work).
+- Cucumber, Gherkin reference and changelog: the keywords, and the 2018 note on
+  "form submissions and link clicking".
+  https://cucumber.io/docs/gherkin/reference/ and
+  https://github.com/cucumber/gherkin/blob/main/CHANGELOG.md

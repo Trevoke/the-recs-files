@@ -18,7 +18,7 @@ source (kept in `docs/knowledge-base/` so the borrowing can be checked):
 | Vision | What the system is for and the domain it works in | A single file |
 | Ubiquitous language | What a word means, grouped by bounded context | Evans |
 | User workflows (UW-n) | What a person is trying to achieve, step by step | Cockburn |
-| Features (F-n) | What a thing takes, produces, and lets a user do next | — |
+| Features (F-n) | What a thing takes and produces, one requirement to a sentence | Mavin (EARS) |
 | Message catalog (MSG-n) | The exact text given on a refusal or failure | — |
 | Architectural decisions (ADR-n) | A pattern the code follows, and why | Nygard |
 

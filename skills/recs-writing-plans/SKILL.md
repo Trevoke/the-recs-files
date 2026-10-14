@@ -15,7 +15,7 @@ A plan is built against the project's records — commonly user workflows, archi
 
 **Standing rule:** Where the plan and a record disagree, the record wins. The plan stops at the point of disagreement and the disagreement is raised with the user. Never plan around a record, and never "fix" a record to fit the plan — records change only at the user's direction.
 
-**A missing record stops the plan too.** A task that builds surface — something a user gives the system, gets back, or may do next — cites the feature record for it. Where no feature covers that surface, the plan stops there and the gap is raised with the user, to be routed through recs-brainstorming and written with recs-writing-records. Never cite a neighbouring record to fill the gap, and never plan the surface from the design document alone.
+**A missing record stops the plan too.** A task that builds surface — something a user gives the system or gets back — cites the feature record for it. Where no feature covers that surface, the plan stops there and the gap is raised with the user, to be routed through recs-brainstorming and written with recs-writing-records. Never cite a neighbouring record to fill the gap, and never plan the surface from the design document alone.
 
 **Announce at start:** "I'm using the recs-writing-plans skill to create the implementation plan."
 

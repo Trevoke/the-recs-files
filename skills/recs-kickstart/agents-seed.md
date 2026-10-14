@@ -29,6 +29,7 @@ the borrowing can be checked:
 
 - Ubiquitous language — `docs/knowledge-base/evans-ubiquitous-language.org`
 - Architectural decisions — `docs/knowledge-base/nygard-architecture-decision-records.org`
+- Features — `docs/knowledge-base/mavin-ears.org`
 - User workflows — `docs/knowledge-base/cockburn-use-cases.org`
 
 ## Creating/updating a record
@@ -88,6 +89,86 @@ than to one record. A record's file, its line in the projection's file, and its
 heading carry the same title, and the title does not change: a record that needs
 a new title is superseded by one that has it.
 
+## A feature record's form
+
+A feature record is one feature — authenticating as an admin, printing a tax
+report, buying stocks — stated as a list of requirements in EARS (Mavin's Easy
+Approach to Requirements Syntax). Each requirement is one sentence in one of
+five patterns, its clauses always in this order:
+
+| Pattern | For | Sentence |
+|---|---|---|
+| Ubiquitous | what always holds | The <system> shall <response>. |
+| State driven | what holds while a state lasts | While <state>, the <system> shall <response>. |
+| Event driven | the response to a trigger | When <trigger>, the <system> shall <response>. |
+| Optional feature | what holds where an option is in place | Where <option>, the <system> shall <response>. |
+| Unwanted behaviour | a refusal or a failure | If <condition>, then the <system> shall <response>. |
+
+A requirement may combine the keywords, in the order While, When; If-then
+stands in for When where the trigger is unwanted.
+
+- **One trigger to a sentence.** A sentence with two triggers is two
+  requirements.
+- **The subject of "shall" is the system, or a part of it the ubiquitous
+  language names.**
+- **No sequence.** Each requirement holds in any order and from any user
+  workflow that reaches the feature. The order of things, and what a user may
+  do next, are the user workflow's to say.
+- **A refusal cites its message, never quotes it.** "If the book is reserved,
+  then the library shall refuse the renewal with `MSG-4: A reserved book cannot
+  be renewed`." The text lives in the message catalog alone.
+- **Examples are optional.** An example sits under the one requirement it
+  illustrates, in plain prose. It decides nothing the requirement does not, so
+  adding or rewording one changes the record without superseding it. Changing,
+  adding or removing a requirement supersedes the record.
+
+### Numbered requirements
+
+Requirements are numbered from 1, and the number is the requirement's section:
+a pointer to one requirement is `F-12 §2: A borrower can renew a loan`. A
+number is never reused within its record. A successor numbers its own
+requirements from 1, and its status maps each of the old record's sections to
+the successor's sections that carry it, or to none: "Supersedes F-12: A
+borrower can renew a loan (§1 → §1; §2 → §2, §3; §3 → none)". The sweep of the
+old identifier repoints each `F-12 §n` citation by that map.
+
+```org
+* F-12 A borrower can renew a loan
+
+1. When a borrower renews a loan, the library shall set the loan's due date
+   one loan period after the renewal date.
+   - The one where a 14-day loan renewed on 1 October is due on 15 October.
+2. If the book is reserved, then the library shall refuse the renewal with
+   `MSG-4: A reserved book cannot be renewed`.
+3. While a loan is overdue beyond the grace period, the library shall refuse
+   any renewal of it with `MSG-5: An overdue loan cannot be renewed`.
+4. Where the library sets a renewal limit, the library shall refuse a renewal
+   past it with `MSG-6: This loan has reached its renewal limit`.
+```
+
+### Where each thing about a feature is held
+
+A feature is read across several records, each holding one kind of thing:
+
+| What | Where it is held |
+|---|---|
+| What the system does, and when | This feature record, one EARS requirement to a sentence |
+| What that looks like in a case | An example, under the requirement it illustrates |
+| What a user does, in what order, and what they may do next | The steps of the user workflow that reaches the feature |
+| What a user gets when it succeeds | That user workflow's success guarantee |
+| Why it matters, and to whom | That user workflow's Stakeholders & Interests |
+| The exact text of a refusal or failure | The message catalog, cited from the requirement |
+| What a word means, or what a thing is declared as | The ubiquitous language |
+| Why it is built this way | An architectural decision |
+
+A sentence drafted into a feature goes where the table puts it: "nothing inside
+the job can raise it" is a requirement, rewritten in EARS in this record;
+"steer without stopping" is a workflow step; "three bad papers out of two
+hundred stop what comes next, rather than quietly producing a summary of the
+rest" is a stakeholder's interest. Moving a sentence to its place is a record
+change like any other: each destination is proposed with its wording, and
+nothing moves before the user agrees.
+
 ## Relationships between records
 
 A user workflow record may name feature records, message catalog records,
@@ -123,7 +204,7 @@ rather than what this one quotes.
 - **Vision** what the system is for, who it serves, the domain it works in and its bounded contexts.
 - **Ubiquitous language** is taxonomy: what a word means, in a sentence or two, and nothing about behaviour.
 - **Architectural decisions** a pattern the codebase follows, and why.
-- **Features** the surface behavior: what a thing takes, what it produces, and what a user may do next.
+- **Features** the surface behavior: what a thing takes and what it produces, as requirements in EARS.
 - **User workflows** what a person is trying to achieve, step by step, with the extensions where it goes otherwise.
 - **Message catalog** the exact text the system gives when it refuses something or something goes wrong. Tests assert this text, so it changes here before it changes in code.
 

@@ -1,0 +1,254 @@
+#+TITLE: Mavin's EARS — Reference
+#+STARTUP: overview
+
+Not a project document. This records what the source material actually says, so
+that when the project borrows a form or a term we can check the borrowing.
+Paraphrased from the sources listed at the end, with the load-bearing sentences quoted.
+
+*What it establishes.* Alistair Mavin's Easy Approach to Requirements Syntax
+(EARS) is a way of writing a requirement as one English sentence whose
+clauses always come in the same order: an optional state, an optional
+trigger, the name of the system, and "shall" followed by what the system
+does. Which clauses a sentence uses puts it in one of five patterns
+(ubiquitous, state driven, event driven, optional feature, unwanted
+behaviour), and sentences that use more than one keyword are called complex.
+It was built to keep requirements in natural language, so that they need no
+translation into another notation and no specialist tool.
+
+*On the sources.* The four papers by the originators (RE'09, RE'10, RE'16,
+/IEEE Software/ 2019) are behind the IEEE paywall and were not read. The 2009
+abstract is quoted from the University of Manchester's repository and the
+2019 abstract from Semantic Scholar's record of it. The patterns, the
+ruleset and the examples are quoted from Mavin's own page, cited [Mavin],
+which is the originator's current statement of the notation. Wikipedia,
+cited [Wikipedia], is used only for the bibliography and for the limitations,
+which no primary source read here states; treat those as secondary. Kiro's
+documentation, cited [Kiro], is quoted to show one current adoption.
+
+* EARS gently constrains natural language, rather than replacing it
+
+#+begin_quote
+The Easy Approach to Requirements Syntax (EARS) is a mechanism to gently
+constrain textual requirements. The EARS patterns provide structured guidance
+that enable authors to write high quality textual requirements. [Mavin]
+#+end_quote
+
+The 2009 paper sets this against other notations: they buy precision at the
+price of translating from the source text and training their readers.
+
+#+begin_quote
+Some experts advocate the use of other notations to in-crease precision and
+minimise problems such as ambiguity. However, use of non-textual notations
+requires translation of the source requirements, which can introduce further
+errors. There is also a training overhead associated with the introduction of
+new notations. A small set of structural rules was developed to address eight
+common requirement problems including ambiguity, complexity and vagueness. The
+ruleset allows all natural language requirements to be expressed in one of
+five simple templates. [RE'09 abstract]
+#+end_quote
+
+The eight problems are not named in the abstract; only ambiguity, complexity
+and vagueness are. The paper's case study applied the ruleset "whilst
+extracting aero engine control system requirements from an airworthiness
+regulation document", and reports "qualitative and quantitative improvements
+compared with a conventional textual requirements specification" [RE'09
+abstract].
+
+Mavin gives the reasons practitioners adopt it:
+
+#+begin_quote
+EARS has proved popular with practitioners because it is lightweight, there is
+little training overhead, no specialist tool is necessary, and the resultant
+requirements are easy to read. [Mavin]
+#+end_quote
+
+He also says it "is especially effective for requirements authors who must
+write requirements in English, but whose first language is not English"
+[Mavin]. The originators, ten years on, put its value in its simplicity:
+
+#+begin_quote
+As the original authors, we were initially unsure about publishing because we
+thought that EARS was too simple: almost too obvious to be of value. It turns
+out that it is this simplicity that is perhaps the greatest strength of EARS.
+[Ten Years of EARS, abstract]
+#+end_quote
+
+* It came from extracting requirements from regulations
+
+#+begin_quote
+Mav and colleagues at Rolls-Royce PLC developed EARS whilst analysing the
+airworthiness regulations for a jet engine's control system. The regulations
+contained high level objectives, a mixture of implicit and explicit
+requirements at different levels, lists, guidelines and supporting
+information. [Mavin]
+#+end_quote
+
+#+begin_quote
+In the process of extracting and simplifying the requirements, Mav noticed
+that the requirements all followed a similar structure. He found that
+requirements were easiest to read when the clauses always appeared in the
+same order. [Mavin]
+#+end_quote
+
+The notation was found in existing requirements, not designed and then
+imposed. It is used at Airbus, Bosch, Dyson, Honeywell, Intel, NASA,
+Rolls-Royce and Siemens, and taught at universities in six countries [Mavin].
+
+* One sentence, its clauses always in the same order
+
+#+begin_quote
+There is a set syntax (structure), with an underlying ruleset. A small number
+of keywords are used to denote the different clauses of an EARS requirement.
+The clauses are always in the same order, following temporal logic. [Mavin]
+#+end_quote
+
+The generic form:
+
+#+begin_example
+While <optional pre-condition>, when <optional trigger>, the <system name> shall <system response>
+#+end_example
+
+#+begin_quote
+The EARS ruleset states that a requirement must have: Zero or many
+preconditions; Zero or one trigger; One system name; One or many system
+responses. [Mavin]
+#+end_quote
+
+- *One trigger at most.* A requirement with two triggers is two
+  requirements.
+- *One system name.* The sentence names the system responsible; it is the
+  subject of "shall".
+- *"Temporal logic"* means that the state comes before the trigger, and both
+  come before the response.
+
+* Five patterns, named by the clauses they use
+
+Each is quoted from [Mavin], definition, template and example.
+
+| Pattern            | Keyword     | Template                                                        |
+|--------------------+-------------+-----------------------------------------------------------------|
+| Ubiquitous         | none        | The <system name> shall <system response>                       |
+| State driven       | While       | While <precondition(s)>, the <system name> shall <system response> |
+| Event driven       | When        | When <trigger>, the <system name> shall <system response>       |
+| Optional feature   | Where       | Where <feature is included>, the <system name> shall <system response> |
+| Unwanted behaviour | If ... then | If <trigger>, then the <system name> shall <system response>    |
+
+- *Ubiquitous*: "always active (so there is no EARS keyword)". Example: "The
+  mobile phone shall have a mass of less than XX grams."
+- *State driven*: "active as long as the specified state remains true".
+  Example: "While there is no card in the ATM, the ATM shall display “insert
+  card to begin”."
+- *Event driven*: "specify how a system must respond when a triggering event
+  occurs". Example: "When “mute” is selected, the laptop shall suppress all
+  audio output."
+- *Optional feature*: "apply in products or systems that include the
+  specified feature". Example: "Where the car has a sunroof, the car shall
+  have a sunroof control panel on the driver door."
+- *Unwanted behaviour*: "used to specify the required system response to
+  undesired situations". Example: "If an invalid credit card number is
+  entered, then the website shall display “please re-enter credit card
+  details”."
+
+The ATM and website examples give the exact text the system shows, in quotation
+marks, as the system response.
+
+* Complex requirements combine the keywords
+
+#+begin_quote
+The simple building blocks of the EARS patterns described above can be
+combined to specify requirements for richer system behaviour. Requirements
+that include more than one EARS keyword are called Complex requirements.
+[Mavin]
+#+end_quote
+
+#+begin_example
+While <precondition(s)>, When <trigger>, the <system name> shall <system response>
+#+end_example
+
+Example: "While the aircraft is on ground, when reverse thrust is commanded,
+the engine control system shall enable reverse thrust." "Complex requirements
+for unwanted behaviour also include the If-Then keywords." [Mavin]
+
+* Where EARS stops (secondary)
+
+No primary source read here states the limits. Wikipedia reports that
+requirements with more than three preconditions make unwieldy sentences;
+that some requirements are better written as mathematical formulae, decision
+tables or state-transition diagrams; and that EARS suits poorly the
+non-functional requirements that cannot be framed as conditional behaviour,
+such as architectural constraints [Wikipedia, citing QRA Corp., "When Not to
+Use EARS", 2025]. QRA's article was not read.
+
+* Kiro uses the event-driven pattern for its requirements
+
+Amazon's Kiro, an agentic IDE, writes a feature's requirements in EARS:
+
+#+begin_quote
+The requirements.md file uses EARS (Easy Approach to Requirements Syntax)
+notation to provide structured, testable requirements [Kiro]
+#+end_quote
+
+Its documented pattern is "WHEN [condition/event] THE SYSTEM SHALL [expected
+behavior]", with the example "WHEN a user submits a form with invalid data THE
+SYSTEM SHALL display validation errors next to the relevant fields" [Kiro].
+Its documentation claims that "Each requirement can be directly translated
+into test cases" [Kiro]. It shows only the event-driven pattern, and drops
+the comma Mavin places after the trigger.
+
+* Worked example (own illustration)
+
+Not quoted; written for this entry. It restates the library renewal from the
+Cockburn reference (Use Case 12: Renew a borrowed book) so the two forms can
+be compared.
+
+#+begin_example
+When a Borrower asks to renew a loan, the LendingLibrary system shall set the
+loan's due date one loan period after the renewal date.
+
+When a renewal is recorded, the LendingLibrary system shall show the Borrower
+the new due date.
+
+If another borrower has reserved the book, then the LendingLibrary system
+shall refuse the renewal and show "This book is reserved; your due date
+stands".
+
+If the loan has reached the renewal limit, then the LendingLibrary system
+shall refuse the renewal and show "This loan cannot be renewed again".
+
+While a loan is overdue beyond the grace period, the LendingLibrary system
+shall refuse any renewal of it.
+
+Where the library sets no renewal limit, the LendingLibrary system shall
+accept any number of renewals of a loan.
+#+end_example
+
+Points the example is built to show: every sentence names the system as the
+subject of "shall"; each has at most one trigger; the refusals use the
+unwanted-behaviour pattern and give the exact text shown; the overdue rule is
+a state, not an event, so it uses While; the library's configuration uses
+Where. Nothing here says who the Borrower is, what they were trying to
+achieve, or in what order the sentences happen; those are what the use case
+holds and EARS does not.
+
+* Sources
+
+- Mavin, A., Wilkinson, P., Harwood, A., Novak, M. "Easy Approach to
+  Requirements Syntax (EARS)". /17th IEEE International Requirements
+  Engineering Conference (RE'09)/, pp. 317–322, 2009.
+  doi:10.1109/RE.2009.9. Paper not read; abstract cited [RE'09 abstract] from
+  https://research.manchester.ac.uk/en/publications/easy-approach-to-requirements-syntax-ears/
+- Mavin, A., Wilkinson, P. "Big Ears (The Return of Easy Approach to
+  Requirements Engineering)". /RE'10/, pp. 277–282, 2010.
+  doi:10.1109/RE.2010.39. Not read.
+- Mavin, A., Wilkinson, P., Gregory, S., Uusitalo, E. "Listens Learned (8
+  Lessons Learned Applying EARS)". /RE'16/, pp. 276–282, 2016.
+  doi:10.1109/RE.2016.38. Not read.
+- Mavin, A., Wilkinson, P. "Ten Years of EARS". /IEEE Software/ 36(5):
+  10–14, 2019. doi:10.1109/MS.2019.2921164. Article not read; abstract cited
+  [Ten Years of EARS, abstract] from Semantic Scholar.
+- Mavin, Alistair. "EARS: Easy Approach to Requirements Syntax", read
+  2026-10-14. Cited [Mavin]. https://alistairmavin.com/ears/
+- "Easy Approach to Requirements Syntax", Wikipedia, read 2026-10-14. Cited
+  [Wikipedia]. https://en.wikipedia.org/wiki/Easy_Approach_to_Requirements_Syntax
+- Kiro, "Feature Specs", read 2026-10-14. Cited [Kiro].
+  https://kiro.dev/docs/specs/feature-specs/

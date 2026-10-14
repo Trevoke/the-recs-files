@@ -37,7 +37,7 @@ An existing codebase already holds what its records would say, spread across cod
 | A comment's claim | a question to the user, citing the code it contradicts or confirms | truth |
 | A knowledge-base entry | a copy of a sourced entry, or nothing | memory |
 
-The seed's list of borrowed forms points at knowledge-base entries kept with the recs skills (Cockburn, Evans, Nygard). Offer to copy them into the target's `docs/knowledge-base/`; if you cannot find them, drop the list from the target's AGENTS.md.
+The seed's list of borrowed forms points at knowledge-base entries kept with the recs skills (Cockburn, Evans, Mavin, Nygard). Offer to copy them into the target's `docs/knowledge-base/`; if you cannot find them, drop the list from the target's AGENTS.md.
 
 ## Red Flags — STOP
 

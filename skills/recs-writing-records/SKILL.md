@@ -22,7 +22,7 @@ A starting point, to adopt or adapt. A project may keep fewer projections, more,
 | Vision | What the system is for, who it serves, its domain and bounded contexts. | A single file; no projection file, no numbers | — |
 | Ubiquitous language | What a word means, in a sentence or two, and nothing about behaviour. One definition per term — a term needing two is two terms. | One term, one short definition; layout per project | The term itself |
 | Architectural decisions | A pattern the codebase follows, and why. | Nygard (context, decision, consequences) | ADR-12 |
-| Features | The surface: what a thing takes, what it produces, and what a user may do next. | Per project | F-7 |
+| Features | The surface: what a thing takes and what it produces. | EARS (one requirement to a sentence) | F-7 |
 | User workflows | What a person is trying to achieve, step by step, with the extensions where it goes otherwise. | Cockburn (main scenario + extensions) | UW-3 |
 | Message catalog | The exact text the system gives when it refuses something or fails. Tests assert this text, so wording changes here before it changes in code. | Message per entry | MSG-4 |
 

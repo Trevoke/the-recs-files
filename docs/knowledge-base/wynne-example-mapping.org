@@ -1,0 +1,273 @@
+#+TITLE: Wynne's Example Mapping — Reference
+#+STARTUP: overview
+
+Not a project document. This records what the source material actually says, so
+that when the project borrows a form or a term we can check the borrowing.
+Paraphrased from the sources listed at the end, with the load-bearing sentences quoted.
+
+*What it establishes.* Matt Wynne's Example Mapping is a way of running the
+conversation that settles what a piece of work must do, before anyone builds
+it. Four kinds of card are laid on a table as people talk: the story
+(yellow), the rules it must keep (blue), the examples that illustrate each
+rule (green), and the questions nobody present can answer (red). The shape
+of the map shows how well the work is understood. Its examples are rough and
+named in a phrase, not written as Gherkin. Cucumber later added a Rule
+keyword to Gherkin so that a written specification could keep the same
+rule-and-example structure.
+
+*On the sources.* Wynne's own introduction (2015), cited [Wynne], is the
+primary source and was read in full. Seb Rose's 2021 post on the Rule
+keyword, cited [Rose], is by Wynne's colleague and co-author, and is the
+source for what survives the map into Gherkin. The Gherkin changelog, cited
+[Gherkin CHANGELOG], records the keyword's arrival. /The BDD Books:
+Discovery/ (Nagy and Rose), which treats Example Mapping at length, was not
+read.
+
+* Example Mapping structures the conversation that settles a story
+
+#+begin_quote
+Before you pull a user story into development, it's crucial to have a
+conversation to clarify and confirm the acceptance criteria. [Wynne]
+#+end_quote
+
+Teams call it backlog refinement, a three amigos meeting, a specification
+workshop or a discovery workshop. Wynne's diagnosis of why it fails:
+
+#+begin_quote
+Whatever you call this conversation, many teams find it hard; it's
+unstructured, it takes too long and gets boring. The result is they don't do
+it regularly or consistently, or maybe they just give up on it entirely.
+[Wynne]
+#+end_quote
+
+Its aim is shared understanding, not a document:
+
+#+begin_quote
+I think the true purpose, however, is to reach a shared understanding of what
+it will take for the story to be done. You can move much more quickly towards
+this goal by staying low-tech. [Wynne]
+#+end_quote
+
+* Four cards: story, rule, example, question
+
+Examples come first, and the other kinds of information come out of
+discussing them [Wynne]:
+
+#+begin_quote
+Concrete examples are a tremendous way to help us explore the problem domain,
+and they make a great basis for our acceptance tests. But as we discuss these
+examples, there are other things coming out in the conversation that deserve
+to be captured too: rules that summarise a bunch of examples, or express other
+agreed constraints about the scope of the story. questions about scenarios
+where nobody in the conversations knows what the right outcome is. Or
+assumptions we're making in order to progress. new user stories we discovered
+or sliced and deferred out of scope. [Wynne]
+#+end_quote
+
+| Card     | Colour | Placed                              | Holds                                         |
+|----------+--------+-------------------------------------+-----------------------------------------------|
+| Story    | yellow | top of the table                    | the story under discussion                    |
+| Rule     | blue   | in a row beneath the story          | "each of the acceptance criteria, or rules that we already know" |
+| Example  | green  | in a column beneath its rule        | an example that illustrates that rule         |
+| Question | red    | wherever it came up                 | what "nobody in the room can answer"          |
+
+The layout and the quoted cells are from [Wynne]'s "How it works". "We keep
+going until the group is satisfied that the scope of the story is clear, or
+we run out of time" [Wynne]. Assumptions are named as something to capture
+but given no colour; a newly found or sliced-off story takes another yellow
+card [Wynne].
+
+* A rule summarises examples, and some rules need none
+
+A rule is either a summary of examples or an agreed constraint on scope
+[Wynne, quoted above]. Examples exist to remove a rule's ambiguity; when the
+rule is clear without them, none are written:
+
+#+begin_quote
+You'll find that some rules are so obvious you don't need examples at all.
+It's clear from the conversation that everyone understands the rule. Great!
+You can all move on with your lives without forcing yourselves to grind out
+examples like BDD-brainwashed automatons. [Wynne]
+#+end_quote
+
+Rose states the dependence both ways, and the one-rule limit:
+
+#+begin_quote
+Each example in an example map illustrates one (and only one) rule. The
+relationship between rule and example is critical. Without its examples, a
+rule may be ambiguous. Without a rule, an example lacks context. Together they
+fully specify an expected behaviour of the product and guide the development
+team's efforts. [Rose]
+#+end_quote
+
+Wynne says the distinction between rules and examples must be "clearly
+understood" before the technique can be used [Wynne].
+
+* An example without a known outcome is a question
+
+#+begin_quote
+When the outcome (Then) is unclear, you don't have an example, you have a
+question. [Wynne]
+#+end_quote
+
+When the conversation circles, it is short of information, not of opinion:
+
+#+begin_quote
+Instead of letting everyone share their opinion about what they think the
+outcome should be, simply capture the question and move on. Congratulations!
+You've just turned an unknown unknown into a known unknown. [Wynne]
+#+end_quote
+
+The remedy for a question is outside the room: someone missing from the
+conversation, user research, or a spike [Wynne].
+
+* The shape of the map tells the group what it knows
+
+#+begin_quote
+A table covered in red (question) cards tells us that we still have a lot to
+learn about this story.
+A table covered in blue (rule) cards tells us that this story is big and
+complicated. Perhaps we can slice it? Take another yellow (story) card and put
+the sliced story on the backlog.
+A rule with many examples might be over-complex. Are there multiple rules at
+play that need to be teased apart? [Wynne]
+#+end_quote
+
+- *Rules are where a story splits*: "You'll find that rules make natural
+  fault lines for slicing your story" [Wynne].
+- *A time-box*: "A small group of amigos should be able to map out a
+  well-understood, well-sized story in about 25 minutes" [Wynne]. Overrunning
+  means the team is still learning the technique, the story is too big, or it
+  is still too uncertain. Readiness is decided by a thumb-vote, and remaining
+  questions may be judged minor enough to resolve along the way [Wynne].
+- *Who attends*: at minimum "a developer, a tester and a product person", plus
+  anyone "likely to help you discover new questions, or to turn questions into
+  decisions" [Wynne].
+- *How often*: one story at a time, "every other day is often a good rhythm"
+  [Wynne].
+
+* Examples are rough phrases, not Gherkin
+
+#+begin_quote
+Many teams assume that the three amigos should write acceptance tests (e.g.
+Cucumber scenarios) during this session, sitting around a projector while
+someone types formal gherkin scenarios into an IDE. There are occasions when
+this is valuable, but generally I think it's a bad idea. It can actually be
+distracting from the true purpose of the conversation. [Wynne]
+#+end_quote
+
+Instead, each example is named in the manner of a /Friends/ episode title:
+
+#+begin_example
+The one where the customer forgot his receipt
+The one where the product is damaged
+The one where the product was bought 15 days ago
+#+end_example
+
+"You still don't need to resort to the rigid structure of Given When Then
+just yet" [Wynne]. Writing Gherkin is a separate step that needs "a different
+mode of thinking from deciding which examples are in scope, and clarifying
+the underlying rules" [Wynne]. On a team with a mature domain language, the
+developer and tester draft it and the product person reviews it, asking "Is
+that how I would have written it?", which tests whether the session passed
+on what the product person knew [Wynne]. Early in a project, writing Gherkin
+together is where the ubiquitous language develops [Wynne].
+
+Nothing requires cards: distributed teams use "bullet lists in a shared
+Google doc", a spreadsheet with coloured cells, or a mind-map [Wynne].
+
+* Only rules and examples outlive the map
+
+Rose calls the step from map to written specification /formulation/, and
+says which cards survive it:
+
+#+begin_quote
+Of the four card types used in example mapping, only two of them should be
+captured in feature files – the rules and the examples. [Rose]
+#+end_quote
+
+- *The story* does not, "because a user story is a transient artefact of
+  prioritisation and planning" [Rose].
+- *The questions* do not, "because they should be answered before the example
+  map is formulated as scenarios. The answers to the question cards may well
+  have caused the creation of rules and/or examples which need to be
+  documented in the feature file, but the questions themselves are transient"
+  [Rose].
+- *Each example* becomes one scenario: "Each scenario in a feature file
+  represents a single example card from the example map" [Rose].
+
+* Gherkin added a Rule keyword to match the map
+
+Example Mapping came after Gherkin, and Gherkin had no place for the rule an
+example illustrates. "The root cause is that Matt discovered example mapping
+/after/ BDD, Cucumber, and Gherkin were created" [Rose]. For over five years
+rules were listed in a feature's free-text description, with no way to tie a
+scenario to its rule [Rose].
+
+Gherkin 6.0.13 (2018-09-25) added the keyword:
+
+#+begin_quote
+This major release aligns Gherkin with Example Mapping, a collaborative
+technique for /designing/ scenarios and discovering details about rules and
+behaviour. A new `Rule` keyword has been introduced, and acts as a grouping
+of one or more `Example`s - a new synonym for `Scenario`. ... We hope they
+will guide people towards thinking of scenarios as /examples of business
+rules/ rather than a series of form submissions and link clicking.
+[Gherkin CHANGELOG]
+#+end_quote
+
+Rose's example of the result [Rose]:
+
+#+begin_example
+Feature: Library changes
+  Rule: Members pay reservation of $1 per item
+    Scenario: Reserving a single book
+      Given Andrew is a member
+      When he reserves one book
+      Then he is charged $1.00
+#+end_example
+
+Tags on a Rule, inherited by its scenarios, followed in Gherkin 18.0.0
+(2021-03-24) [Gherkin CHANGELOG; Rose].
+
+* Worked example (own illustration)
+
+Not quoted; written for this entry. It maps the library renewal from the
+Cockburn reference (Use Case 12: Renew a borrowed book) and the EARS
+reference, so the three forms can be compared.
+
+#+begin_example
+[yellow] A borrower renews a loan
+
+[blue] A renewal moves the due     [blue] A reserved book         [blue] A loan renews at most
+       date one loan period from          cannot be renewed              the library's limit
+       the renewal date
+  [green] The one where the         [green] The one where the     [green] The one where it's the
+          loan is renewed the               book was reserved             third renewal and the
+          day it is due                     yesterday                     limit is three
+  [green] The one where it is       [green] The one where the
+          renewed a week early              borrower reserved it
+                                            themselves
+
+[red] Can an overdue loan be renewed within the grace period?
+[red] Is the renewal limit per loan or per borrower?
+#+end_example
+
+Points the example is built to show: each green card illustrates exactly one
+blue card; the examples are phrases with no Given/When/Then; "the borrower
+reserved it themselves" is an example whose outcome is known (it surfaced
+because the rule's wording was loose), while the overdue case has no known
+outcome and so is a red card, not a green one; the story card names the
+work and would not survive formulation.
+
+* Sources
+
+- Wynne, Matt. "Introducing Example Mapping", Cucumber blog, 2015-12-08, read
+  2026-10-14. Cited [Wynne].
+  https://cucumber.io/blog/bdd/example-mapping-introduction/
+- Rose, Seb. "Gherkin Rules", Cucumber blog, 2021-03-15, read 2026-10-14.
+  Cited [Rose]. https://cucumber.io/blog/bdd/gherkin-rules/
+- Cucumber. Gherkin CHANGELOG, entries 6.0.13 (2018-09-25) and 18.0.0
+  (2021-03-24), read 2026-10-14. Cited [Gherkin CHANGELOG].
+  https://github.com/cucumber/gherkin/blob/main/CHANGELOG.md
+- Nagy, Gáspár and Rose, Seb. /The BDD Books: Discovery/. Not read.

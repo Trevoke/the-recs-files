@@ -33,7 +33,7 @@ Start by reading the project's records, then ask questions one at a time to refi
 - Once you believe you understand what you're building, present the design
 - Break it into sections of 200-300 words
 - Ask after each section whether it looks right so far
-- Cover: surface (what each thing takes, what it produces, what the user may do next), architecture, components, data flow, error handling, testing
+- Cover: surface (what each thing takes, what it produces), architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 
 ## Speak the project's language
@@ -50,9 +50,9 @@ This holds during the dialogue too: candidate words are discussed freely in conv
 
 **Deriving features from the user workflows:**
 
-Before routing, walk every step and extension of each user workflow the design touches. Each step or extension where the system takes something from the user, gives something back, or opens what the user may do next is a feature, and the workflow names it. For each one:
+Before routing, walk every step and extension of each user workflow the design touches. Each step or extension where the system takes something from the user or gives something back is a feature, and the workflow names it. For each one:
 
-- A feature already covers it → the workflow names that feature. If the design changes what the feature takes, produces, or offers next, that is a new feature record superseding it.
+- A feature already covers it → the workflow names that feature. If the design changes what the feature takes or produces, that is a new feature record superseding it.
 - No feature covers it → propose a new feature record.
 
 One feature may serve steps in several workflows, so search the features by the words the surface would use before proposing a new one. An interface no user meets is not a feature; it stays in the design document.
@@ -64,7 +64,7 @@ Walk each validated decision through the placement tests and route it to its pro
 | The decision is... | It routes to... |
 |---|---|
 | What users must be able to do | A user workflow |
-| A thing's surface - what it takes, what it produces, and what a user may do next; describing it names a verb, an argument, or a sequence of events | A feature |
+| A thing's surface - what it takes and what it produces; describing it names a verb, an argument, or a sequence of events | A feature |
 | An invariant and its why - a word or pattern that would retire if the implementation changed | An architectural decision |
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
