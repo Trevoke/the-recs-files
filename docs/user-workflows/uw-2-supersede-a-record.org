@@ -28,7 +28,7 @@ the old record outside a plan points at the successor.
 **** 2a1. Agent drafts two successors, the half that holds carried over in its own words, and assigns each citation to the successor whose half it meant
 *** 2b. The change replaces several records at once
 **** 2b1. Agent drafts one successor that supersedes all of them
-*** 2c. The successor needs a word the records do not have
+*** 2c. The successor needs a term the ubiquitous language does not define
 **** 2c1. Agent proposes candidate words and waits
 **** 2c2. Record keeper agrees to one; continue at 2
 *** 3a. Record keeper rewords the draft

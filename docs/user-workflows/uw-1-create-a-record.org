@@ -25,7 +25,7 @@ projection, and every sentence it falsifies is replaced.
 **** 2a1. Supersede a record (UW-2: Supersede a record); the use case ends
 *** 2b. The placement tests do not settle the category
 **** 2b1. Agent shows what each test found, and the record keeper picks the category
-*** 3a. The record needs a word the records do not have
+*** 3a. The record needs a term the ubiquitous language does not define
 **** 3a1. Agent proposes candidate words, built from existing words first, and waits
 **** 3a2. Record keeper agrees to one; continue at 3
 *** 4a. Record keeper rewords the draft
