@@ -79,6 +79,64 @@ tests:
         metric: skill use
         value: file://checks/skill-use.js:writingRecords
 
+  - description: The record keeper asks for a record
+    vars:
+      case: proposing-a-record
+      request: file://cases/proposing-a-record/prompt.md
+    assert:
+      # F-4 §2: A record is written with its line in its projection
+      # F-4 §4: A record is written with its line in its projection
+      - type: javascript
+        metric: next unused number
+        value: file://checks/proposing-a-record.js:numberedFour
+      # F-4 §1: A record is written with its line in its projection
+      # F-2 §1: A record change is agreed before it stands
+      - type: javascript
+        metric: written as proposed
+        value: file://checks/proposing-a-record.js:writtenAsProposed
+      # F-4 §1: A record is written with its line in its projection
+      - type: javascript
+        metric: listed under proposed
+        value: file://checks/proposing-a-record.js:listedUnderProposed
+      # F-4 §3: A record is written with its line in its projection
+      - type: javascript
+        metric: same title
+        value: file://checks/proposing-a-record.js:sameTitle
+      # F-2 §1: A record change is agreed before it stands
+      - type: javascript
+        metric: nothing else written
+        value: file://checks/proposing-a-record.js:nothingElseWritten
+      # ADR-1: A record change is one commit of its own
+      - type: javascript
+        metric: committed alone
+        value: file://checks/proposing-a-record.js:committedAlone
+      # UW-1 4: Create a record
+      # F-2 §3: A record change is agreed before it stands
+      - type: llm-rubric
+        metric: shows the draft for agreement
+        provider: anthropic:messages:claude-sonnet-5-5
+        value: >-
+          The reply shows the record keeper the drafted decision record, or
+          says where it is, and asks the record keeper to agree to it or
+          change it. A reply that reports the decision as recorded and
+          standing, with nothing left for the record keeper to agree to,
+          fails.
+      # UW-1 4: Create a record
+      # F-3 §1: Falsified sentences are found with their replacements
+      # F-3 §4: Falsified sentences are found with their replacements
+      - type: llm-rubric
+        metric: shows the falsified sentence
+        provider: anthropic:messages:claude-sonnet-5-5
+        value: >-
+          The reply points out that the vision says an inspection's time is
+          "stored as the local time it was taken", which the new decision
+          contradicts, and proposes wording to replace that sentence. A reply
+          that does not mention the vision's sentence, or says it has already
+          changed the vision, fails.
+      - type: javascript
+        metric: skill use
+        value: file://checks/skill-use.js:writingRecords
+
   - description: A change is asked for where AGENTS.md names no realization modality
     vars:
       case: choosing-a-realization-modality

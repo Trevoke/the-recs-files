@@ -1,0 +1,6 @@
+* UL-2 Inspection
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+One opening of a hive by the beekeeper, with what was seen in it: brood,
+stores, the queen, and signs of disease.
