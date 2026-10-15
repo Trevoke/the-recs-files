@@ -1,6 +1,6 @@
 ---
 name: recs-writing-records
-description: Use when a decision, definition, workflow, feature, or exact failure text needs to enter a project's records, when a record needs superseding, merging, splitting or retiring, or when an agreed term must be swept across the codebase — for projects that keep records as their source of truth.
+description: Use when a decision, definition, workflow, feature, or exact failure text needs to enter a project's records, when a record needs superseding, merging, splitting, retiring or clarifying, or when an agreed term must be swept across the codebase — for projects that keep records as their source of truth.
 ---
 
 # Writing Records
@@ -46,14 +46,25 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
 
 1. **Place it.** Pick the category using the placement tests. Check the existing records — this may supersede one rather than stand beside it. Search by the words the record would use, not just by topic.
 2. **Superseding? Read the old record against the change.** A change that falsifies only part of what the old record decides means the record was deciding two things. Supersede it with two records, one for each half, the half that holds carried over in its own words; then grep the old record's citations to see which half each one meant — that is what decides which successor each one repoints to. Where the old record numbers its sections, as a feature numbers its requirements, the successor carries a section map (below), and a citation of one section repoints to wherever the map sends it.
-3. **Draft it.** Number, title, body, in the category's form.
+3. **Draft it, and write it as proposed.** Number, title, body, in the category's form. The number is the next one its category has not used. Its status is Proposed, and its line goes under its projection's Proposed heading, so that nobody bases a decision on it.
 4. **New term needed?** Stop before drafting around it:
    - First try combining existing terms: if the project has a "refund policy" and something must enforce it, try "refund policy enforcer" before inventing "guard".
    - Check each candidate against words the taxonomy already owns — a candidate that collides is out.
    - Propose the candidates to the record keeper and wait. Never write a new term into any file — a record, a comment, a plan, a sketch — before the record keeper has agreed to that specific word.
 5. **Name the words it moves, then find what each falsifies.** List every word whose definition this change alters — the ones keeping their spelling included, and the ones that merely lose a clause. In a batch of changes that list is what the sweep works from, and a word nobody names is a word nobody sweeps. Then run steps 1–3 of the sweep (below) on each word in it, before anything is shown; they produce the falsified sentences, each with the wording that replaces it.
-6. **Show the draft and the falsified sentences together. Wait for agreement.** Records change only at the record keeper's direction; agreement covers the words, the number, the category, and every falsified sentence. Look for them after agreement instead and every hit is a change nobody agreed to, leaving no move that is not a partial sweep or an unbidden change.
-7. **Write it — the record and its consequences in one pass.** A new record — each successor included — also takes its line in its projection, in the place and shape AGENTS.md gives; a record missing from the projection is missing for anyone reading it. Then close the sweep (below).
+6. **Show the draft and the falsified sentences together. Wait for agreement.** Records change only at the record keeper's direction; agreement covers the words, the number, the category, and every falsified sentence. Look for them after agreement instead and every hit is a change nobody agreed to, leaving no move that is not a partial sweep or an unbidden change. If the record keeper declines, mark the record Rejected and remove its line from its projection; its file and its number stay, and nothing else of it is written.
+7. **Accept it — the record and its consequences in one pass.** Mark the record Accepted, move its line out from under the Proposed heading, and write every falsified sentence's replacement. A record missing from its projection is missing for anyone reading it. Then close the sweep (below).
+
+## Statuses
+
+A record's status is where AGENTS.md puts it, and is one of:
+
+- **Proposed** — written, and not yet agreed. Nothing is based on it.
+- **Accepted** — agreed by the record keeper.
+- **Rejected** — proposed, and declined. Its text stands as written and its number stays taken.
+- **Superseded** or **Retired** — withdrawn (below).
+
+A standing record is an accepted record that is not withdrawn. A projection lists standing and proposed records, the proposed ones under its Proposed heading; a rejected or withdrawn record's line is removed.
 
 ## Superseding and Retiring a Record
 
@@ -61,12 +72,19 @@ A record is never deleted, and its number is never reused: it is still worth kno
 
 A standing record that no longer holds is withdrawn, as superseded or as retired:
 
-- **Superseded** — one or more successors replace it. The replacement is a new record, written through the flow above, and its status says "Supersedes F-7: Export takes a date range". The old record's status becomes "Superseded by F-12: Export takes a saved filter". Where the old record numbers its sections, the successor's status also maps each of them to the successor's sections that carry it, or to none: "Supersedes F-7: Export takes a date range (§1 → §1; §2 → §2, §3; §3 → none)". The map is part of what the record keeper agrees to.
+- **Superseded** — one or more successors replace it. A successor is a new record, written through the flow above, and names each record it supersedes, by number and title, where AGENTS.md says: "Supersedes F-7: Export takes a date range". The old record's status becomes "Superseded by F-12: Export takes a saved filter". A change that replaces several records at once is one successor that supersedes them all: a merge. Where the old record numbers its sections, the successor also maps each of them to the successor's sections that carry it, or to none: "Supersedes F-7: Export takes a date range (§1 → §1; §2 → §2, §3; §3 → none)". The map is part of what the record keeper agrees to.
 - **Retired** — nothing replaces it. Its status becomes "Retired", with the reason in a sentence.
 
 Either way, the status is the only change to the withdrawn record; the rest of it stands as written. Its line is removed from its projection, which lists only standing and proposed records. Superseding or retiring is a record change like any other: propose it together with the sentences it falsifies, wait for agreement, then sweep its identifier (step 5 below) — citations move to the successor, or go where there is none.
 
-A sweep is the one other way a standing record's text changes. It may rewrite a standing record's sentences to carry an agreed word change, or repoint a citation to a successor, because the record still decides what it decided; a change to what a record decides supersedes it. Withdrawn records are never swept: their text stands as written, old words and old citations included.
+Besides a clarification (below), a sweep is the one other way a standing record's text changes. It may rewrite a standing record's sentences to carry an agreed word change, or repoint a citation to a successor, because the record still decides what it decided; a change to what a record decides supersedes it. Withdrawn records are never swept: their text stands as written, old words and old citations included.
+
+## Clarifying a Record
+
+Apart from a sweep, a standing record changes in place only as a clarification: its wording, or its title, brought closer to an intent that does not change. When the record keeper asks for an in-place edit, draft the new wording and assess whether the record's intent is kept, and how it changes if not, naming each citation that would read wrong after the edit. Show the draft and the assessment with the rule: *if the intent doesn't change, then it might be the same record.* The record keeper decides whether the intent is kept; you assess it, and do not decide it.
+
+- **Kept** — write the new wording. The number and the status stay. A new title goes into the record's file name, its heading and its line in its projection, and into every citation of it outside a plan.
+- **Changed** — supersede the record instead.
 
 ## Sweeps
 
@@ -83,7 +101,7 @@ Steps 1–3 are what the flow runs before it shows a draft; 4–8 are the rest.
 1. Grep the word's stem, so every inflection lands — `approv` catches approve, approved, approval — and grep every synonym that crept in. One concept often hides under three names ("cutoff" here, "deadline" there, "due date" in a test name). Never grep the phrase you have in mind: `at approval` finds only the sentences you already thought of.
 2. Count the hits. That number is the checklist, and the sweep is not finished until every one of them has a verdict.
 3. For a redefinition, write the rule that tells a false sentence from a true one *before* reading any of them — one sentence, in the project's words: *where a record says something is declared "at approval" it means where that thing is written, which is now the order form; where "at approval" names the moment, it stands.* Then give each hit its verdict against the rule: the wording that replaces it, or *stands*, with the reason. "Almost all of them are still true" is a verdict on nothing.
-4. Change every occurrence in one pass: standing records, code, comments, tests, plans, docs. Withdrawn records are left as written.
+4. Change every occurrence in one pass: standing records, code, comments, tests, docs. Withdrawn records and plans are left as written: a plan is the work as planned against the records then standing, its words and its citations included.
 5. For a superseded or retired record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint each to its successor, or remove it where there is none. A citation of a section (`F-7 §2`) repoints by the successor's section map; a section the map sends to none is a citation removed, and one it sends to several repoints to those the citing site rests on, read against each — where that is unclear, it goes back to the record keeper. A plan keeps the citations it was written under: it is the work as planned against the records then standing.
 6. Re-grep the stem and the old identifier, and re-count. Every remaining hit is one you judged *stands*, or sits in a withdrawn record — anything else is unfinished work.
 7. Nothing is committed while a sentence you know to be false is still standing. A hit that falls outside what was agreed goes back to the record keeper *before* the commit: asking costs one message, and committing around it costs a second commit and leaves the records wrong in between.
@@ -136,7 +154,8 @@ def refund(order): ...
 | "Almost all the remaining hits are still true" | "Almost" names no sentence. Every hit gets its own verdict — the new wording, or *stands* and why. |
 | "I swept for the new words the change introduces" | The words that falsify sentences are the ones the change took something *away* from, and they read fine in every sentence they are in. Name every word the change redefines, and sweep each. |
 | "That one wasn't in what the record keeper agreed to, so I left it" | Sweeping exists to turn up sentences nobody has agreed to yet. Take them back before the commit; leaving one behind ships a record you know is false. |
-| "The plan cites the old record too, so I repointed it" | A plan is the work as planned against the records then standing. Its citations stay as written. |
+| "The plan cites the old record too, so I repointed it" | A plan is the work as planned against the records then standing. Its words and citations stay as written. |
+| "It's only a wording fix, so I'll edit it in place" | Small is not the test; intent is. Assess it, show the assessment, and let the record keeper decide. |
 | "Nothing cites this record any more, so I'll delete it" | A retired record stays, marked, and its number stays taken. Deleting it loses why it once held. |
 | "ADR-12" (bare) | Number and title, always — the title is what makes the reference readable. |
 

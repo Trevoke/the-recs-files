@@ -84,9 +84,16 @@ A record lives in a file of its own under its category's directory —
 the title. The projection, `docs/features.org`, lists every standing or
 proposed record as `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in
 number order, beside the projection's preamble and any section that belongs to
-the projection rather than to one record. A record's file, its line in the projection, and its
+the projection rather than to one record. A record's status, and the records a
+successor supersedes, are properties in its drawer, `:STATUS:` and
+`:SUPERSEDES:`. A proposed record's line sits under a `* Proposed` heading at the
+end of the projection. A record's file, its line in the projection, and its
 heading carry the same title, and a clarification that gives a record a new
 title changes all three.
+
+A record change is committed on its own, and a proposal in a commit before the
+one that accepts or rejects it (`ADR-1: A record change is one commit of its
+own`).
 
 ## A feature record's form
 
