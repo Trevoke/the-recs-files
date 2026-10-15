@@ -1,0 +1,64 @@
+#+TITLE: How pi behaves as an eval harness
+
+Established 2026-10-15 against pi 0.87.1, on the rejecting-a-proposed-record
+case with anthropic/claude-haiku-5-5 (with skills) and
+google/gemini-3-flash-preview (without). Source: runs, and pi's own
+docs/skills.md, docs/json.md, docs/security.md, docs/configuration.md.
+
+* A non-interactive run is `pi -p --mode json --no-session`
+#+begin_src sh
+pi -p --mode json --no-session --model anthropic/claude-haiku-5-5 "$PROMPT"
+#+end_src
+Stdout is JSONL: a `session` header carrying `cwd`, `tool_execution_start`
+(`toolName`, `args`), `tool_execution_end` (`isError`), `message_end` carrying
+`usage.cost.total`, and `agent_end` (`messages`). Diagnostics go to stderr.
+`--no-session` keeps the run out of `~/.pi/agent/sessions`.
+
+* The JSONL is split on LF only
+Node's `readline` also splits on characters inside JSON strings (docs/json.md).
+
+* pi exits 0 when the provider fails
+An OpenAI "no credits" error and a Gemini 429 both exited 0. The error is only
+in the assistant message: `stopReason: "error"` and `errorMessage` (run).
+
+* A skill load is a `read` of its SKILL.md
+pi has no Skill tool. It lists each skill's name, description and path in the
+system prompt, and the model loads one by reading the file. On the Haiku run
+the first tool call was
+`read .../.agents/skills/recs-writing-records/SKILL.md` (docs/skills.md, run).
+
+* Skills are discovered in `.agents/skills` and `.pi/skills`, not `.claude/skills`
+Project `.agents/skills` up to the git root, `.pi/skills`, `~/.agents/skills`
+and `<agent-dir>/skills` (docs/skills.md).
+
+* In print mode, project skills are skipped silently without `--approve`
+Project skills load only under project trust. Without `--approve`, `-p` listed
+none of the project's skills and gave no error (run).
+
+* `--no-skills --skill <dir>` loads exactly that directory's skills
+`~/.agents/skills` loaded whatever `PI_CODING_AGENT_DIR` was set to.
+`--no-skills` removes every discovered skill; `--skill <dir>` still loads an
+explicit path beside it, and needs no `--approve` (run).
+
+* A parent directory's AGENTS.md loads, even past a git root
+A git repository at `parent/child` loaded `parent/AGENTS.md` as well as its
+own (run). Context files need no trust (docs/configuration.md).
+
+* `PI_CODING_AGENT_DIR` moves settings, models and auth
+A fresh directory keeps the user's settings.json and models.json out of a run
+(run).
+
+* Nothing confines pi to its working directory
+Tools are read, bash, edit and write (grep, find and ls off by default), and
+none asks for approval. The working directory decides discovery and default
+paths, not access (docs/security.md). `--tools` and `--exclude-tools` narrow
+the tool set.
+
+* A model is named `<provider>/<id>`
+`anthropic/claude-haiku-5-5`, `google/gemini-3-flash-preview`,
+`openai/gpt-5.4-mini` (run). A model missing from pi's catalog prints "Using
+custom model id" and runs. OpenRouter models are `openrouter/<vendor>/<model>`
+with `OPENROUTER_API_KEY` (pi's model catalog; not run).
+
+* promptfoo 0.124.1 has no pi provider
+None in `dist/src/providers` (grep).

@@ -1,0 +1,60 @@
+#+TITLE: How opencode behaves as an eval harness
+
+Established 2026-10-15 against opencode 2.0.29 (the CLI) and opencode-ai
+1.19.0 (through promptfoo 0.124.1), on the rejecting-a-proposed-record case
+with anthropic/claude-haiku-5-5. Source: runs, `opencode --help`, and
+promptfoo's `dist/src/opencode-sdk-*.js`.
+
+* A non-interactive run is `opencode run --format json`
+#+begin_src sh
+opencode run --standalone --auto --format json -m anthropic/claude-haiku-5-5 "$PROMPT"
+#+end_src
+Stdout is JSON lines of type `step_start`, `text`, `tool_use`, `step_finish`
+(tokens, cost) and `error`. A skill load in 2.0.29 is
+`{"tool":"skill","status":"completed","input":{"id":"recs-writing-records"}}`;
+a skill that is not installed comes back `"status":"error"`. The run exits 1
+on a provider error, with `{"type":"error","error":{"type":"provider.quota"}}`.
+
+* `--standalone` is needed once the config directories move
+Without it the run joins the shared background service and fails with
+"Managed service port 49374 ... already in use" (run).
+
+* `--auto` runs write, edit and shell without prompting
+`git commit` included (run).
+
+* Skills are discovered in `.opencode/skills`, `.claude/skills` and `.agents/skills`
+In the project, and in `~/.claude/skills`, `~/.agents/skills` and
+`~/.config/opencode/skills`. Built-in skills are always offered: `opencode`
+and `report` in 2.0.29, `customize-opencode` in 1.19.0 (run).
+
+* Global skills leak unless HOME and every XDG directory move
+With only the XDG variables moved, the user's own skills were still offered.
+Moving `HOME`, `XDG_CONFIG_HOME`, `XDG_DATA_HOME`, `XDG_STATE_HOME` and
+`XDG_CACHE_HOME`, with `--standalone`, left only the built-ins (run;
+`opencode debug paths` confirms the move). The moved HOME needs a `.gitconfig`,
+or the agent cannot commit; asdf shims stop resolving, so node is run by its
+absolute path.
+
+* `external_directory: deny` stops the write tool, not the shell
+With `OPENCODE_CONFIG_CONTENT='{"permission":{"external_directory":"deny"}}'`,
+writing outside the working directory was refused ("Permission denied:
+external_directory"); `echo hi > $OUTSIDE/file` through the shell succeeded
+(run).
+
+* A model is named `<provider>/<model>`
+`anthropic/claude-haiku-5-5`, `openai/gpt-5-mini`, `google/gemini-3.5-flash`
+(run). OpenRouter models are `openrouter/<vendor>/<model>` with
+`OPENROUTER_API_KEY` (binary strings; not run).
+
+* promptfoo 0.124.1's `opencode:sdk` provider drives opencode 1.x, not 2.x
+The provider bundles `@opencode-ai/sdk` 1.19.0. It waits for the line
+"opencode server listening", where 2.0.29 prints "server listening on ...",
+and times out after 30000 ms. 2.0.29 also serves `/session` and `/config` as
+the web UI's HTML, and its skill tool sends `input.id` where the provider's
+`deriveSkillCalls` reads `input.name` (SDK `server.js:33`, runs).
+
+* With opencode-ai 1.19.0 first on PATH, `opencode:sdk` fills workingDir and skillCalls
+With `copy_working_dir: git`, a run returned `metadata.workingDir` and
+`metadata.skillCalls` naming `recs-writing-records`, and the agent committed
+(run). 1.19.0 writes `.opencode/.gitignore`, `package.json` and `node_modules`
+into the project; the `.gitignore` covers the rest and itself.
