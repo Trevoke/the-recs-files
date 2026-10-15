@@ -17,6 +17,8 @@ A plan is built against the project's records — commonly user workflows, archi
 
 **A missing record stops the plan too.** A task that builds surface — something a user gives the system or gets back — cites the feature record for it. Where no feature covers that surface, the plan stops there and the gap is raised with the user, to be routed through recs-brainstorming and written with recs-writing-records. Never cite a neighbouring record to fill the gap, and never plan the surface from the design document alone.
 
+**A missing realization modality stops the plan before it starts.** AGENTS.md names the project's realization modalities: the forms its realization takes, such as code or skill text. A plan is written in one of them. Where AGENTS.md names none, write nothing; ask the record keeper to choose one, and once they have, name it in AGENTS.md. Files already in the project are not a choice.
+
 **Announce at start:** "I'm using the recs-writing-plans skill to create the implementation plan."
 
 **Context:** This should be run in a dedicated worktree (created by the recs-brainstorming skill; see recs-using-git-worktrees).
