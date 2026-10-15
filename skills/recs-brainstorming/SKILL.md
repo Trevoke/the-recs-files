@@ -65,7 +65,7 @@ Walk each validated decision through the placement tests and route it to its cat
 |---|---|
 | What users must be able to do | A user workflow |
 | A thing's surface - what it takes and what it produces; describing it names a verb, an argument, or a sequence of events | A feature |
-| An invariant and its why - a word or pattern that would retire if the implementation changed | An architectural decision |
+| An invariant and its why - a word or pattern that would retire if the realization changed | An architectural decision |
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
 

@@ -31,7 +31,7 @@ A starting point, to adopt or adapt. A project may keep fewer categories, more, 
 Two tests settle the hard cases:
 
 1. **If describing the record names a verb, an argument, or a sequence of events** → it is a feature, not an architectural decision.
-2. **If the word would survive a change of implementation** → ubiquitous language. **If changing the implementation would retire the word** → it belongs in an architectural decision.
+2. **If the word would survive a change of realization** → ubiquitous language. **If changing the realization would retire the word** → it belongs in an architectural decision.
 
 Example, from a papers-screening pipeline: "screening takes a paper and returns an include/exclude decision" names a verb and an argument — a feature. "Screening" itself survives any rewrite — ubiquitous language. "Decisions travel over the message broker" dies with the broker — the word lives in the ADR that chose it.
 
@@ -126,8 +126,8 @@ whichever site has the better claim to it.
 
 That is the half of the comment rule a record's author owns. How a citation is
 laid out, and where a reason the code does not show is kept, are the project's
-own and belong with its implementation instructions, where whoever is writing
-code will meet them.
+own and belong with its instructions for the realization, where whoever is
+writing code will meet them.
 
 ```python
 # ❌ Restates the record
