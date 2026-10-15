@@ -1,0 +1,75 @@
+description: recs-files evals
+
+prompts:
+  - '{{request}}'
+
+providers:
+  - id: anthropic:claude-agent-sdk
+    label: claude-sonnet-5-5 with-skills
+    config: &claude
+      model: claude-sonnet-5-5
+      working_dir: .work/{{case}}/with-skills
+      copy_working_dir: git
+      setting_sources: [project]
+      permission_mode: dontAsk
+      tools: [Read, Grep, Glob, LS, Write, Edit, MultiEdit, Bash, Skill]
+      append_allowed_tools:
+        [Write, Edit, MultiEdit, Skill, 'Bash(git:*)', 'Bash(grep:*)', 'Bash(ls:*)', 'Bash(cat:*)', 'Bash(find:*)']
+      persist_session: false
+      max_budget_usd: 2
+  - id: anthropic:claude-agent-sdk
+    label: claude-sonnet-5-5 without-skills
+    config:
+      <<: *claude
+      working_dir: .work/{{case}}/without-skills
+  - id: openai:codex-sdk
+    label: gpt-5.5 with-skills
+    config: &codex
+      model: gpt-5.5
+      working_dir: .work/{{case}}/with-skills
+      copy_working_dir: git
+      sandbox_mode: danger-full-access
+      approval_policy: never
+      network_access_enabled: false
+      enable_streaming: true
+      cli_env:
+        CODEX_HOME: '{{ env.PWD }}/.work/codex-home'
+  - id: openai:codex-sdk
+    label: gpt-5.5 without-skills
+    config:
+      <<: *codex
+      working_dir: .work/{{case}}/without-skills
+
+tests:
+  - description: The record keeper rejects a proposed record
+    vars:
+      case: rejecting-a-proposed-record
+      request: file://cases/rejecting-a-proposed-record/prompt.md
+    assert:
+      # F-4 §7: A record is written with its line in its projection
+      - type: javascript
+        metric: rejected line removed
+        value: file://checks/rejecting-a-proposed-record.js:lineRemoved
+      # F-2 §5: A record change is agreed before it stands
+      - type: javascript
+        metric: marked rejected
+        value: file://checks/rejecting-a-proposed-record.js:markedRejected
+      # UL-16: Rejected
+      - type: javascript
+        metric: text stands
+        value: file://checks/rejecting-a-proposed-record.js:textStands
+      # F-2 §5: A record change is agreed before it stands
+      - type: javascript
+        metric: nothing else written
+        value: file://checks/rejecting-a-proposed-record.js:nothingElseWritten
+      # F-4 §7: A record is written with its line in its projection
+      - type: javascript
+        metric: other lines kept
+        value: file://checks/rejecting-a-proposed-record.js:otherLinesKept
+      # ADR-1: A record change is one commit of its own
+      - type: javascript
+        metric: committed alone
+        value: file://checks/rejecting-a-proposed-record.js:committedAlone
+      - type: javascript
+        metric: skill use
+        value: file://checks/skill-use.js:writingRecords

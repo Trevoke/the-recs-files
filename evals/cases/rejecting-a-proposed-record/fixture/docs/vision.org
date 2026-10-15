@@ -1,0 +1,11 @@
+#+TITLE: Vision
+
+* What the apiary log is for
+The apiary log keeps a beekeeper's record of each hive: when it was
+inspected, what was found, and what was done.
+
+* Who it serves
+Hobby beekeepers who keep a handful of hives on one or more stands.
+
+* Bounded contexts
+- Hive keeping :: hives, their stands and their inspections.

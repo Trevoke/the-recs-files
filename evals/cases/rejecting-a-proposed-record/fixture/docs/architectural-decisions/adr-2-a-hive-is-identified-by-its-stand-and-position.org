@@ -1,0 +1,12 @@
+* ADR-2 A hive is identified by its stand and position
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+Beekeepers name hives by where they stand: "stand B, third from the left".
+Hives are rarely moved once placed.
+** Decision
+We will identify a hive by its stand letter and its position on the stand.
+** Consequences
+Moving a hive changes its identity, so a move is recorded as the old hive
+ending and a new one starting.

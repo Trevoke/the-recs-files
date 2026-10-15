@@ -1,0 +1,7 @@
+#+TITLE: Architectural decisions
+
+- ADR-1 :: [[./architectural-decisions/adr-1-inspections-are-stored-in-sqlite.org][Inspections are stored in SQLite]]
+- ADR-2 :: [[./architectural-decisions/adr-2-a-hive-is-identified-by-its-stand-and-position.org][A hive is identified by its stand and position]]
+
+* Proposed
+- ADR-3 :: [[./architectural-decisions/adr-3-keep-inspections-as-an-append-only-log.org][Keep inspections as an append-only log]]
