@@ -1,6 +1,6 @@
 ---
 name: recs-brainstorming
-description: "Use when starting any creative work - creating features, building components, adding functionality, or modifying behavior - before implementation — for projects that keep records as their source of truth."
+description: "Use when asked to build, add, change or fix what a system does - a feature, a component, a behaviour - before any record, plan or implementation for it — for projects that keep records as their source of truth."
 ---
 
 # Brainstorming Ideas Into Designs
