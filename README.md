@@ -57,11 +57,14 @@ report of its own run is not evidence.
 
 ### Evals
 
-`evals/` runs each case under `evals/cases/` with promptfoo, on each agent and
-model in `evals/promptfooconfig.yaml`, with the skills installed and without.
-Each run starts from a fresh git clone of the case's fixture, and the checks
-in `evals/checks/` read the files and commits the agent left behind. Each
-check cites the record it tests.
+`evals/` runs each case under `evals/cases/` with promptfoo, on each model in
+`evals/promptfooconfig.yaml`, with the skills installed and without. Every
+model runs in the same harness, pi (`evals/providers/pi.js`), reached through
+OpenRouter. Each run starts from a fresh git repository of the case's fixture,
+under the system's temporary directory so that no AGENTS.md above it is
+loaded, with a pi configuration directory of its own. The checks in
+`evals/checks/` read the files and commits the agent left behind. Each check
+cites the record it tests.
 
 ```sh
 cd evals
@@ -71,6 +74,7 @@ npx promptfoo eval --repeat 3 --filter-providers 'with-skills'
 npm run view            # browse the results
 ```
 
-The runs need `ANTHROPIC_API_KEY` and `OPENAI_API_KEY`. The Codex arms run
-with `danger-full-access`, because Codex's workspace sandbox keeps `.git`
-read-only and the agent could not commit.
+The runs need `OPENROUTER_API_KEY`, and `ANTHROPIC_API_KEY` for the
+`llm-rubric` grader, and bubblewrap (`bwrap`): each run sees only the system,
+node, pi and its own directory. Each run's transcript is kept beside its
+project, as `pi.jsonl`.

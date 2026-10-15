@@ -5,7 +5,7 @@ import path from 'node:path';
 export function workingDir(context) {
   const dir = context.providerResponse?.metadata?.workingDir;
   if (!dir) {
-    throw new Error('the provider reported no workingDir; set copy_working_dir');
+    throw new Error('the provider reported no workingDir');
   }
   return dir;
 }

@@ -4,41 +4,46 @@ prompts:
   - '{{request}}'
 
 providers:
-  - id: anthropic:claude-agent-sdk
-    label: claude-sonnet-5-5 with-skills
-    config: &claude
-      model: claude-sonnet-5-5
-      working_dir: .work/{{case}}/with-skills
-      copy_working_dir: git
-      setting_sources: [project]
-      permission_mode: dontAsk
-      tools: [Read, Grep, Glob, LS, Write, Edit, MultiEdit, Bash, Skill]
-      append_allowed_tools:
-        [Write, Edit, MultiEdit, Skill, 'Bash(git:*)', 'Bash(grep:*)', 'Bash(ls:*)', 'Bash(cat:*)', 'Bash(find:*)']
-      persist_session: false
-      max_budget_usd: 2
-  - id: anthropic:claude-agent-sdk
-    label: claude-sonnet-5-5 without-skills
+  - id: file://providers/pi.js
+    label: claude-sonnet-5.5 with-skills
     config:
-      <<: *claude
-      working_dir: .work/{{case}}/without-skills
-  - id: openai:codex-sdk
+      model: openrouter/anthropic/claude-sonnet-5.5
+      skills: true
+  - id: file://providers/pi.js
+    label: claude-sonnet-5.5 without-skills
+    config:
+      model: openrouter/anthropic/claude-sonnet-5.5
+      skills: false
+  - id: file://providers/pi.js
     label: gpt-5.5 with-skills
-    config: &codex
-      model: gpt-5.5
-      working_dir: .work/{{case}}/with-skills
-      copy_working_dir: git
-      sandbox_mode: danger-full-access
-      approval_policy: never
-      network_access_enabled: false
-      enable_streaming: true
-      cli_env:
-        CODEX_HOME: '{{ env.PWD }}/.work/codex-home'
-  - id: openai:codex-sdk
+    config:
+      model: openrouter/openai/gpt-5.5
+      skills: true
+  - id: file://providers/pi.js
     label: gpt-5.5 without-skills
     config:
-      <<: *codex
-      working_dir: .work/{{case}}/without-skills
+      model: openrouter/openai/gpt-5.5
+      skills: false
+  - id: file://providers/pi.js
+    label: gemini-3.1-pro with-skills
+    config:
+      model: openrouter/google/gemini-3.1-pro-preview
+      skills: true
+  - id: file://providers/pi.js
+    label: gemini-3.1-pro without-skills
+    config:
+      model: openrouter/google/gemini-3.1-pro-preview
+      skills: false
+  - id: file://providers/pi.js
+    label: qwen3.7-max with-skills
+    config:
+      model: openrouter/qwen/qwen3.7-max
+      skills: true
+  - id: file://providers/pi.js
+    label: qwen3.7-max without-skills
+    config:
+      model: openrouter/qwen/qwen3.7-max
+      skills: false
 
 tests:
   - description: The record keeper rejects a proposed record
