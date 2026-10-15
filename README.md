@@ -101,7 +101,7 @@ cites the record it tests.
 cd evals
 npm install
 npm run eval            # every case, every arm
-npx promptfoo eval --repeat 3 --filter-providers 'with-skills'
+npm run eval -- --repeat 3 --filter-providers 'with-skills'
 npm run view            # browse the results
 ```
 

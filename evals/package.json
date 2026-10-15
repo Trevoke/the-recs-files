@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "eval": "promptfoo eval --no-cache",
+    "eval": "PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS=3600000 promptfoo eval --no-cache",
     "view": "promptfoo view"
   },
   "devDependencies": {

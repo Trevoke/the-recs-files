@@ -91,3 +91,14 @@ proposing-a-record and rejecting-a-proposed-record, the only tool call was a
 `read` of `recs-writing-records/SKILL.md`, and the next assistant message had
 `stopReason: "stop"` and no text. pi exited 0 and the run left the fixture
 untouched (runs, 2026-10-15).
+
+* promptfoo's scheduler drops a run that waits 300 s for its provider
+promptfoo 0.124.1 queues calls per provider id, lowers that provider's
+concurrency when it is rate limited, and rejects a call that has waited
+`PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS` (300000 by default): "Request
+pi:openrouter/google/gemini-3.1-pro-preview-... timed out after 300000ms in
+queue". Gemini kickstart runs, several minutes each at `-j 6`, lost three runs
+this way. `PROMPTFOO_DISABLE_ADAPTIVE_SCHEDULER=true` removes the queue and the
+back-off with it: the same six runs all failed on OpenRouter's 429 "Rate limit
+exceeded: new-account-rpm/google/gemini-3.1-pro-preview" (`dist/src/shared-*.js`,
+`RateLimitRegistry`; runs, 2026-10-15).
