@@ -35,14 +35,14 @@ providers:
       model: openrouter/google/gemini-3.1-pro-preview
       skills: false
   - id: file://providers/pi.js
-    label: qwen3.7-max with-skills
+    label: qwen3.8-max with-skills
     config:
-      model: openrouter/qwen/qwen3.7-max
+      model: openrouter/qwen/qwen3.8-max-0902
       skills: true
   - id: file://providers/pi.js
-    label: qwen3.7-max without-skills
+    label: qwen3.8-max without-skills
     config:
-      model: openrouter/qwen/qwen3.7-max
+      model: openrouter/qwen/qwen3.8-max-0902
       skills: false
 
 tests:
