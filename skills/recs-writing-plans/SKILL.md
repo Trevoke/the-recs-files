@@ -13,7 +13,7 @@ Assume they are a skilled developer, but know almost nothing about our toolset o
 
 A plan is built against the project's records — commonly user workflows, architectural decisions, features, a ubiquitous language, and a message catalog; the project's AGENTS.md names its actual set and where it lives. The records are the source of truth; the plan is a derivation from them.
 
-**Standing rule:** Where the plan and a record disagree, the record wins. The plan stops at the point of disagreement and the disagreement is raised with the user. Never plan around a record, and never "fix" a record to fit the plan — records change only at the user's direction.
+**Standing rule:** Where the plan and a record disagree, the record wins. The plan stops at the point of disagreement and the disagreement is raised with the record keeper. Never plan around a record, and never "fix" a record to fit the plan — records change only at the record keeper's direction.
 
 **A missing record stops the plan too.** A task that builds surface — something a user gives the system or gets back — cites the feature record for it. Where no feature covers that surface, the plan stops there and the gap is raised with the user, to be routed through recs-brainstorming and written with recs-writing-records. Never cite a neighbouring record to fill the gap, and never plan the surface from the design document alone.
 
@@ -23,12 +23,12 @@ A plan is built against the project's records — commonly user workflows, archi
 
 **Save plans to:** `docs/plans/YYYY-MM-DD-<feature-name>.md`
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 ## Bite-Sized Task Granularity
@@ -109,14 +109,14 @@ Read before executing any task, in this order:
 
 ### 4. Cataloged-Text Ordering
 
-Where a task touches user-facing text the project catalogs — error messages, refusals — the record's wording changes first, at the user's direction, and the failing test asserts the record's exact current text. Task steps are ordered accordingly.
+Where a task touches user-facing text the project catalogs — error messages, refusals — the record's wording changes first, at the record keeper's direction, and the failing test asserts the record's exact current text. Task steps are ordered accordingly.
 
 ```markdown
 ## Cataloged-Text Ordering
 
 Tasks [N, M] touch cataloged text ([MSG-4: title]). For each:
 
-1. The catalog record's wording is settled first, at the user's direction.
+1. The catalog record's wording is settled first, at the record keeper's direction.
 2. The failing test asserts the record's exact current text, character for
    character.
 3. Only then is the implementation written to emit it.

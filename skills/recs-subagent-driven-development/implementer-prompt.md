@@ -22,7 +22,7 @@ Task tool (general-purpose):
     architectural decisions, features, ubiquitous language entries, cataloged
     user-facing text. The project's AGENTS.md says which records it keeps.]
 
-    Records are source of truth and change only at the user's direction.
+    Records are source of truth and change only at the record keeper's direction.
     Do not modify a record file.
 
     ## Before You Begin
@@ -88,7 +88,7 @@ Task tool (general-purpose):
     - Does any comment say what is coming later, or what used to be? A
       comment says what is true now: what will be true later belongs in the
       plan, and what used to be true belongs in your commit message.
-    - Did I coin any term the user has not agreed to? Anywhere — code,
+    - Did I coin any term the record keeper has not agreed to? Anywhere — code,
       comments, test names, commit messages?
     - Does every piece of user-facing text the project catalogs match its
       record character-for-character?

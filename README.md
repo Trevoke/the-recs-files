@@ -6,14 +6,14 @@ Skills for working on a codebase whose records are the source of truth.
 
 A project keeps **records**: short, numbered, one-thing-each statements of what
 it does and why. The records are the truth for the code: code, tests and
-comments follow them, and a comment is a pointer to a record and nothing else.
+comments follow them, and a comment is a citation of a record and nothing else.
 The people working on the project are the truth for the records: a record
 changes only at their direction, in words they have agreed to.
 
-Records live in **projections**, each with a form borrowed from a published
-source (kept in `docs/knowledge-base/` so the borrowing can be checked):
+Each record belongs to a **category**, listed in the **projection** named
+after it, and each category's form is borrowed from a published source (kept in `docs/knowledge-base/` so the borrowing can be checked):
 
-| Projection | Holds | Form |
+| Category | Holds | Form |
 |---|---|---|
 | Vision | What the system is for and the domain it works in | A single file |
 | Ubiquitous language | What a word means, grouped by bounded context | Evans |

@@ -73,7 +73,7 @@ You MUST complete each phase before proceeding to the next.
 
    In a project that keeps records as source of truth (see its AGENTS.md and its records):
    - Is the observed behavior what the records say should happen?
-   - A "bug" may be code disagreeing with a record - then the remedy starts at the record, with the user, not in code
+   - A "bug" may be code disagreeing with a record - then the remedy starts at the record, with the record keeper, not in code
    - Read the record BEFORE forming any hypothesis about the code
 
 5. **Gather Evidence in Multi-Component Systems**
@@ -215,7 +215,7 @@ You MUST complete each phase before proceeding to the next.
    - Are we "sticking with it through sheer inertia"?
    - Should we refactor architecture vs. continue fixing symptoms?
 
-   **In a project with records:** the architecture under question is usually a recorded decision. Raise the question against that record - by number and title ("ADR-12: One connection per client"), with your human partner. Never edit the record as part of a fix; records change only at the user's direction.
+   **In a project with records:** the architecture under question is usually a recorded decision. Raise the question against that record - by number and title ("ADR-12: One connection per client"), with your human partner. Never edit the record as part of a fix; records change only at the record keeper's direction.
 
    **Discuss with your human partner before attempting more fixes**
 
@@ -263,14 +263,14 @@ If you catch yourself thinking:
 | "Reference too long, I'll adapt the pattern" | Partial understanding guarantees bugs. Read it completely. |
 | "I see the problem, let me fix it" | Seeing symptoms ≠ understanding root cause. |
 | "One more fix attempt" (after 2+ failures) | 3+ failures = architectural problem. Question pattern, don't fix again. |
-| "The record is clearly outdated, I'll fix the code my way" | Maybe - but the record changes first, with the user. Code follows records. |
+| "The record is clearly outdated, I'll fix the code my way" | Maybe - but the record changes first, with the record keeper. Code follows records. |
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 ## Quick Reference

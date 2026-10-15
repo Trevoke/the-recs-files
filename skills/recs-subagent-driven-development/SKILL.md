@@ -9,7 +9,7 @@ Execute plan by dispatching fresh subagent per task, with two-stage review after
 
 **Core principle:** Fresh subagent per task + two-stage review (spec then quality) = high quality, fast iteration
 
-In a project that keeps records as source of truth, "the spec" for a task is the task text **and the records it cites** — the user workflows, architectural decisions, features, ubiquitous language, and any catalog of exact user-facing text. Read the project's AGENTS.md and its records to know which exist here. Records change only at the user's direction; no subagent modifies one.
+In a project that keeps records as source of truth, "the spec" for a task is the task text **and the records it cites** — the user workflows, architectural decisions, features, ubiquitous language, and any catalog of exact user-facing text. Read the project's AGENTS.md and its records to know which exist here. Records change only at the record keeper's direction; no subagent modifies one.
 
 ## When to Use
 
@@ -102,12 +102,12 @@ Reviewers do not compete for the index, because reviewers are **read-only**:
 - Give it the frozen SHAs it reviews: it reads with `git show <sha>:<path>` and `git diff <base>..<head>` — never the working tree, and never `git add`/`git commit`.
 - A frozen SHA cannot change under the reviewer, so a writer can keep working while it reads.
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 ## Example Workflow
@@ -236,7 +236,7 @@ Done!
 - Let implementer self-review replace actual review (both are needed)
 - **Start code quality review before spec compliance is ✅** (wrong order)
 - Move to next task while either review has open issues
-- Let any subagent modify a record — records change only at the user's direction
+- Let any subagent modify a record — records change only at the record keeper's direction
 
 **If subagent asks questions:**
 - Answer clearly and completely

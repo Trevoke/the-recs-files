@@ -11,7 +11,7 @@ working tree.
 **Your task:**
 1. Review {WHAT_WAS_IMPLEMENTED}
 2. Compare against {PLAN_OR_REQUIREMENTS} — the task text and the records it cites
-3. Check correctness, testing, and the project's language discipline
+3. Check correctness, testing, and ubiquitous language discipline
 4. Categorize issues by severity
 5. Give a clear verdict on readiness to merge
 
@@ -54,7 +54,7 @@ git show {HEAD_SHA}:<path>   # any file as it stands at the head
 - Identifiers, comments, error messages, test names, and commit messages
   use the project's ubiquitous language?
 - One word per concept — no synonym rotation?
-- No coined terms the user has not agreed to?
+- No coined terms the record keeper has not agreed to?
 
 **Comment discipline:**
 - Every comment obeys the project's comment rule — the one in its AGENTS.md
@@ -69,7 +69,7 @@ git show {HEAD_SHA}:<path>   # any file as it stands at the head
   the commit that changed it.
 
 **Records untouched:**
-- No record file modified, except as the user directed?
+- No record file modified, except as the record keeper directed?
 
 **YAGNI and simplicity:**
 - Only what was requested, built plainly?

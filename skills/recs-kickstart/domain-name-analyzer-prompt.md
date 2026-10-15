@@ -7,13 +7,13 @@ Task tool (general-purpose):
   description: "Analyze domain names"
   prompt: |
     You are collecting the domain vocabulary of the codebase at [path],
-    read-only, to help the user name the domain, its bounded contexts, and
+    read-only, to help the record keeper name the domain, its bounded contexts, and
     the terms in each.
 
-    ## The domain, as the user put it
+    ## The domain, as the record keeper put it
 
-    [The domain and the user, in the user's own words from the framing
-    interview.]
+    [The domain and who the system serves, in the record keeper's own words
+    from the framing interview.]
 
     ## Find
 
@@ -26,7 +26,7 @@ Task tool (general-purpose):
       boundaries.
     - How the modules group: which words travel together, and which modules
       never share a word.
-    - Where the code's word differs from the user's word in the framing
+    - Where the code's word differs from the record keeper's word in the framing
       interview.
 
     ## Rules

@@ -41,8 +41,8 @@ Stop. Don't proceed to Step 2.
 
 Anything learned during this branch that belongs in a record — a decision made,
 a workflow step that went otherwise, a missing term, refusal text that changed —
-has been raised with the user. Not silently written into a record, and not
-silently dropped: records change only at the user's direction.
+has been raised with the record keeper. Not silently written into a record, and not
+silently dropped: records change only at the record keeper's direction.
 
 **If unraised findings exist:**
 ```
@@ -181,12 +181,12 @@ git worktree remove <worktree-path>
 
 **For Option 3:** Keep worktree.
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 ## Quick Reference
@@ -205,8 +205,8 @@ A project that keeps a ubiquitous language owns its words (check AGENTS.md and t
 - **Fix:** Always verify tests before offering options
 
 **Silently updating a record**
-- **Problem:** Records are the project's source of truth, and they change only at the user's direction
-- **Fix:** Raise the finding; the user decides what the record says
+- **Problem:** Records are the project's source of truth, and they change only at the record keeper's direction
+- **Fix:** Raise the finding; the record keeper decides what the record says
 
 **Silently dropping a finding**
 - **Problem:** The next branch relearns what this one already knew
@@ -233,7 +233,7 @@ A project that keeps a ubiquitous language owns its words (check AGENTS.md and t
 **Never:**
 - Proceed with failing tests
 - Finish with an unraised finding
-- Write a record without the user's direction
+- Write a record without the record keeper's direction
 - Assume main or master is the base branch
 - Merge without verifying tests on result
 - Delete work without confirmation

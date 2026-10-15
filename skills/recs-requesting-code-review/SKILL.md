@@ -52,12 +52,12 @@ Use Task tool with recs-code-reviewer type, fill template at `code-reviewer.md` 
 
 Fixes are commits like any other: Tim Pope's rules — imperative subject of about 50 characters, blank line, body explaining why; conventional-commit types (feat:, fix:, ...) welcome.
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 ## Example

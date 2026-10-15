@@ -9,21 +9,21 @@ policy is followed, before saying "checker" try "refund policy validator").
 The records are the source of truth for the skills. The people working on the
 project, and their context, are the source of truth for the records; a record
 goes out of date when they move on and it does not, and bringing it back is
-theirs to direct. Do not modify records on your own. Only do so on the request
-of the user.
+theirs to direct. Make no record change on your own; make one only at the
+record keeper's direction.
 
 ## The projections
 
 This project keeps these projections.
 
-- **Vision** — `docs/vision.org`, a single file: no projection file, no numbered records
+- **Vision** — `docs/vision.org`, a single file: no projection, no numbered records
 - **Ubiquitous language** — `docs/ubiquitous-language.org`
 - **Architectural decisions** (ADR-n) — `docs/architectural-decisions.org`
 - **Features** (F-n) — `docs/features.org`
 - **User workflows** (UW-n) — `docs/user-workflows.org`
 - **Message catalog** (MSG-n) — `docs/message-catalog.org`
 
-Where a projection borrows its form, the knowledge base records the source, so
+Where a category borrows its form, the knowledge base records the source, so
 the borrowing can be checked:
 
 - Ubiquitous language — `docs/knowledge-base/evans-ubiquitous-language.org`
@@ -31,9 +31,9 @@ the borrowing can be checked:
 - Features — `docs/knowledge-base/mavin-ears.org`
 - User workflows — `docs/knowledge-base/cockburn-use-cases.org`
 
-## Creating/updating a record
+## Making a record change
 
-When modifying, be brief. Define by defining: state what something is; do not
+When making a record change, be brief. Define by defining: state what something is; do not
 compare it to something it isn't.
 
 Examples:
@@ -47,7 +47,7 @@ a quote offers, it does not oblige
 
 A good record follows the single responsibility principle, that is to say, it
 has one and only one reason to change. The scale of the one thing can vary (and
-therefore its consequences), but it must be one thing. Help the user.
+therefore its consequences), but it must be one thing. Help the record keeper.
 
 Examples:
 ```
@@ -79,12 +79,12 @@ X-1: Use pub/sub for job notifications
 X-1: The job notifies by message and keeps none
 ```
 
-A record lives in a file of its own under its projection's directory —
+A record lives in a file of its own under its category's directory —
 `docs/features/f-12-<slug>.org` — headed `* F-12 <title>`, the slug made from
-the title. The projection's file, `docs/features.org`, lists every record as
-`- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in number order, beside
-the projection's preamble and any section that belongs to the projection rather
-than to one record. A record's file, its line in the projection's file, and its
+the title. The projection, `docs/features.org`, lists every standing or
+proposed record as `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in
+number order, beside the projection's preamble and any section that belongs to
+the projection rather than to one record. A record's file, its line in the projection, and its
 heading carry the same title, and a clarification that gives a record a new
 title changes all three.
 
@@ -123,7 +123,7 @@ stands in for When where the trigger is unwanted.
 ### Numbered requirements
 
 Requirements are numbered from 1, and the number is the requirement's section:
-a pointer to one requirement is `F-12 §2: A borrower can renew a loan`. A
+a citation of one requirement is `F-12 §2: A borrower can renew a loan`. A
 number is never reused within its record. A successor numbers its own
 requirements from 1, and its status maps each of the old record's sections to
 the successor's sections that carry it, or to none: "Supersedes F-12: A
@@ -165,7 +165,7 @@ the job can raise it" is a requirement, rewritten in EARS in this record;
 hundred stop what comes next, rather than quietly producing a summary of the
 rest" is a stakeholder's interest. Moving a sentence to its place is a record
 change like any other: each destination is proposed with its wording, and
-nothing moves before the user agrees.
+nothing moves before the record keeper agrees.
 
 ## Relationships between records
 
@@ -186,18 +186,18 @@ A record's text is in its own file, and is read from there.
 
 Open a record's file before you cite a section of it, measure code, a test, a
 plan or a design against it, assert its text, propose a change to it, or frame
-a question to the user with it. Its title tells you which records bear on the
+a question to the record keeper with it. Its title tells you which records bear on the
 work; it is never the evidence that something conforms. Open each record that
 bears, and no others: a record named by a task, by a record you opened, or by a
-pointer in the code you are changing bears; a title that only sounds near the
+citation in the code you are changing bears; a title that only sounds near the
 work is opened to find out.
 
 Whatever this file inlines is what a session and every subagent it dispatches
-carry for the rest of it. A session that edits a record therefore reads its own
-superseded text from the moment it saves. Cite what the file on disk says
+carry for the rest of it. A session that changes a record therefore carries a stale
+copy of it from the moment it saves. Cite what the file on disk says
 rather than what this one quotes.
 
-# Which projection a record belongs in
+# Which category a record belongs in
 
 - **Vision** what the system is for, who it serves, the domain it works in and its bounded contexts.
 - **Ubiquitous language** is taxonomy: what a word means, in a sentence or two, and nothing about behaviour.
@@ -213,18 +213,18 @@ language; if changing the implementation would retire the word, it belongs in an
 architectural decision — "middleware" is the worked example: it names how a
 thing is built, so it lives in the decision that chose to build it that way.
 
-# How to talk to the user
+# How to talk to the record keeper
 
 Writing software is about managing combinations of decisions.
-When the user wants to make a change, check the existing records. When you need
-to talk to the user about it, use the record number and the record title.
+When the record keeper wants to make a change, check the existing records. When
+you need to talk to the record keeper about it, use the record number and the record title.
 
 Good: "`X-8: Frobnicate the widgets`"
 Bad: "`X-8`"
 
 ## Framing a question
 
-Every question to the user is framed from the records, and starts from the user
+Every question to the record keeper is framed from the records, and starts from the user
 workflow the work is in. Name that workflow by number and title, and the step or
 extension of it that applies. Then bring in whatever else bears — a feature, an
 architectural decision, a message catalog entry, a ubiquitous language term —
@@ -245,18 +245,18 @@ At the moment, we must whirl before we pool because....
 The workflow comes first because it is what the user is trying to achieve; the
 other records are what constrain it. A question that opens on a feature, a
 message, or a line of code has skipped the part that says why any of it matters,
-and asks the user to reconstruct it.
+and asks the record keeper to reconstruct it.
 
 Then work your way inside the situation, and name it with the word the records
 already have for it — not "a request failed", and not a loop, a thread, a field,
 or which function calls which. The mechanism is how the situation is served; it
-is not the situation, and leading with it makes the user translate back into
+is not the situation, and leading with it makes the record keeper translate back into
 their own domain before they can answer. Where the mechanism is genuinely what
 is being asked about, it comes after the situation it serves, and named as
 serving it.
 
 Never write a new term into any file — a record, a design document, a sketch, a
-comment — before the user has agreed to that specific word. Propose candidates,
+comment — before the record keeper has agreed to that specific word. Propose candidates,
 wait, and then sweep the agreed word everywhere in one pass. Check each
 candidate against words the taxonomy already owns.
 
@@ -267,23 +267,23 @@ by number and title. The other points at a heading of `docs/knowledge-base/`,
 where the code performs a technical operation whose reason the code does not
 show.
 
-A comment is the pointer and nothing else. It carries no prose of its own — no
+A comment is the citation and nothing else. It carries no prose of its own — no
 sentence explaining the mechanism, naming a constraint, giving an order
 dependency, naming an idiom, warning a reader, or rejecting an alternative.
 Each of those is either a heading in the knowledge base to point at, or it is
 not said. A comment therefore asserts nothing about code elsewhere, since a
-pointer asserts nothing at all: what some other module does is a record's to
+citation asserts nothing at all: what some other module does is a record's to
 say, or the knowledge base's.
 
-What a pointer must never do is restate what it points at. A restatement can go
+What a citation must never do is restate what it points at. A restatement can go
 obsolete where the record or the entry it copies cannot, and a citation standing
 beside a copy does not redeem the copy: the citation is what carries the
 content, and the paraphrase beside it is what drifts. The rule binds a test's
 comments as it binds the code's, and applies at every site.
 
-A pointer is laid out one record to a line —
+A citation is laid out one record to a line —
 `ADR-13 §Consequences: One retry queue per provider` — and
-where a comment points at several, the pointers lead it. A pointer names the
+where a comment points at several, the citations lead it. A citation names the
 section carrying the claim the comment makes, not the record's most familiar
 section. And citing what refuses a rule does not discharge the rule: where the
 claim rests on a feature's rule, the feature is cited, whatever message catalog
@@ -291,10 +291,10 @@ entry stands beside it.
 
 Assume any other comment is wrong. On coming across one, dispatch a subagent to
 find whether a record can be pointed to. If one can, the comment is replaced by
-the pointer; if none can, the comment is removed.
+the citation; if none can, the comment is removed.
 
 A test's check message is a comment for this rule: a record it rests on is a
-pointer line above the check, and the message says what the check asserts.
+citation line above the check, and the message says what the check asserts.
 
 `docs/knowledge-base/` holds what this project has established about its
 subject and its tools: the source taxonomy it borrows from, how a library it is

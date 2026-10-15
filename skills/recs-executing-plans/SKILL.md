@@ -52,7 +52,7 @@ After all tasks complete and verified:
 
 ## Records Are Not Tasks
 
-**Standing rule, in force for every batch:** never modify the project's record files - the user workflows, architectural decisions, features, ubiquitous language, message catalog, or whatever this project keeps (see its AGENTS.md). Records change only at the user's direction.
+**Standing rule, in force for every batch:** never modify the project's record files - the user workflows, architectural decisions, features, ubiquitous language, message catalog, or whatever this project keeps (see its AGENTS.md). Records change only at the record keeper's direction.
 
 Work that seems to require a record change is a blocker to raise, not a task to absorb. Stop, name the record by number and title, say what the plan needs from it, and wait.
 
@@ -67,12 +67,12 @@ Work that seems to require a record change is a blocker to raise, not a task to 
 
 **Ask for clarification rather than guessing.**
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 A plan's code snippets are code to write, not text to transcribe. A comment in

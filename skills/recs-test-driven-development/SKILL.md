@@ -48,7 +48,7 @@ Implement fresh from tests. Period.
 
 ## The Record Is the Red Phase
 
-Where the project catalogs exact user-facing text — error messages, refusal text, validation failures — the catalog is the source and the tests assert it. A change to that text happens in the RECORD first, at the user's direction, and the failing test asserts the record's exact current text, character for character.
+Where the project catalogs exact user-facing text — error messages, refusal text, validation failures — the catalog is the source and the tests assert it. A change to that text happens in the RECORD first, at the record keeper's direction, and the failing test asserts the record's exact current text, character for character.
 
 This extends the Iron Law:
 
@@ -57,14 +57,14 @@ NO PRODUCTION CODE WITHOUT A FAILING TEST FIRST
 NO FAILING TEST ABOUT CATALOGED TEXT WITHOUT THE RECORD IT ASSERTS
 ```
 
-Records change only at the user's direction. You do not "improve" a cataloged message in code and reconcile the record afterward — that inverts the whole chain. Wording changes in the record, then the test goes red against the new wording, then minimal code makes it pass. (Changing the record itself is its own discipline: see recs-writing-records.)
+Records change only at the record keeper's direction. You do not "improve" a cataloged message in code and reconcile the record afterward — that inverts the whole chain. Wording changes in the record, then the test goes red against the new wording, then minimal code makes it pass. (Changing the record itself is its own discipline: see recs-writing-records.)
 
 **No exceptions:**
 - Don't tweak the message in code "and sync the catalog later"
 - Don't assert a paraphrase — the record's exact text or nothing
 - Don't invent refusal text the catalog doesn't hold; propose the entry first
 
-**Worked example.** An invented order system keeps a message catalog; entry MSG-4 covers a refund requested after the return window. The user agrees the wording should change:
+**Worked example.** An invented order system keeps a message catalog; entry MSG-4 covers a refund requested after the return window. The record keeper agrees the wording should change:
 
 1. **Record:** MSG-4 gains its agreed wording — `The return window has closed; this order is not refundable.`
 2. **RED:** The test asserting that exact string now fails — code still emits the old text:
@@ -76,12 +76,12 @@ Records change only at the user's direction. You do not "improve" a cataloged me
 
 The record led, the test followed, the code followed the test.
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
 ## Red-Green-Refactor
@@ -402,7 +402,7 @@ Before marking work complete (see recs-verification-before-completion):
 - [ ] Tests use real code (mocks only if unavoidable)
 - [ ] Edge cases and errors covered
 - [ ] Every asserted user-facing string matches its record's current text exactly
-- [ ] No new term appears in code, tests, or comments that the user has not agreed to
+- [ ] No new term appears in code, tests, or comments that the record keeper has not agreed to
 - [ ] Every comment obeys the project's comment rule, and each sentence is true of the code as committed
 - [ ] No comment says what a later task will do, or what used to be true — those belong to the plan and to the commit
 
@@ -416,7 +416,7 @@ Can't check all boxes? You skipped TDD. Start over.
 | Test too complicated | Design too complicated. Simplify interface. |
 | Must mock everything | Code too coupled. Use dependency injection. |
 | Test setup huge | Extract helpers. Still complex? Simplify design. |
-| Record and code disagree on wording | The record wins. If the record itself seems wrong, that's the user's call — propose, wait (recs-writing-records). |
+| Record and code disagree on wording | The record wins. If the record itself seems wrong, that's the record keeper's call — propose, wait (recs-writing-records). |
 
 ## Debugging Integration
 

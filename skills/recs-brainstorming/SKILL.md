@@ -9,7 +9,7 @@ description: "Use when starting any creative work - creating features, building 
 
 Help turn ideas into fully formed designs and specs through natural collaborative dialogue, grounded in the project's records.
 
-Start by reading the project's records, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far. Then route each validated decision to the projection it belongs in.
+Start by reading the project's records, then ask questions one at a time to refine the idea. Once you understand what you're building, present the design in small sections (200-300 words), checking after each section whether it looks right so far. Then route each validated decision to the category it belongs in.
 
 ## The Process
 
@@ -36,15 +36,15 @@ Start by reading the project's records, then ask questions one at a time to refi
 - Cover: surface (what each thing takes, what it produces), architecture, components, data flow, error handling, testing
 - Be ready to go back and clarify if something doesn't make sense
 
-## Speak the project's language
+## Speak using the ubiquitous language
 
 A project that keeps a ubiquitous language owns its words (check AGENTS.md and the records).
 
 - One word per concept, and always the project's word. Never rotate synonyms for variety — if the project says "interlock," it is never "gate," "threshold," or "guard."
-- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the user has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
+- Never write a new term into any file — a record, a plan, a comment, code, a test name, a commit message — before the record keeper has agreed to that specific word. Propose candidates, wait, then sweep the agreed word everywhere in one pass.
 - Where a word seems missing, first combine terms the project already owns (an "order" that needs checking gets an "order validator," not a "checker") before proposing a new one.
 
-This holds during the dialogue too: candidate words are discussed freely in conversation, but none lands in any file until the user has agreed to it.
+This holds during the dialogue too: candidate words are discussed freely in conversation, but none lands in any file until the record keeper has agreed to it.
 
 ## After the Design
 
@@ -57,9 +57,9 @@ Before routing, walk every step and extension of each user workflow the design t
 
 One feature may serve steps in several workflows, so search the features by the words the surface would use before proposing a new one. An interface no user meets is not a feature; it stays in the design document.
 
-**Routing decisions to their projections:**
+**Routing decisions to their categories:**
 
-Walk each validated decision through the placement tests and route it to its projection:
+Walk each validated decision through the placement tests and route it to its category:
 
 | The decision is... | It routes to... |
 |---|---|
@@ -69,7 +69,7 @@ Walk each validated decision through the placement tests and route it to its pro
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
 
-Propose each record change to the user - by projection, with the number and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the user's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
+Propose each record change to the record keeper - by category, with the number and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the record keeper's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
 
 **Documenting what remains:**
 - What routing leaves behind - purely implementation-level decisions - goes to `docs/plans/YYYY-MM-DD-<topic>-design.md`
@@ -92,5 +92,5 @@ Propose each record change to the user - by projection, with the number and titl
 - **Incremental validation** - Present design in sections, validate each
 - **The project's word, or no word** - Candidate terms land in no file until agreed
 - **Workflows yield features** - Every step and extension the design touches is checked for the feature it names
-- **Route, then propose** - Every validated decision finds its projection; a superseding record is proposed with what it falsifies, and record changes are never written unbidden
+- **Route, then propose** - Every validated decision finds its category; a superseding record is proposed with what it falsifies, and record changes are never written unbidden
 - **Be flexible** - Go back and clarify when something doesn't make sense

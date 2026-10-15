@@ -86,7 +86,7 @@ Task tool (general-purpose):
     - Did the task text itself drift from the records it cites? If the task
       and a record disagree, the record wins; report the disagreement rather
       than blessing either side.
-    - Was any record file modified? Records change only at the user's
+    - Was any record file modified? Records change only at the record keeper's
       direction; an undirected record change is an issue however small.
     - Does every comment in the diff obey the project's comment rule? A
       comment transcribed from the task's own snippet is the likeliest one
