@@ -1,0 +1,43 @@
+#+TITLE: How bubblewrap confines an eval run
+
+Established 2026-10-15 with bubblewrap 0.11.2 on Arch Linux, running pi
+0.87.1 with openrouter/qwen/qwen3.7-flash through `evals/providers/pi.js`.
+Source: runs.
+
+* An unconfined run can read the whole filesystem
+A full eval pass with pi and no sandbox was stopped by the record keeper when
+a run began reading the whole filesystem, a RAID array included. The run left
+no transcript, so the command is not known.
+
+* A run sees only the system, node, pi and its own directory
+#+begin_src sh
+bwrap --unshare-all --share-net --die-with-parent --clearenv \
+  --ro-bind /usr /usr \
+  --symlink usr/bin /bin --symlink usr/lib /lib \
+  --symlink usr/lib /lib64 --symlink usr/bin /sbin \
+  --ro-bind /etc /etc \
+  --proc /proc --dev /dev --tmpfs /tmp \
+  --bind "$RUN" "$RUN" \
+  --ro-bind "$NODE_PREFIX" /opt/node \
+  --ro-bind evals/node_modules /opt/evals/node_modules \
+  --setenv PATH /opt/node/bin:/usr/bin --setenv HOME "$RUN/home" \
+  --setenv OPENROUTER_API_KEY "$OPENROUTER_API_KEY" \
+  --chdir "$RUN/project" -- /opt/node/bin/node \
+  /opt/evals/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js ...
+#+end_src
+Told to run `ls /mnt/raid; ls -a /home/stag; ls /home/stag/src; env`, the agent
+reported:
+#+begin_example
+ls: cannot access '/mnt/raid': No such file or directory
+ls: cannot access '/home/stag': No such file or directory
+ls: cannot access '/home/stag/src': No such file or directory
+HOME=/tmp/recs-eval-rejecting-a-proposed-record-uTyTAX/home
+AI_AGENT GIT_AUTHOR_EMAIL GIT_AUTHOR_NAME GIT_COMMITTER_EMAIL GIT_COMMITTER_NAME HOME LANG OPENROUTER_API_KEY PATH PI_CODING_AGENT PI_CODING_AGENT_DIR PI_MODEL PI_OFFLINE PI_PROVIDER PI_REASONING_LEVEL PI_SESSION_ID PI_SKIP_VERSION_CHECK PWD SHLVL _
+#+end_example
+`--clearenv` keeps every other key and variable out of the run. git, node and
+HTTPS to openrouter.ai work inside it.
+
+* A path bound at its own location exposes its parent directories
+Binding node and `evals/node_modules` at their real paths made
+`/home/stag/src/projects` visible as empty directories. Binding them under
+`/opt` leaves `/home` with nothing in it.

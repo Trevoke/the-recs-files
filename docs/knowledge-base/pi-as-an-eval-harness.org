@@ -58,7 +58,22 @@ the tool set.
 `anthropic/claude-haiku-5-5`, `google/gemini-3-flash-preview`,
 `openai/gpt-5.4-mini` (run). A model missing from pi's catalog prints "Using
 custom model id" and runs. OpenRouter models are `openrouter/<vendor>/<model>`
-with `OPENROUTER_API_KEY` (pi's model catalog; not run).
+with `OPENROUTER_API_KEY`; `openrouter/anthropic/claude-sonnet-5.5`,
+`openrouter/openai/gpt-5.5`, `openrouter/google/gemini-3.1-pro-preview` and
+`openrouter/qwen/qwen3.7-max` ran (run).
+
+* pi's cost for a model missing from its catalog is not the provider's price
+The anthropic/claude-haiku-5-5 run (custom model id) reported
+`usage.cost.total` summing to $0.18 for about 2,300 output tokens, 37,000
+cache reads and 17,000 cache writes. At OpenRouter's listed price for
+claude-haiku-5.5 ($0.10 per million input tokens, $0.50 per million output)
+that is a few cents at most (run; OpenRouter `/api/v1/models`).
 
 * promptfoo 0.124.1 has no pi provider
 None in `dist/src/providers` (grep).
+
+* A model may read a skill through bash instead of `read`
+In a sandboxed run, claude-sonnet-5.5 (through OpenRouter) read
+`.agents/skills/recs-writing-records/SKILL.md` with
+`cat ... | head -80` in a bash call, and never called `read` on a skill
+(run, 2026-10-15).
