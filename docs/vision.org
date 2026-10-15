@@ -2,10 +2,11 @@
 
 * What the recs files are for
 The recs files are a set of skills that instruct an agent to keep the truth
-of a system in records. Each record belongs to a category, and each
-category's records are read through a projection named after it. The
-system need not be code. The recs files are reused across projects; each
-project's own facts live in its AGENTS.md.
+of a system in records, and to realize the system from them. Each record
+belongs to a category, and each category's records are read through a
+projection named after it. A realization may be code, skill text, or other
+work. The recs files are reused across projects; each project's own facts
+live in its AGENTS.md.
 
 * Who they serve
 The record keeper: the person or team whose job is to manage a project's
@@ -23,8 +24,3 @@ truth for the records.
 - Record realization :: taking a project from brainstorming to a
   realization of its records, in code, skill text or other work, reading
   and citing its records along the way.
-
-* Open questions
-- Record realization's language is adopted beyond UL-22: Realization and
-  UL-23: Record realization only one term at a time. Its skills are largely
-  borrowed and written for code alone.
