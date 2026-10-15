@@ -31,6 +31,11 @@ the borrowing can be checked:
 - Features — `docs/knowledge-base/mavin-ears.org`
 - User workflows — `docs/knowledge-base/cockburn-use-cases.org`
 
+## The realization modality
+
+This project's realization modality is skill text: the `recs-*` skills under
+`skills/`, checked by the evals under `evals/`.
+
 ## Making a record change
 
 When making a record change, be brief. Define by defining: state what something is; do not
