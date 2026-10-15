@@ -1,0 +1,20 @@
+* ADR-1 A record change is one commit of its own
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+** Context
+A record change touches the record, its line in its projection, and every
+sentence it falsifies, often across several files. The truth for the
+system changes when the change is written, and the project's history is
+read from its commits. Other work, such as code, skill text or a plan, is
+often in progress in the same worktree at the same time.
+** Decision
+We will commit each record change, with its projection's line and the
+replacements of its falsified sentences, in one commit that holds nothing
+else. We will commit a proposal in a commit of its own, before the one that
+accepts or rejects it.
+** Consequences
+Every change to the truth has a single, clear point in time, found in the
+history by its commit. A record change never rides along with code; the
+code that follows it is committed after it. Files are staged by name, so
+work in progress stays out of the commit.

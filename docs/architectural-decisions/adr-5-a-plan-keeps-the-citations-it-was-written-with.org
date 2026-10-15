@@ -1,0 +1,16 @@
+* ADR-5 A plan keeps the citations it was written with
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+** Context
+A plan is the work as planned against the records standing when it was
+written. A sweep repoints the citations of a superseded record, removes
+those of a retired one, and replaces a renamed or redefined term.
+** Decision
+We will leave every word and every citation in a plan as written when a
+sweep runs.
+** Consequences
+A plan reads later as it read when it was made, so its reasoning can be
+followed. A plan may cite a withdrawn record or use a word since renamed;
+its reader follows the withdrawn record's status to its successor. Every
+sweep skips plans.

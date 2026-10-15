@@ -1,0 +1,10 @@
+#+TITLE: Architectural decisions
+
+* Proposed
+- ADR-1 :: [[./architectural-decisions/adr-1-a-record-change-is-one-commit-of-its-own.org][A record change is one commit of its own]]
+- ADR-2 :: [[./architectural-decisions/adr-2-the-recs-files-live-apart-from-any-project-that-uses-them.org][The recs files live apart from any project that uses them]]
+- ADR-3 :: [[./architectural-decisions/adr-3-feature-records-are-written-in-ears.org][Feature records are written in EARS]]
+- ADR-4 :: [[./architectural-decisions/adr-4-a-changed-decision-is-a-new-record-that-supersedes-the-old.org][A changed decision is a new record that supersedes the old]]
+- ADR-5 :: [[./architectural-decisions/adr-5-a-plan-keeps-the-citations-it-was-written-with.org][A plan keeps the citations it was written with]]
+- ADR-6 :: [[./architectural-decisions/adr-6-records-are-written-in-org.org][Records are written in org]]
+- ADR-7 :: [[./architectural-decisions/adr-7-the-agent-speaks-in-the-ubiquitous-language.org][The agent speaks in the ubiquitous language]]
