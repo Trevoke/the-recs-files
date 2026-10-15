@@ -10,6 +10,4 @@
 - F-8 :: [[./features/f-8-a-clarification-comes-with-an-assessment-of-the-records-intent.org][A clarification comes with an assessment of the record's intent]]
 - F-9 :: [[./features/f-9-a-new-term-is-proposed-as-candidates-before-it-is-written.org][A new term is proposed as candidates before it is written]]
 - F-10 :: [[./features/f-10-every-occurrence-of-a-term-is-counted-and-given-a-verdict.org][Every occurrence of a term is counted and given a verdict]]
-
-* Proposed
 - F-11 :: [[./features/f-11-the-record-keeper-chooses-a-projects-realization-modalities.org][The record keeper chooses a project's realization modalities]]

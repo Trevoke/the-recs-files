@@ -1,6 +1,6 @@
 * F-11 The record keeper chooses a project's realization modalities
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. If a project's AGENTS.md names no realization modality, then the agent
    shall ask the record keeper to choose one before working on the
