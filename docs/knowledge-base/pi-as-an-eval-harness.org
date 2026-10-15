@@ -77,3 +77,10 @@ In a sandboxed run, claude-sonnet-5.5 (through OpenRouter) read
 `.agents/skills/recs-writing-records/SKILL.md` with
 `cat ... | head -80` in a bash call, and never called `read` on a skill
 (run, 2026-10-15).
+
+* Gemini through OpenRouter sometimes ends a run with "The operation was aborted"
+Two runs of openrouter/google/gemini-3.1-pro-preview stopped after a tool
+call, the next assistant message carrying `stopReason: "error"`,
+`errorMessage: "The operation was aborted"` and no output tokens; another
+stopped with "JSON error injected into SSE stream". Rerunning the same case
+ran to the end (runs, 2026-10-15).
