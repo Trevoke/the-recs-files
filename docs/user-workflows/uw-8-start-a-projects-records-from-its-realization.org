@@ -1,0 +1,30 @@
+* UW-8 Start a project's records from its realization
+:PROPERTIES:
+:STATUS: Proposed
+:ACTOR: Record keeper
+:SCOPE: The recs files
+:LEVEL: User goal
+:END:
+** Trigger
+A project has a realization and keeps no records, or only scattered docs.
+** Minimal guarantee
+No record change stands before the record keeper agrees to it, and the
+realization is unchanged.
+** Success guarantee
+The project's vision, its core user workflow, the workflows in active
+development and the records they touch stand, and its AGENTS.md names its
+projections and its realization modalities.
+** Main success scenario
+*** 1. Record keeper asks the agent to start the project's records
+*** 2. Agent reads what the project holds: its AGENTS.md, docs, history and realization
+*** 3. Record keeper chooses the project's realization modalities (F-11: The record keeper chooses a project's realization modalities)
+*** 4. Agent and record keeper name the domain, its bounded contexts, the core user workflow and the workflows in active development
+*** 5. Category by category, the agent shows titles, then bodies in batches, and each agreed batch is created (UW-1: Create a record)
+*** 6. Agent drafts the project's AGENTS.md, naming its projections and realization modalities, and shows every line it adds, changes or removes
+*** 7. Record keeper agrees
+*** 8. Agent lists the changes to the realization that the records now call for
+** Extensions
+*** 2a. The project's AGENTS.md already names its realization modalities
+**** 2a1. Agent shows them to the record keeper to confirm; continue at 4
+*** 7a. Record keeper rewords a line
+**** 7a1. Agent redrafts; back to 6
