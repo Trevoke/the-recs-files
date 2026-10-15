@@ -22,3 +22,6 @@
 - UL-19 :: [[./ubiquitous-language/ul-19-successor.org][Successor]]
 - UL-20 :: [[./ubiquitous-language/ul-20-retired.org][Retired]]
 - UL-21 :: [[./ubiquitous-language/ul-21-placement-tests.org][Placement tests]]
+
+* Proposed
+- UL-22 :: [[./ubiquitous-language/ul-22-realization.org][Realization]]
