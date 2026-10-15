@@ -1,0 +1,34 @@
+* UW-7 Realize a change to the system
+:PROPERTIES:
+:STATUS: Proposed
+:ACTOR: Record keeper
+:SCOPE: The recs files
+:LEVEL: User goal
+:END:
+** Trigger
+The record keeper wants the system to do something it does not yet do.
+** Minimal guarantee
+No record change stands before the record keeper agrees to it, and nothing
+in the realization rests on a proposed or rejected record.
+** Success guarantee
+Every decision the change needed stands in a record, and the realization
+does what those records say, checked against them.
+** Main success scenario
+*** 1. Record keeper tells the agent what the system should do
+*** 2. Agent reads the records that bear on it, and the project's realization modalities from its AGENTS.md
+*** 3. Agent and record keeper settle the change, and each decision that belongs in a record is made a record change (UW-1: Create a record; UW-2: Supersede a record)
+*** 4. Agent writes a plan, each step citing the records it realizes
+*** 5. Agent realizes the plan in the project's realization modalities, checking each step against the records it cites
+*** 6. Agent shows the record keeper the realization and how it was checked
+*** 7. Record keeper agrees
+** Extensions
+*** 1a. Record keeper names a user workflow, or a step or extension of it, that the change starts from
+**** 1a1. Agent reads that user workflow first, and frames the change from it; continue at 2
+*** 2a. The project's AGENTS.md names no realization modality
+**** 2a1. Record keeper chooses one, and the agent names it in AGENTS.md; continue at 3
+*** 5a. A check fails
+**** 5a1. Agent finds the cause before changing the realization; back to 5
+*** 5b. Realizing the plan turns up a decision no record holds
+**** 5b1. Agent raises it as a record change (UW-1: Create a record); once it stands, back to 5
+*** 7a. Record keeper declines the realization
+**** 7a1. Agent and record keeper settle what differs; back to 3
