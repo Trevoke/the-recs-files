@@ -1,0 +1,5 @@
+* UL-19 Successor
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+A record that replaces one or more superseded records.

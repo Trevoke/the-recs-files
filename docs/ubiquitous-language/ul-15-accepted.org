@@ -1,0 +1,5 @@
+* UL-15 Accepted
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+The status of a record the record keeper has agreed to.

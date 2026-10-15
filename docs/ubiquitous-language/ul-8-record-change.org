@@ -1,0 +1,5 @@
+* UL-8 Record change
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+Creating, superseding, retiring or clarifying a record.

@@ -1,0 +1,6 @@
+* UL-14 Proposed
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+The status of a record written for the record keeper's agreement, before
+they have given it.

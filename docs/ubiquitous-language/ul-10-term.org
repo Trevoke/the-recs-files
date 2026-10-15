@@ -1,0 +1,6 @@
+* UL-10 Term
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+A word, or a few words, that the ubiquitous language defines within one
+bounded context.

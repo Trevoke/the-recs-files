@@ -1,0 +1,6 @@
+* UL-4 Record
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+A short, numbered statement of one truth about a system, with a title that
+states its substance. Every record belongs to one category.

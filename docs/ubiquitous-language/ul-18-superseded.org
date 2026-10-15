@@ -1,0 +1,6 @@
+* UL-18 Superseded
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+The status of a withdrawn record that one or more successors replace. Its
+text stands as written.

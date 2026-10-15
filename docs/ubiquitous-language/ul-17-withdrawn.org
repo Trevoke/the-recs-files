@@ -1,0 +1,5 @@
+* UL-17 Withdrawn
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+An accepted record that no longer holds.

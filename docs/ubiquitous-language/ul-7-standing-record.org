@@ -1,0 +1,5 @@
+* UL-7 Standing record
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+An accepted record that is not withdrawn.

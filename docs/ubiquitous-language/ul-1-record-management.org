@@ -1,0 +1,6 @@
+* UL-1 Record management
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+The bounded context of record changes and of sweeping words through a
+project.
