@@ -215,8 +215,8 @@ rather than what this one quotes.
 
 Two tests settle the hard cases. If describing the record names a verb, an
 argument, or a sequence of events, it is a feature and not an architectural
-decision. If a word would survive a change of implementation it is ubiquitous
-language; if changing the implementation would retire the word, it belongs in an
+decision. If a word would survive a change of realization it is ubiquitous
+language; if changing the realization would retire the word, it belongs in an
 architectural decision — "middleware" is the worked example: it names how a
 thing is built, so it lives in the decision that chose to build it that way.
 
@@ -267,7 +267,7 @@ comment — before the record keeper has agreed to that specific word. Propose c
 wait, and then sweep the agreed word everywhere in one pass. Check each
 candidate against words the taxonomy already owns.
 
-# How to do implementation work
+# How to work on the realization
 
 Two kinds of comment are valid in code, and no third. One points at a record,
 by number and title. The other points at a heading of `docs/knowledge-base/`,

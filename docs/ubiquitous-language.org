@@ -23,6 +23,8 @@
 - UL-20 :: [[./ubiquitous-language/ul-20-retired.org][Retired]]
 - UL-21 :: [[./ubiquitous-language/ul-21-placement-tests.org][Placement tests]]
 
-* Proposed
+* Record realization
 - UL-22 :: [[./ubiquitous-language/ul-22-realization.org][Realization]]
+
+* Proposed
 - UL-23 :: [[./ubiquitous-language/ul-23-record-realization.org][Record realization]]
