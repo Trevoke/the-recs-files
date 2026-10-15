@@ -1,6 +1,6 @@
 * ADR-1 A record change is one commit of its own
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A record change touches the record, its line in its projection, and every

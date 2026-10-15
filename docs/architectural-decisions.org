@@ -1,6 +1,5 @@
 #+TITLE: Architectural decisions
 
-* Proposed
 - ADR-1 :: [[./architectural-decisions/adr-1-a-record-change-is-one-commit-of-its-own.org][A record change is one commit of its own]]
 - ADR-2 :: [[./architectural-decisions/adr-2-the-recs-files-live-apart-from-any-project-that-uses-them.org][The recs files live apart from any project that uses them]]
 - ADR-3 :: [[./architectural-decisions/adr-3-feature-records-are-written-in-ears.org][Feature records are written in EARS]]

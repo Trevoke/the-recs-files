@@ -1,6 +1,6 @@
 * ADR-4 A changed decision is a new record that supersedes the old
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A record's text is what the record keeper agreed to, and records, code

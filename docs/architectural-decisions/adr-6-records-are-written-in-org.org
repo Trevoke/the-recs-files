@@ -1,6 +1,6 @@
 * ADR-6 Records are written in org
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A record carries structured fields beside its prose: its status, the

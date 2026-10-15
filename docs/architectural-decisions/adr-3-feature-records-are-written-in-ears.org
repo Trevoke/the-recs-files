@@ -1,6 +1,6 @@
 * ADR-3 Feature records are written in EARS
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A feature record is a spoke of a user workflow: it holds what a step

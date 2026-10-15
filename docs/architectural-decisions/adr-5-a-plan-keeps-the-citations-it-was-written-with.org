@@ -1,6 +1,6 @@
 * ADR-5 A plan keeps the citations it was written with
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A plan is the work as planned against the records standing when it was

@@ -1,6 +1,6 @@
 * ADR-2 The recs files live apart from any project that uses them
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 The skills were written for one project, Stone, and describe a way of
