@@ -1,6 +1,6 @@
 * UW-8 Start a project's records from its realization
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: User goal

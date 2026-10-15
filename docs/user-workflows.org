@@ -7,6 +7,4 @@
 - UW-5 :: [[./user-workflows/uw-5-rename-a-term.org][Rename a term]]
 - UW-6 :: [[./user-workflows/uw-6-redefine-a-term.org][Redefine a term]]
 - UW-7 :: [[./user-workflows/uw-7-realize-a-change-to-the-system.org][Realize a change to the system]]
-
-* Proposed
 - UW-8 :: [[./user-workflows/uw-8-start-a-projects-records-from-its-realization.org][Start a project's records from its realization]]
