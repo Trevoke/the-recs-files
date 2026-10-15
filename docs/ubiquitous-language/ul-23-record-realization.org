@@ -1,0 +1,7 @@
+* UL-23 Record realization
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+The bounded context of taking a project from brainstorming to a
+realization of its records, and of checking that realization against
+them.

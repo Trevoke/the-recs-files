@@ -25,3 +25,4 @@
 
 * Proposed
 - UL-22 :: [[./ubiquitous-language/ul-22-realization.org][Realization]]
+- UL-23 :: [[./ubiquitous-language/ul-23-record-realization.org][Record realization]]
