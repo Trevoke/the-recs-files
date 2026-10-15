@@ -1,0 +1,5 @@
+* UL-1 Plot
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A numbered bed of the garden, allocated to one gardener for a season.

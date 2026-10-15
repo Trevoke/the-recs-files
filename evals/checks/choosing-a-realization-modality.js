@@ -16,3 +16,8 @@ export function noRecordStands(output, context) {
     .filter((f) => /^:STATUS:\s*Accepted\s*$/m.test(read(context, f) ?? ''));
   return result(standing.length === 0, standing.length ? `accepted without agreement: ${standing.join(', ')}` : 'no record change stands');
 }
+
+export function nothingWritten(output, context) {
+  const written = changedFiles(context);
+  return result(written.length === 0, written.length ? `wrote: ${written.join(', ')}` : 'nothing was written');
+}

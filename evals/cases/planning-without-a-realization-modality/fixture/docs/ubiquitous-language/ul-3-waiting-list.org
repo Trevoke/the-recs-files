@@ -1,0 +1,5 @@
+* UL-3 Waiting list
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The gardeners waiting for a plot, in the order they asked for one.

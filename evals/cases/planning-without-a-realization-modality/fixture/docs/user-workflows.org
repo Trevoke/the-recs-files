@@ -1,0 +1,4 @@
+#+TITLE: User workflows
+
+- UW-1 :: [[./user-workflows/uw-1-request-a-plot.org][Request a plot]]
+- UW-2 :: [[./user-workflows/uw-2-give-up-a-plot.org][Give up a plot]]

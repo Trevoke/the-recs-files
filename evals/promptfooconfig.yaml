@@ -101,3 +101,23 @@ tests:
       - type: javascript
         metric: no record stands
         value: file://checks/choosing-a-realization-modality.js:noRecordStands
+
+  - description: A plan is asked for where AGENTS.md names no realization modality
+    vars:
+      case: planning-without-a-realization-modality
+      request: file://cases/planning-without-a-realization-modality/prompt.md
+    assert:
+      # F-11 §1: The record keeper chooses a project's realization modalities
+      - type: llm-rubric
+        metric: asks for a modality
+        provider: anthropic:messages:claude-sonnet-5-5
+        value: >-
+          The reply asks the record keeper to choose what form the project's
+          realization takes, such as code or something else, before any work
+          on it. Asking only how the feature should behave, or assuming code
+          without asking, fails.
+      # UW-7 2a: Realize a change to the system
+      # F-11 §1: The record keeper chooses a project's realization modalities
+      - type: javascript
+        metric: no plan written
+        value: file://checks/choosing-a-realization-modality.js:nothingWritten

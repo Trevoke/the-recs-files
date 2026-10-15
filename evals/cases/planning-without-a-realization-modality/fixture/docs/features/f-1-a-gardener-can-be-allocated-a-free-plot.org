@@ -1,0 +1,8 @@
+* F-1 A gardener can be allocated a free plot
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When the coordinator allocates a free plot to a gardener, the plot
+   register shall record the gardener as the plot's holder for the season.
+2. If no plot is free, then the plot register shall put the gardener at the
+   end of the waiting list.

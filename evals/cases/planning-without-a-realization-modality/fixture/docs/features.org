@@ -1,0 +1,4 @@
+#+TITLE: Features
+
+- F-1 :: [[./features/f-1-a-gardener-can-be-allocated-a-free-plot.org][A gardener can be allocated a free plot]]
+- F-2 :: [[./features/f-2-a-gardener-can-give-up-a-plot.org][A gardener can give up a plot]]

@@ -1,0 +1,9 @@
+* F-2 A gardener can give up a plot
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When the coordinator records a plot given up, the plot register shall
+   record the first gardener on the waiting list as the plot's holder for
+   the rest of the season, and remove them from the waiting list.
+2. If the waiting list is empty when a plot is given up, then the plot
+   register shall record the plot as free.
