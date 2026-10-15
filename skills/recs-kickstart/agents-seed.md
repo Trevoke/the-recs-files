@@ -18,7 +18,7 @@ This project keeps these projections. Adapt the list to the project; the
 `recs-writing-records` skill carries the starting set.
 
 - **Vision** — `docs/vision.org`, a single file: no projection, no numbered records
-- **Ubiquitous language** — `docs/ubiquitous-language.org`
+- **Ubiquitous language** (UL-n) — `docs/ubiquitous-language.org`
 - **Architectural decisions** (ADR-n) — `docs/architectural-decisions.org`
 - **Features** (F-n) — `docs/features.org`
 - **User workflows** (UW-n) — `docs/user-workflows.org`
