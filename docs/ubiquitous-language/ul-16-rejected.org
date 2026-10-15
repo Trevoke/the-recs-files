@@ -1,6 +1,6 @@
 * UL-16 Rejected
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 The status of a proposed record the record keeper declined. Its text
 stands as written and its number stays taken.

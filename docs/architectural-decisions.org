@@ -7,6 +7,4 @@
 - ADR-5 :: [[./architectural-decisions/adr-5-a-plan-keeps-the-citations-it-was-written-with.org][A plan keeps the citations it was written with]]
 - ADR-6 :: [[./architectural-decisions/adr-6-records-are-written-in-org.org][Records are written in org]]
 - ADR-7 :: [[./architectural-decisions/adr-7-the-agent-speaks-in-the-ubiquitous-language.org][The agent speaks in the ubiquitous language]]
-
-* Proposed
 - ADR-8 :: [[./architectural-decisions/adr-8-each-term-is-a-record-of-its-own.org][Each term is a record of its own]]

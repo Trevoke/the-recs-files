@@ -1,6 +1,6 @@
 * UL-3 Agent
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 The model that the recs files instruct, which drafts and writes record
 changes at the record keeper's direction.

@@ -1,5 +1,5 @@
 * UL-2 Record keeper
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 The person or team who directs a project's record changes.

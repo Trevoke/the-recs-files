@@ -1,5 +1,5 @@
 * UL-11 Falsified sentence
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 A sentence that a record change makes untrue.

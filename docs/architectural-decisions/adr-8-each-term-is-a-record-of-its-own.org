@@ -1,6 +1,6 @@
 * ADR-8 Each term is a record of its own
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 The ubiquitous language was kept as one file of unnumbered terms. A

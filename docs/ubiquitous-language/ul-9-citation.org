@@ -1,6 +1,6 @@
 * UL-9 Citation
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 A reference to a record by its number and title, or to a heading of the
 knowledge base.

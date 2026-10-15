@@ -1,6 +1,6 @@
 * UL-12 Sweep
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 One pass through a project that carries an agreed change to a term, or to
 a record's citations, into every sentence it reaches.
