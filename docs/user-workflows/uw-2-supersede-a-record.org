@@ -18,7 +18,7 @@ the old record outside a plan points at the successor.
 *** 2. Agent drafts the successor and writes it as proposed, with its line under the projection's Proposed heading, and finds every sentence the change falsifies, with the wording that replaces it
 *** 3. Agent shows the record keeper the successor, the old record's new status, and the falsified sentences with their replacements
 *** 4. Record keeper agrees
-*** 5. Agent marks the successor accepted, moves its line out from under the projection's Proposed heading, sets the old record's status, and sweeps the old record's citations
+*** 5. Agent marks the successor accepted, moves its line out from under the projection's Proposed heading, sets the old record's status, removes the old record's line from the projection, and sweeps the old record's citations
 ** Extensions
 *** 1a. Record keeper asks for an in-place edit instead
 **** 1a1. Agent assesses whether the record's intent is kept, and how it changes if not
@@ -34,6 +34,6 @@ the old record outside a plan points at the successor.
 *** 3a. Record keeper rewords the draft
 **** 3a1. Agent redrafts; back to 3
 *** 3b. Record keeper declines
-**** 3b1. Agent marks the successor rejected; the use case ends
+**** 3b1. Agent marks the successor rejected and removes its line from the projection; the use case ends
 *** 5a. The sweep finds a falsified sentence not shown at 3
 **** 5a1. Agent shows it to the record keeper; back to 4

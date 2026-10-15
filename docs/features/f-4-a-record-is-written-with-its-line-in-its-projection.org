@@ -14,3 +14,5 @@
    from under its projection's Proposed heading.
 6. When a record change is agreed, the agent shall mark the record
    accepted and write every falsified sentence's replacement in one pass.
+7. When a record is rejected or withdrawn, the agent shall remove its line
+   from its projection.

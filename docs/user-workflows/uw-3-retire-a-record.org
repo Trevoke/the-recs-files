@@ -12,14 +12,14 @@ holds, and nothing replaces it.
 Nothing stands before the record keeper agrees to it.
 ** Success guarantee
 The record's status is Retired, with the reason in a sentence, and that is
-the only change to it; its line stays in its projection, carrying the same
-status; every citation of it outside a plan is removed.
+the only change to it; its line is removed from its projection; every
+citation of it outside a plan is removed.
 ** Main success scenario
 *** 1. Record keeper tells the agent which record no longer holds, and why
 *** 2. Agent finds every citation of the record, and every sentence its retirement falsifies, with the wording that replaces it
 *** 3. Agent shows the record keeper the new status with its reason, and the falsified sentences with their replacements
 *** 4. Record keeper agrees
-*** 5. Agent sets the record's status, removes its citations, and writes the replacements
+*** 5. Agent sets the record's status, removes its line from the projection and its citations, and writes the replacements
 ** Extensions
 *** 1a. Something replaces the record
 **** 1a1. Supersede a record (UW-2: Supersede a record); the use case ends
