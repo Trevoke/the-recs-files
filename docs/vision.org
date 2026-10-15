@@ -20,9 +20,11 @@ truth for the records.
 * Bounded contexts
 - Record management :: making record changes (creating, superseding,
   retiring a record) and sweeping a word through the project.
-- Code implementation :: taking a project from brainstorming to code,
-  reading and citing its records along the way.
+- Record realization :: taking a project from brainstorming to a
+  realization of its records, in code, skill text or other work, reading
+  and citing its records along the way.
 
 * Open questions
-- Code implementation's language is not yet adopted. Its skills are largely
-  borrowed, and its words are not defined here until it is.
+- Record realization's language is adopted beyond UL-22: Realization and
+  UL-23: Record realization only one term at a time. Its skills are largely
+  borrowed and written for code alone.
