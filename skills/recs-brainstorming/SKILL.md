@@ -73,7 +73,7 @@ Propose each record change to the record keeper - by category, with the number a
 
 **Documenting what remains:**
 - What routing leaves behind - purely implementation-level decisions - goes to `docs/plans/YYYY-MM-DD-<topic>-design.md`
-- Design-doc decisions are not citable from code comments; if code needs to justify itself against a decision, that decision needs a record. The exception is the traditional implementation comment ("X is done in Y way because the platform does Z"), which stays a comment.
+- Design-doc decisions are not citable from code comments; if code needs to justify itself against a decision, that decision needs a record. A reason the code does not show ("X is done in Y way because the platform does Z") goes into the knowledge base, and the comment cites its heading.
 - Use elements-of-style:writing-clearly-and-concisely skill if available
 - Commit the design document to git: imperative subject of about 50 characters, blank line, body explaining why; conventional-commit types (feat:, fix:, docs:, refactor:) welcome
 

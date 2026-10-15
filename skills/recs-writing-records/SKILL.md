@@ -124,19 +124,19 @@ is what carries the record's content, and the paraphrase beside it is what
 drifts. This holds at every site, in tests as in code — the copy is not moved to
 whichever site has the better claim to it.
 
-That is the half of the comment rule a record's author owns. What a comment may
-explain about the code itself, and how a citation is laid out, is the project's
-own and belongs with its implementation instructions, where whoever is writing
-code will meet it.
+That is the half of the comment rule a record's author owns. How a citation is
+laid out, and where a reason the code does not show is kept, are the project's
+own and belong with its implementation instructions, where whoever is writing
+code will meet them.
 
 ```python
 # ❌ Restates the record
 # ADR-7 says every refund must be idempotent.
 def refund(order): ...
 
-# ✅ Cites it; the rest is what only this code knows
-# ADR-7 §Consequences: idempotency key is the order id plus
-# attempt count, because order ids alone repeat across resubmits.
+# ✅ Cites it, and cites the knowledge base for what the code does not show
+# ADR-7 §Decision: Every refund is idempotent
+# docs/knowledge-base/payments.org: Order ids repeat across resubmits
 def refund(order): ...
 ```
 

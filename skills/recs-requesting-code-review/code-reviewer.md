@@ -151,9 +151,10 @@ git show {HEAD_SHA}:<path>   # any file as it stands at the head
 
 2. **Comment restates its record**
    - File: search.ts:24
-   - Issue: The comment paraphrases the cited decision instead of saying
-     what only this code knows (why linear scan over the index here)
-   - Fix: Keep the citation, replace the paraphrase with the local reason
+   - Issue: The comment paraphrases the cited decision, and explains in
+     prose why a linear scan beats the index here
+   - Fix: Keep the citation; move the reason to a knowledge-base heading,
+     and cite that heading in place of the prose
 
 #### Minor
 1. **Progress indicators**
