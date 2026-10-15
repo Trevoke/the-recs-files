@@ -1,5 +1,5 @@
 * UL-24 Realization modality
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 The form a project's realization takes: code, skill text, or other work.

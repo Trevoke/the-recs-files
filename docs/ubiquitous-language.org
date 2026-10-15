@@ -26,6 +26,4 @@
 * Record realization
 - UL-22 :: [[./ubiquitous-language/ul-22-realization.org][Realization]]
 - UL-23 :: [[./ubiquitous-language/ul-23-record-realization.org][Record realization]]
-
-* Proposed
 - UL-24 :: [[./ubiquitous-language/ul-24-realization-modality.org][Realization modality]]
