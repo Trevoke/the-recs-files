@@ -1,12 +1,12 @@
 # How to work with this project
 
-This project keeps records as the source of truth for its code, and uses strict taxonomy and
+This project keeps records as the source of truth for its realization, and uses strict taxonomy and
 terminology. Speak using this language, refer to these concepts. Where a concept
 or a word is missing, first attempt to combine existing concepts, or build on
 top of it (e.g. if there is a "refund policy" and we must make sure this refund
 policy is followed, before saying "checker" try "refund policy validator").
 
-The records are the source of truth for the code. The people working on the
+The records are the source of truth for the realization. The people working on the
 project, and their context, are the source of truth for the records; a record
 goes out of date when they move on and it does not, and bringing it back is
 theirs to direct. Make no record change on your own; make one only at the
@@ -31,6 +31,11 @@ the borrowing can be checked:
 - Architectural decisions — `docs/knowledge-base/nygard-architecture-decision-records.org`
 - Features — `docs/knowledge-base/mavin-ears.org`
 - User workflows — `docs/knowledge-base/cockburn-use-cases.org`
+
+## The realization modality
+
+This project's realization modality is <the modality the record keeper chose:
+code, skill text, or other work, and where it lives>.
 
 ## Making a record change
 

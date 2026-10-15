@@ -1,9 +1,9 @@
 ---
 name: recs-kickstart
-description: Use when an existing codebase is adopting records as its source of truth and has no records yet, or only scattered docs — before any other recs-* skill can be used there.
+description: Use when an existing project is adopting records as its source of truth and has no records yet, or only scattered docs — before any other recs-* skill can be used there.
 ---
 
-# Kickstarting Records in an Existing Codebase
+# Kickstarting Records in an Existing Project
 
 ## Overview
 
@@ -16,15 +16,16 @@ An existing codebase already holds what its records would say, spread across cod
 ## The Flow
 
 1. **Read what exists.** AGENTS.md, README, docs, ADRs, and `git log` *with bodies*. A monorepo: ask which parts this run covers.
-2. **Framing interview** (`interviewing.md`). Domain, who the user is, the core user workflow — the most baseline value the system delivers — and the one or two workflows in active development.
-3. **Analyze.** Dispatch the four analyzers in parallel, read-only, each with its prompt template filled in: `entry-point-analyzer-prompt.md`, `failure-text-analyzer-prompt.md`, `history-analyzer-prompt.md`, `domain-name-analyzer-prompt.md`. Open every cited file:line yourself before a claim reaches the record keeper; an analyzer's report is not evidence.
-4. **Domain pass.** Name the domain and its bounded contexts with the record keeper, from the analyzers' evidence — a word that changes meaning between modules is a context boundary. The domain goes in `docs/vision.org`; each bounded context is a ubiquitous language term, and every domain term is grouped under its context. The record keeper picks each word and says what it means; you draft the sentence, they agree to it.
-5. **One category at a time:** vision → core user workflow → in-development workflows → features → message catalog → architectural decisions. For each:
+2. **Realization modality.** Before any other question, ask the record keeper to choose the project's realization modalities: the forms its realization takes, such as code or skill text. Where AGENTS.md already names them, show them to confirm. Files already in the project are not a choice.
+3. **Framing interview** (`interviewing.md`). Domain, who the user is, the core user workflow — the most baseline value the system delivers — and the one or two workflows in active development.
+4. **Analyze.** Dispatch the four analyzers in parallel, read-only, each with its prompt template filled in: `entry-point-analyzer-prompt.md`, `failure-text-analyzer-prompt.md`, `history-analyzer-prompt.md`, `domain-name-analyzer-prompt.md`. Open every cited file:line yourself before a claim reaches the record keeper; an analyzer's report is not evidence.
+5. **Domain pass.** Name the domain and its bounded contexts with the record keeper, from the analyzers' evidence — a word that changes meaning between modules is a context boundary. The domain goes in `docs/vision.org`; each bounded context is a ubiquitous language term, and every domain term is grouped under its context. The record keeper picks each word and says what it means; you draft the sentence, they agree to it.
+6. **One category at a time:** vision → core user workflow → in-development workflows → features → message catalog → architectural decisions. For each:
    - show the **titles** first — a title is a headline, so the list is the skeleton;
    - then bodies, **at most 5–8 per batch**, items needing judgement first;
    - write an agreed batch through recs-writing-records before showing the next.
-6. **AGENTS.md.** Draft the target's AGENTS.md from `agents-seed.md` in this skill's directory: its categories and the paths of their projections, and how a worktree's tests run its own code (ask). Show every line that differs from the seed, removals included; wait. Add a provenance line naming the commit the analysis ran against.
-7. **Hand over the follow-ups.** Kickstart writes records, AGENTS.md, `.gitignore` and the knowledge base, and no code, test or comment, even where the record keeper agrees to the change. List every change the records now call for (renames, reworded messages, comments that contradict a record or point at none, missing tests) for the record keeper to direct through recs-writing-records and the development flow.
+7. **AGENTS.md.** Draft the target's AGENTS.md from `agents-seed.md` in this skill's directory: its categories and the paths of their projections, its realization modalities, and how a worktree's tests run its own code (ask). Show every line that differs from the seed, removals included; wait. Add a provenance line naming the commit the analysis ran against.
+8. **Hand over the follow-ups.** Kickstart writes records, AGENTS.md, `.gitignore` and the knowledge base, and no code, test or comment, even where the record keeper agrees to the change. List every change the records now call for (renames, reworded messages, comments that contradict a record or point at none, missing tests) for the record keeper to direct through recs-writing-records and the development flow.
 
 ## What Comes From Where
 
