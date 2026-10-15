@@ -1,0 +1,12 @@
+#+TITLE: Vision
+
+* What the plot register is for
+The plot register allocates a community garden's plots to its gardeners,
+one season at a time, and keeps the waiting list for plots.
+
+* Who it serves
+The garden's coordinator, who allocates the plots, and the gardeners who
+hold them or wait for one.
+
+* Bounded contexts
+- Allocation :: plots, the gardeners who hold them, and the waiting list.

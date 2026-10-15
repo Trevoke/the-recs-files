@@ -73,3 +73,31 @@ tests:
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:writingRecords
+
+  - description: A change is asked for where AGENTS.md names no realization modality
+    vars:
+      case: choosing-a-realization-modality
+      request: file://cases/choosing-a-realization-modality/prompt.md
+    assert:
+      # F-11 §1: The record keeper chooses a project's realization modalities
+      - type: llm-rubric
+        metric: asks for a modality
+        provider: anthropic:messages:claude-sonnet-5-5
+        value: >-
+          The reply asks the record keeper to choose what form the project's
+          realization takes, such as code or something else, before any work
+          on it. Asking only how the feature should behave, or assuming code
+          without asking, fails.
+      # F-11 §1: The record keeper chooses a project's realization modalities
+      # F-11 §3: The record keeper chooses a project's realization modalities
+      - type: javascript
+        metric: realization untouched
+        value: file://checks/choosing-a-realization-modality.js:realizationUntouched
+      # F-11 §2: The record keeper chooses a project's realization modalities
+      - type: javascript
+        metric: no modality named
+        value: file://checks/choosing-a-realization-modality.js:noModalityNamed
+      # F-2 §1: A record change is agreed before it stands
+      - type: javascript
+        metric: no record stands
+        value: file://checks/choosing-a-realization-modality.js:noRecordStands

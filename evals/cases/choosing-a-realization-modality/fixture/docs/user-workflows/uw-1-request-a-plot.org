@@ -1,0 +1,19 @@
+* UW-1 Request a plot
+:PROPERTIES:
+:STATUS: Accepted
+:ACTOR: Gardener
+:SCOPE: The plot register
+:LEVEL: User goal
+:END:
+** Trigger
+A gardener wants a plot for the coming season.
+** Minimal guarantee
+The gardener's request is kept.
+** Success guarantee
+The gardener holds a plot for the season.
+** Main success scenario
+*** 1. Gardener asks the coordinator for a plot
+*** 2. Coordinator allocates a free plot to the gardener (F-1: A gardener can be allocated a free plot)
+** Extensions
+*** 2a. No plot is free
+**** 2a1. Coordinator puts the gardener on the waiting list; the use case ends

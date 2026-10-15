@@ -1,0 +1,5 @@
+* UL-2 Gardener
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A member of the garden who holds a plot, or waits for one.
