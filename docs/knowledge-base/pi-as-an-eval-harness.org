@@ -84,3 +84,10 @@ call, the next assistant message carrying `stopReason: "error"`,
 `errorMessage: "The operation was aborted"` and no output tokens; another
 stopped with "JSON error injected into SSE stream". Rerunning the same case
 ran to the end (runs, 2026-10-15).
+
+* Gemini through OpenRouter sometimes ends its turn empty after reading a skill
+In two runs of openrouter/google/gemini-3.1-pro-preview, on
+proposing-a-record and rejecting-a-proposed-record, the only tool call was a
+`read` of `recs-writing-records/SKILL.md`, and the next assistant message had
+`stopReason: "stop"` and no text. pi exited 0 and the run left the fixture
+untouched (runs, 2026-10-15).
