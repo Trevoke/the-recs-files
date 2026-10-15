@@ -5,8 +5,6 @@
 - F-3 :: [[./features/f-3-falsified-sentences-are-found-with-their-replacements.org][Falsified sentences are found with their replacements]]
 - F-4 :: [[./features/f-4-a-record-is-written-with-its-line-in-its-projection.org][A record is written with its line in its projection]]
 - F-5 :: [[./features/f-5-a-superseded-record-names-its-successor.org][A superseded record names its successor]]
-
-* Proposed
 - F-6 :: [[./features/f-6-a-retired-record-gives-its-reason.org][A retired record gives its reason]]
 - F-7 :: [[./features/f-7-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][A sweep repoints or removes citations, and leaves plans as written]]
 - F-8 :: [[./features/f-8-a-clarification-comes-with-an-assessment-of-the-records-intent.org][A clarification comes with an assessment of the record's intent]]

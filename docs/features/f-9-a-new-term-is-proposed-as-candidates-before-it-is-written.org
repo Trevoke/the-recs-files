@@ -1,6 +1,6 @@
 * F-9 A new term is proposed as candidates before it is written
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When a record change needs a term the ubiquitous language does not
    define, the agent shall propose candidate words and wait for the record

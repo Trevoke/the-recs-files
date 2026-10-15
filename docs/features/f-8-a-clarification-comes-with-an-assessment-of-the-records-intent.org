@@ -1,6 +1,6 @@
 * F-8 A clarification comes with an assessment of the record's intent
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When the record keeper asks for an in-place edit of a record, the agent
    shall assess whether the record's intent is kept, and how it changes if

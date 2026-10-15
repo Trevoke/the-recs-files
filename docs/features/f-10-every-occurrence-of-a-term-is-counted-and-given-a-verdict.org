@@ -1,6 +1,6 @@
 * F-10 Every occurrence of a term is counted and given a verdict
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When a term is renamed or redefined, the agent shall count every
    occurrence of the term, its stem and its synonyms.

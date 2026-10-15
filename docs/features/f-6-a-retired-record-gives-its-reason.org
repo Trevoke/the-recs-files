@@ -1,6 +1,6 @@
 * F-6 A retired record gives its reason
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When a retirement is agreed, the agent shall set the record's status to
    Retired, with the reason in one sentence.

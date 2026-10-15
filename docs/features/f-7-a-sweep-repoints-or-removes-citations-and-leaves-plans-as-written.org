@@ -1,6 +1,6 @@
 * F-7 A sweep repoints or removes citations, and leaves plans as written
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When a supersede is agreed, the agent shall repoint every citation of
    the old record outside a plan to the successor that carries what the
