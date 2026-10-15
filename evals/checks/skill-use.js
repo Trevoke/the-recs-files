@@ -9,12 +9,19 @@ function expectsSkills(context) {
   return !/without-skills/.test(context.provider?.label ?? '');
 }
 
-export function writingRecords(output, context) {
-  const skill = 'recs-writing-records';
+function usedAsExpected(context, skill) {
   const expected = expectsSkills(context);
   const actual = used(context, skill);
   return result(
     actual === expected,
     `${skill} ${actual ? 'was' : 'was not'} used, in the ${expected ? 'with' : 'without'}-skills arm`,
   );
+}
+
+export function writingRecords(output, context) {
+  return usedAsExpected(context, 'recs-writing-records');
+}
+
+export function kickstart(output, context) {
+  return usedAsExpected(context, 'recs-kickstart');
 }
