@@ -54,3 +54,23 @@ the skill under test can still load it on its own initiative. Forbid that skill
 by name, forbid every other skill, and read the run's own tool calls to confirm
 it loaded none. Check the outcome against the fixture directly; an agent's
 report of its own run is not evidence.
+
+### Evals
+
+`evals/` runs each case under `evals/cases/` with promptfoo, on each agent and
+model in `evals/promptfooconfig.yaml`, with the skills installed and without.
+Each run starts from a fresh git clone of the case's fixture, and the checks
+in `evals/checks/` read the files and commits the agent left behind. Each
+check cites the record it tests.
+
+```sh
+cd evals
+npm install
+npm run eval            # every case, every arm
+npx promptfoo eval --repeat 3 --filter-providers 'with-skills'
+npm run view            # browse the results
+```
+
+The runs need `ANTHROPIC_API_KEY` and `OPENAI_API_KEY`. The Codex arms run
+with `danger-full-access`, because Codex's workspace sandbox keeps `.git`
+read-only and the agent could not commit.

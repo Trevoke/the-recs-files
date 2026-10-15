@@ -324,9 +324,10 @@ A second worktree gives a second index and does not, on its own, give a second
 copy of the code under test. Where the ecosystem links a package to one path,
 every test run resolves it there whatever directory it starts in, and a
 worktree's tests read the main tree's modules, reporting green or red for code
-the run never touched. This project has no tests yet; when its evals are
-written, how a worktree's evals run its own skills is recorded here. With
-both, two agents may write at once; with only the index, the second is
+the run never touched. This project's evals copy the skills from the
+`skills/` beside their own `evals/` into each run's project, so a worktree's
+evals run that worktree's skills; run them from the worktree's own `evals/`.
+With both, two agents may write at once; with only the index, the second is
 testing the first's code and nothing says so.
 
 A worktree sits under a directory `.gitignore` holds. It is a second checkout of
