@@ -6,6 +6,4 @@
 - UW-4 :: [[./user-workflows/uw-4-clarify-a-record.org][Clarify a record]]
 - UW-5 :: [[./user-workflows/uw-5-rename-a-term.org][Rename a term]]
 - UW-6 :: [[./user-workflows/uw-6-redefine-a-term.org][Redefine a term]]
-
-* Proposed
 - UW-7 :: [[./user-workflows/uw-7-realize-a-change-to-the-system.org][Realize a change to the system]]

@@ -1,6 +1,6 @@
 * UW-7 Realize a change to the system
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: User goal
