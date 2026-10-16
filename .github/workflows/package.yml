@@ -1,0 +1,62 @@
+name: package
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: Release tag to package, such as v1.0.0-beta
+        required: true
+
+jobs:
+  package:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - harness: claude
+            key: DEPLOY_KEY_CLAUDE
+          - harness: codex
+            key: DEPLOY_KEY_CODEX
+          - harness: pi
+            key: DEPLOY_KEY_PI
+          - harness: agy
+            key: DEPLOY_KEY_AGY
+    env:
+      TAG: ${{ inputs.tag || github.ref_name }}
+      REPO: the-recs-files-${{ matrix.harness }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: tools
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ env.TAG }}
+          path: source
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Build the package
+        run: |
+          rm -rf source/packaging
+          cp -r tools/packaging source/packaging
+          node source/packaging/build.mjs "${{ matrix.harness }}" "$RUNNER_TEMP/package" "$TAG"
+      - name: Publish it to its repository
+        env:
+          DEPLOY_KEY: ${{ secrets[matrix.key] }}
+        run: |
+          install -m 600 /dev/null "$RUNNER_TEMP/key"
+          printf '%s\n' "$DEPLOY_KEY" > "$RUNNER_TEMP/key"
+          export GIT_SSH_COMMAND="ssh -i $RUNNER_TEMP/key -o IdentitiesOnly=yes -o StrictHostKeyChecking=accept-new"
+          git clone "git@github.com:${{ github.repository_owner }}/$REPO.git" "$RUNNER_TEMP/repo"
+          cd "$RUNNER_TEMP/repo"
+          git rm -rq --ignore-unmatch .
+          cp -a "$RUNNER_TEMP/package/." .
+          git add -A
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -q --allow-empty -m "Release $TAG" -m "Built from ${{ github.server_url }}/${{ github.repository }}/tree/$TAG"
+          git tag -f "$TAG"
+          git push origin HEAD
+          git push -f origin "$TAG"

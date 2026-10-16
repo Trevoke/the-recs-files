@@ -49,19 +49,33 @@ ecosystem example list beside npm, cargo and pytest.
 
 ## Installing
 
-Clone this repository and copy (or link) the skills into the directory your
-agent reads skills from, and the reviewer agent beside them if your agent
-supports subagents:
+Each harness has a package of its own, published from this repository on each
+release:
+
+| Harness | Install |
+|---|---|
+| Claude Code | `claude plugin marketplace add Trevoke/the-recs-files-claude`, then `claude plugin install recs-files@the-recs-files` |
+| Codex | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
+| pi | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
+| Antigravity | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+
+The Claude Code and Antigravity packages carry the `recs-code-reviewer`
+subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
+`skills/recs-*` into a directory the harness reads skills from, such as a
+project's `.agents/skills`.
+
+Then open a project and ask for `recs-kickstart`.
+
+### Releasing
+
+Pushing a `v*` tag runs `.github/workflows/package.yml`, which builds each
+package with `packaging/build.mjs` and pushes it, tagged, to its repository;
+each package repository then creates its own release from the CHANGELOG. A
+package can be built and inspected locally:
 
 ```sh
-git clone https://github.com/Trevoke/the-recs-files.git
-cp -r the-recs-files/skills/recs-* ~/.claude/skills/        # Claude Code
-cp the-recs-files/agents/recs-code-reviewer.md ~/.claude/agents/
-cp -r the-recs-files/skills/recs-* ~/.agents/skills/        # pi, opencode, and others
+node packaging/build.mjs claude /tmp/recs-claude v1.0.0-beta
 ```
-
-A project-level directory (`.claude/skills`, `.agents/skills`) works the same
-way. Then open the project and ask for `recs-kickstart`.
 
 ## Status: 1.0.0-beta
 
