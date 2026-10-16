@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.0-beta — unreleased
+## 1.0.0-beta — 2026-10-16
 
 The first release. The record forms, the categories, and record management
 (`UW-1: Create a record` to `UW-6: Redefine a term`) are stable for 1.0. The
