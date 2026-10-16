@@ -1,0 +1,128 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>The recs files</title>
+<meta name="description" content="Skills that instruct an agent to keep the truth of a system in records, and to realize the system from them.">
+<style>
+  :root {
+    --bg: #f7f5f0;
+    --fg: #1d1c1a;
+    --muted: #6b675f;
+    --rule: #d9d4c8;
+    --accent: #8a3b12;
+    --card: #ffffff;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #161513;
+      --fg: #ebe7df;
+      --muted: #9a958b;
+      --rule: #34312c;
+      --accent: #e08a5a;
+      --card: #1f1d1a;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--fg);
+    font: 17px/1.6 Georgia, "Iowan Old Style", serif;
+  }
+  main { max-width: 42rem; margin: 0 auto; padding: 4rem 1rem 6rem; }
+  header h1 {
+    font-size: 2.6rem; line-height: 1.1; margin: 0 0 .75rem;
+    letter-spacing: -0.01em;
+  }
+  header p { color: var(--muted); margin: 0 0 3rem; font-size: 1.1rem; }
+  .label {
+    font: 600 .75rem/1 ui-monospace, "SF Mono", Menlo, monospace;
+    letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+  }
+  article {
+    background: var(--card); border: 1px solid var(--rule);
+    border-radius: 6px; padding: 2rem 1.5rem;
+  }
+  article h2 { margin: .5rem 0 1rem; font-size: 1.6rem; }
+  dl.props {
+    display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem;
+    font-size: .9rem; color: var(--muted); margin: 0 0 1.5rem;
+  }
+  dl.props dt { font-family: ui-monospace, Menlo, monospace; }
+  dl.props dd { margin: 0; }
+  h3 {
+    font-size: 1rem; margin: 2rem 0 .5rem; padding-top: 1rem;
+    border-top: 1px solid var(--rule);
+  }
+  ol.steps { padding-left: 1.5rem; }
+  ol.steps li { margin: .35rem 0; }
+  .ext { margin: .75rem 0; }
+  .ext b { font-family: ui-monospace, Menlo, monospace; font-size: .9rem; }
+  .ext ol { margin: .25rem 0 0; padding-left: 1.5rem; list-style: none; }
+  .ext ol li::before {
+    content: attr(data-n) "  "; font-family: ui-monospace, Menlo, monospace;
+    font-size: .85rem; color: var(--muted);
+  }
+  .ext ol li { text-indent: -2.6rem; padding-left: 2.6rem; }
+  footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <header>
+    <h1>The recs files</h1>
+    <p>Skills that instruct an agent to keep the truth of a system in records, and to realize the system from them.</p>
+  </header>
+
+  <article>
+    <span class="label">User workflow</span>
+    <h2>UW-1 Create a record</h2>
+    <dl class="props">
+      <dt>Status</dt><dd>Accepted</dd>
+      <dt>Actor</dt><dd>Record keeper</dd>
+      <dt>Scope</dt><dd>The recs files</dd>
+      <dt>Level</dt><dd>User goal</dd>
+    </dl>
+
+    <h3>Trigger</h3>
+    <p>Something worth recording surfaces: a decision, a definition, a workflow, a feature, or the exact text the system gives on a refusal or a failure.</p>
+
+    <h3>Minimal guarantee</h3>
+    <p>Nothing stands before the record keeper agrees to it.</p>
+
+    <h3>Success guarantee</h3>
+    <p>The record is written in a file of its own and listed in its category's projection, and every sentence it falsifies is replaced.</p>
+
+    <h3>Main success scenario</h3>
+    <ol class="steps">
+      <li>Record keeper tells the agent what is to be recorded</li>
+      <li>Agent places it in a category, and searches the standing records for one that already decides it</li>
+      <li>Agent drafts the record in its category's form and writes it as proposed, with its line under the projection's Proposed heading, and finds every sentence the record falsifies, with the wording that replaces it</li>
+      <li>Agent shows the record keeper the draft and the falsified sentences with their replacements</li>
+      <li>Record keeper agrees</li>
+      <li>Agent marks the record accepted, moves its line out from under the projection's Proposed heading, and writes the replacements</li>
+    </ol>
+
+    <h3>Extensions</h3>
+    <div class="ext"><b>2a.</b> A standing record already decides it
+      <ol><li data-n="2a1.">Supersede a record (UW-2: Supersede a record); the use case ends</li></ol></div>
+    <div class="ext"><b>2b.</b> The placement tests do not settle the category
+      <ol><li data-n="2b1.">Agent shows what each test found, and the record keeper picks the category</li></ol></div>
+    <div class="ext"><b>3a.</b> The record needs a term the ubiquitous language does not define
+      <ol><li data-n="3a1.">Agent proposes candidate words, built from existing words first, and waits</li>
+          <li data-n="3a2.">Record keeper agrees to one; continue at 3</li></ol></div>
+    <div class="ext"><b>4a.</b> Record keeper rewords the draft
+      <ol><li data-n="4a1.">Agent redrafts; back to 4</li></ol></div>
+    <div class="ext"><b>4b.</b> Record keeper declines
+      <ol><li data-n="4b1.">Agent marks the record rejected and removes its line from the projection; the use case ends</li></ol></div>
+    <div class="ext"><b>6a.</b> Writing turns up a falsified sentence not shown at 4
+      <ol><li data-n="6a1.">Agent shows it to the record keeper; back to 5</li></ol></div>
+  </article>
+
+  <footer><a href="https://github.com/Trevoke/the-recs-files">github.com/Trevoke/the-recs-files</a></footer>
+</main>
+</body>
+</html>
