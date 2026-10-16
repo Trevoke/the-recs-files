@@ -35,7 +35,7 @@ The SHAs freeze what is reviewed. Anything you commit afterwards is outside the 
 
 **2. Dispatch code-reviewer subagent:**
 
-Use Task tool with recs-code-reviewer type, fill template at `code-reviewer.md` — it opens by telling the reviewer it is read-only; keep that.
+Fill the template at `code-reviewer.md` — it opens by telling the reviewer it is read-only; keep that. Where the harness offers a `recs-code-reviewer` subagent, dispatch it with the filled template. Otherwise dispatch a general-purpose subagent with `reviewer-role.md` followed by the filled template.
 
 **Placeholders:**
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built

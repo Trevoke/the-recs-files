@@ -12,7 +12,7 @@ tree, and never `git add`/`git commit`. The template says so; do not trim
 that part out.
 
 ```
-Task tool (recs-code-reviewer):
+Subagent (as recs-requesting-code-review step 2 dispatches it):
   Use template at recs-requesting-code-review/code-reviewer.md
 
   WHAT_WAS_IMPLEMENTED: [from implementer's report]
