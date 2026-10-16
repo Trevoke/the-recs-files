@@ -29,16 +29,19 @@ function copy(from, to = from) {
   fs.cpSync(path.join(root, from), path.join(out, to), { recursive: true });
 }
 
-function frontmatter(file) {
-  const text = fs.readFileSync(path.join(root, file), 'utf8');
-  const [, head, body] = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
-  const description = head.match(/^description: \|\n((?:  .*\n?)+)/m)?.[1].replace(/^  /gm, '').trim()
-    ?? head.match(/^description: (.*)$/m)[1].trim();
-  return { name: head.match(/^name: (.*)$/m)[1].trim(), description, body };
+const subagents = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'subagents.json'), 'utf8'));
+
+function yaml(fields) {
+  return Object.entries(fields)
+    .map(([k, v]) => (Array.isArray(v) ? `${k}:\n${v.map((i) => `  - ${JSON.stringify(i)}`).join('\n')}` : `${k}: ${JSON.stringify(v)}`))
+    .join('\n');
 }
 
-function yamlBlock(text) {
-  return `|\n${text.split('\n').map((l) => `  ${l}`).join('\n')}`;
+function writeSubagents() {
+  for (const [name, agent] of Object.entries(subagents)) {
+    const role = fs.readFileSync(path.join(root, agent.role), 'utf8');
+    write(`agents/${name}.md`, `---\n${yaml({ name, description: agent.description, ...agent[harness] })}\n---\n\n${role}`);
+  }
 }
 
 const install = {
@@ -56,51 +59,17 @@ const install = {
 
 const contents = {
   claude: 'the skills and the `recs-code-reviewer` subagent',
-  codex: 'the skills',
-  pi: 'the skills',
+  codex: 'the skills, which dispatch Codex\'s own subagents',
+  pi: 'the skills and a `subagent` tool for them to dispatch',
   agy: 'the skills and the `recs-code-reviewer` subagent',
 };
-
-const releaseWorkflow = `name: release
-
-on:
-  push:
-    tags: ['v*']
-
-permissions:
-  contents: write
-
-jobs:
-  release:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - name: Create the release
-        env:
-          GH_TOKEN: \${{ github.token }}
-          TAG: \${{ github.ref_name }}
-        run: |
-          version="\${TAG#v}"
-          awk -v v="$version" '
-            index($0, "## " v " ") == 1 || $0 == "## " v { on = 1; next }
-            on && /^## / { exit }
-            on { print }
-          ' CHANGELOG.md > notes.md
-          flags=""
-          case "$version" in *-*) flags="--prerelease" ;; esac
-          if gh release view "$TAG" >/dev/null 2>&1; then
-            gh release edit "$TAG" --notes-file notes.md
-          else
-            gh release create "$TAG" --title "$TAG" --notes-file notes.md $flags
-          fi
-`;
 
 fs.rmSync(out, { recursive: true, force: true });
 fs.mkdirSync(out, { recursive: true });
 copy('skills');
 copy('LICENSE');
 copy('CHANGELOG.md');
-write('.github/workflows/release.yml', releaseWorkflow);
+copy('packaging/templates/release.yml', '.github/workflows/release.yml');
 write('README.md', `# ${repo}
 
 The [recs files](${source}) packaged for ${{ claude: 'Claude Code', codex: 'Codex', pi: 'pi', agy: 'Antigravity' }[harness]}: ${contents[harness]}, version ${version}.
@@ -131,7 +100,7 @@ if (harness === 'claude') {
     owner: author,
     plugins: [{ name: plugin, source: './', description, version }],
   });
-  copy('agents');
+  writeSubagents();
 }
 
 if (harness === 'codex') {
@@ -154,8 +123,10 @@ if (harness === 'pi') {
   write('package.json', {
     name: repo, version, description, license: 'MIT', repository: source,
     keywords: ['pi-package'],
-    pi: { skills: ['./skills'] },
+    pi: { skills: ['./skills'], extensions: ['./extensions/subagent/index.ts'] },
+    peerDependencies: { '@earendil-works/pi-coding-agent': '*', typebox: '*' },
   });
+  copy('packaging/pi/extensions', 'extensions');
 }
 
 if (harness === 'agy') {
@@ -163,21 +134,7 @@ if (harness === 'agy') {
     $schema: 'https://antigravity.google/schemas/v1/plugin.json',
     name: plugin, description,
   });
-  for (const file of fs.readdirSync(path.join(root, 'agents'))) {
-    const agent = frontmatter(path.join('agents', file));
-    write(path.join('agents', file), `---
-name: ${agent.name}
-description: ${yamlBlock(agent.description)}
-tools:
-  - view_file
-  - grep_search
-  - run_command
-mainAgent: false
-subagent: true
-model: inherit
----
-${agent.body}`);
-  }
+  writeSubagents();
 }
 
 console.log(`built ${repo} ${version} in ${out}`);

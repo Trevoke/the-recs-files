@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0-beta.2 — unreleased
+
+- The skills dispatch subagents and keep task lists in words any harness can
+  follow, instead of naming Claude Code's Task tool and TodoWrite. The
+  reviewer's role moves from `agents/recs-code-reviewer.md` into
+  `skills/recs-requesting-code-review/reviewer-role.md`.
+- The Claude Code and Antigravity packages generate their `recs-code-reviewer`
+  subagent from that file. The pi package adds a `subagent` tool, since pi has
+  none. Codex dispatches its own subagents.
+- Every package is installed and checked with its harness's CLI before any of
+  them is published.
+
 ## 1.0.0-beta — 2026-10-16
 
 The first release. The record forms, the categories, and record management

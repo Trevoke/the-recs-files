@@ -59,22 +59,31 @@ release:
 | pi | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
 | Antigravity | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
 
-The Claude Code and Antigravity packages carry the `recs-code-reviewer`
-subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
-`skills/recs-*` into a directory the harness reads skills from, such as a
-project's `.agents/skills`.
+The skills dispatch subagents in words any harness can follow. The Claude Code
+and Antigravity packages also carry a native `recs-code-reviewer` subagent,
+generated from `skills/recs-requesting-code-review/reviewer-role.md` and
+`packaging/subagents.json`; Codex uses its own subagents; the pi package adds
+a `subagent` tool (`packaging/pi/extensions/subagent/`), since pi has none.
+Elsewhere, such as in opencode, copy (or link) `skills/recs-*` into a
+directory the harness reads skills from, such as a project's
+`.agents/skills`.
 
 Then open a project and ask for `recs-kickstart`.
 
 ### Releasing
 
-Pushing a `v*` tag runs `.github/workflows/package.yml`, which builds each
-package with `packaging/build.mjs` and pushes it, tagged, to its repository;
-each package repository then creates its own release from the CHANGELOG. A
-package can be built and inspected locally:
+`.github/workflows/package.yml` builds each package with
+`packaging/build.mjs` and validates it with `packaging/validate.sh`, which
+installs it with the harness's own CLI under a throwaway home and checks that
+every skill is offered. It does this on every push and pull request. On a `v*`
+tag, once all four packages validate, it pushes each one, tagged, to its
+repository, which then creates its own release from the CHANGELOG
+(`packaging/templates/release.yml`). The same build and validation run
+locally:
 
 ```sh
-node packaging/build.mjs claude /tmp/recs-claude v1.0.0-beta
+node packaging/build.mjs pi /tmp/recs-pi v1.0.0-beta.2
+packaging/validate.sh pi /tmp/recs-pi
 ```
 
 ## Status: 1.0.0-beta
