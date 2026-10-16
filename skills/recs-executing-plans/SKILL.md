@@ -20,7 +20,7 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 2. Review critically - identify any questions or concerns about the plan
 3. Check the plan against the records it cites - user workflows, architectural decisions, features, message catalog entries, whatever the project keeps (see the project's AGENTS.md and its records). Where the plan and a record disagree, the record wins - stop and raise the disagreement with your human partner rather than executing either version
 4. If concerns: Raise them with your human partner before starting
-5. If no concerns: Create a task list (the harness's own, or a checklist in your reply) and proceed
+5. If no concerns: Create TodoWrite and proceed
 
 ### Step 2: Execute Batch
 **Default: First 3 tasks**

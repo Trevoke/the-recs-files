@@ -3,7 +3,7 @@
 Use this template when dispatching the domain-name analyzer.
 
 ```
-Subagent (general-purpose):
+Task tool (general-purpose):
   description: "Analyze domain names"
   prompt: |
     You are collecting the domain vocabulary of the codebase at [path],

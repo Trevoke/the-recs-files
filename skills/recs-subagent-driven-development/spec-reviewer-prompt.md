@@ -9,7 +9,7 @@ compliance includes checking cataloged text against the record verbatim, and
 checking the task itself did not drift from the records it cites.
 
 ```
-Subagent (general-purpose):
+Task tool (general-purpose):
   description: "Review spec compliance for Task N"
   prompt: |
     You are reviewing whether an implementation matches its specification.

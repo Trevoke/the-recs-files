@@ -3,7 +3,7 @@
 Use this template when dispatching the failure-text analyzer.
 
 ```
-Subagent (general-purpose):
+Task tool (general-purpose):
   description: "Analyze failure text for [slice]"
   prompt: |
     You are analyzing the text the codebase at [path] gives when it refuses
