@@ -4,125 +4,274 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>The recs files</title>
-<meta name="description" content="Skills that instruct an agent to keep the truth of a system in records, and to realize the system from them.">
+<meta name="description" content="Skills for coding agents that keep a system's decisions in records, and build the system from them.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;700&amp;display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f7f5f0;
-    --fg: #1d1c1a;
-    --muted: #6b675f;
-    --rule: #d9d4c8;
-    --accent: #8a3b12;
-    --card: #ffffff;
-  }
-  @media (prefers-color-scheme: dark) {
-    :root {
-      --bg: #161513;
-      --fg: #ebe7df;
-      --muted: #9a958b;
-      --rule: #34312c;
-      --accent: #e08a5a;
-      --card: #1f1d1a;
-    }
-  }
-  * { box-sizing: border-box; }
-  body {
-    margin: 0;
-    background: var(--bg);
-    color: var(--fg);
-    font: 17px/1.6 Georgia, "Iowan Old Style", serif;
-  }
-  main { max-width: 42rem; margin: 0 auto; padding: 4rem 1rem 6rem; }
-  header h1 {
-    font-size: 2.6rem; line-height: 1.1; margin: 0 0 .75rem;
-    letter-spacing: -0.01em;
-  }
-  header p { color: var(--muted); margin: 0 0 3rem; font-size: 1.1rem; }
-  .label {
-    font: 600 .75rem/1 ui-monospace, "SF Mono", Menlo, monospace;
-    letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
-  }
-  article {
-    background: var(--card); border: 1px solid var(--rule);
-    border-radius: 6px; padding: 2rem 1.5rem;
-  }
-  article h2 { margin: .5rem 0 1rem; font-size: 1.6rem; }
-  dl.props {
-    display: grid; grid-template-columns: max-content 1fr; gap: .25rem 1rem;
-    font-size: .9rem; color: var(--muted); margin: 0 0 1.5rem;
-  }
-  dl.props dt { font-family: ui-monospace, Menlo, monospace; }
-  dl.props dd { margin: 0; }
-  h3 {
-    font-size: 1rem; margin: 2rem 0 .5rem; padding-top: 1rem;
-    border-top: 1px solid var(--rule);
-  }
-  ol.steps { padding-left: 1.5rem; }
-  ol.steps li { margin: .35rem 0; }
-  .ext { margin: .75rem 0; }
-  .ext b { font-family: ui-monospace, Menlo, monospace; font-size: .9rem; }
-  .ext ol { margin: .25rem 0 0; padding-left: 1.5rem; list-style: none; }
-  .ext ol li::before {
-    content: attr(data-n) "  "; font-family: ui-monospace, Menlo, monospace;
-    font-size: .85rem; color: var(--muted);
-  }
-  .ext ol li { text-indent: -2.6rem; padding-left: 2.6rem; }
-  footer { margin-top: 3rem; color: var(--muted); font-size: .9rem; }
-  a { color: var(--accent); }
+body{margin:0;background:#F4F5F7}
+a{color:#2340D8}a:hover{color:#16289A}
+.wrap{max-width:1200px;margin:0 auto;padding:0 24px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,3fr);gap:48px;padding:88px 0;border-top:1px solid #0E1116}
+.idx{font:500 13px/1.4 'JetBrains Mono',monospace;letter-spacing:.06em;text-transform:uppercase;color:#4A5160}
+.idx b{display:block;font:700 56px/1 'Instrument Sans',sans-serif;color:#0E1116;letter-spacing:-.03em;margin-bottom:12px}
+.h2{font:600 38px/1.12 'Instrument Sans',sans-serif;letter-spacing:-.02em;margin:0 0 20px;max-width:780px}
+.lede{font-size:19px;line-height:1.6;max-width:700px;margin:0 0 40px;color:#272C35}
+.mono{font-family:'JetBrains Mono',monospace}
+.box{background:#FFFFFF;border:1px solid #D5D9E0}
+.line{display:flex;gap:14px;align-items:baseline;padding:13px 18px;border-bottom:1px solid #E6E9EE;font-size:16px}
+.line:last-child{border-bottom:0}
+.id{font:700 14px/1 'JetBrains Mono',monospace;color:#2340D8;min-width:58px}
+.cols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:32px;align-items:start}
+.cols3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0;border:1px solid #0E1116}
+.cols3>div{padding:24px;border-right:1px solid #0E1116}
+.cols3>div:last-child{border-right:0}
+.cap{font:500 12px/1 'JetBrains Mono',monospace;letter-spacing:.08em;text-transform:uppercase;color:#4A5160;margin-bottom:12px}
+.code{background:#0E1116;color:#E4E7EC;font:14px/1.7 'JetBrains Mono',monospace;padding:24px;overflow-x:auto;white-space:pre;margin:0}
+.cite{color:#8FA2FF}
+.tl{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:0;position:relative}
+.ev{padding:20px 18px 0 0;border-top:3px solid #0E1116;position:relative}
+.ev::before{content:'';position:absolute;top:-9px;left:0;width:15px;height:15px;border-radius:50%;background:#2340D8}
+.map{position:relative;height:620px}
+.node{position:absolute;transform:translate(-50%,-50%);box-sizing:border-box;width:170px;padding:12px 14px;font-size:14px;line-height:1.35;background:#161A21;border:1px solid #353B47;color:#E4E7EC}
+.node .k{display:block;font:500 10px/1 'JetBrains Mono',monospace;letter-spacing:.1em;text-transform:uppercase;color:#8C93A1;margin-bottom:6px}
+.node .n{font:700 13px/1 'JetBrains Mono',monospace;color:#8FA2FF;margin-right:6px}
+.lines{position:absolute;inset:0;width:100%;height:100%}
+.rel{display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,2fr);border-bottom:1px solid #E6E9EE}
+.rel:last-child{border-bottom:0}
+.rel>div{padding:14px 18px}
+@media (max-width:860px){
+.row{grid-template-columns:minmax(0,1fr);gap:24px;padding:64px 0}
+.cols,.tl{grid-template-columns:minmax(0,1fr)}
+.cols3{grid-template-columns:minmax(0,1fr)}
+.cols3>div{border-right:0;border-bottom:1px solid #0E1116}
+.ev{padding-bottom:20px}
+.h2{font-size:30px}
+.map{height:auto;display:flex;flex-direction:column;gap:10px}
+.node{position:static;transform:none;width:auto}
+.lines{display:none}
+.rel{grid-template-columns:minmax(0,1fr)}
+}
 </style>
 </head>
 <body>
-<main>
-  <header>
-    <h1>The recs files</h1>
-    <p>Skills that instruct an agent to keep the truth of a system in records, and to realize the system from them.</p>
-  </header>
+<div style="font-family: 'Instrument Sans', sans-serif; color: #0E1116; background: #F4F5F7; min-height: 100vh">
 
-  <article>
-    <span class="label">User workflow</span>
-    <h2>UW-1 Create a record</h2>
-    <dl class="props">
-      <dt>Status</dt><dd>Accepted</dd>
-      <dt>Actor</dt><dd>Record keeper</dd>
-      <dt>Scope</dt><dd>The recs files</dd>
-      <dt>Level</dt><dd>User goal</dd>
-    </dl>
+<section style="background: #0E1116; color: #F4F5F7">
+<header class="wrap" style="padding-top: 28px; padding-bottom: 28px; display: flex; justify-content: space-between; align-items: center; gap: 16px; flex-wrap: wrap">
+<div style="font-weight: 700; font-size: 18px; letter-spacing: -.01em">the recs files</div>
+<nav style="display: flex; gap: 22px; flex-wrap: wrap; font-size: 15px">
+<a href="#l-how" style="color: #C9D1FF">How it works</a>
+<a href="#l-example" style="color: #C9D1FF">Example</a>
+<a href="#l-start" style="color: #C9D1FF">Get started</a>
+<a href="https://github.com/Trevoke/the-recs-files" style="color: #C9D1FF">GitHub</a>
+</nav>
+</header>
+<div class="wrap" style="padding-top: 72px; padding-bottom: 96px; display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 56px; align-items: center">
+<div>
+<div class="mono" style="font-size: 13px; letter-spacing: .08em; color: #8FA2FF; margin-bottom: 24px">SKILLS FOR CODING AGENTS · 1.0.0-BETA</div>
+<h1 style="font-size: 72px; line-height: .98; margin: 0 0 28px; letter-spacing: -.035em; font-weight: 700">Keep a system's decisions in records, and build from them.</h1>
+<p style="font-size: 20px; line-height: 1.55; margin: 0 0 36px; color: #C3C8D2; max-width: 560px">The recs files are skills for coding agents. The agent keeps each decision about your system as a short, numbered record, and writes the code from those records. The records persist between sessions; the agent's context does not.</p>
+<div style="display: flex; gap: 14px; flex-wrap: wrap">
+<a href="#l-start" style="background: #2340D8; color: #FFFFFF; text-decoration: none; padding: 15px 22px; font-weight: 600">Install the skills</a>
+<a href="#l-how" style="border: 1px solid #F4F5F7; color: #F4F5F7; text-decoration: none; padding: 15px 22px; font-weight: 600">How it works</a>
+</div>
+</div>
+<div class="map" role="img" aria-label="vision.md links to the ubiquitous language, which links to the user workflow UW-3 Renew a loan. UW-3 names features F-12 and F-11 and messages MSG-4 and MSG-5.">
+<svg class="lines" viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true">
+<line x1="50" y1="7" x2="50" y2="29" stroke="#4A5160" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+<line x1="50" y1="29" x2="50" y2="62" stroke="#4A5160" stroke-width="1" vector-effect="non-scaling-stroke"></line>
+<line x1="50" y1="62" x2="16" y2="50" stroke="#2340D8" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+<line x1="50" y1="62" x2="84" y2="50" stroke="#2340D8" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+<line x1="50" y1="62" x2="16" y2="88" stroke="#2340D8" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+<line x1="50" y1="62" x2="84" y2="88" stroke="#2340D8" stroke-width="1.5" vector-effect="non-scaling-stroke"></line>
+</svg>
+<div class="node" style="left: 50%; top: 7%; width: 200px"><span class="k">Vision</span><span class="mono" style="font-weight: 700">vision.md</span></div>
+<div class="node" style="left: 50%; top: 29%; width: 220px"><span class="k">Ubiquitous language</span><span class="n">UL-2</span>Loan<br><span class="n">UL-5</span>Grace period</div>
+<div class="node" style="left: 50%; top: 62%; width: 200px; background: #2340D8; border-color: #2340D8; color: #FFFFFF; padding: 16px"><span class="k" style="color: #DCE2FF">User workflow</span><span style="font-size: 18px; font-weight: 700">UW-3 Renew a loan</span></div>
+<div class="node" style="left: 16%; top: 50%"><span class="k">Feature</span><span class="n">F-12</span>A borrower can renew a loan</div>
+<div class="node" style="left: 84%; top: 50%"><span class="k">Message</span><span class="n">MSG-4</span>A reserved book cannot be renewed</div>
+<div class="node" style="left: 16%; top: 88%"><span class="k">Feature</span><span class="n">F-11</span>A borrower can reserve a book</div>
+<div class="node" style="left: 84%; top: 88%"><span class="k">Message</span><span class="n">MSG-5</span>An overdue loan cannot be renewed</div>
+</div>
+</div>
+</section>
 
-    <h3>Trigger</h3>
-    <p>Something worth recording surfaces: a decision, a definition, a workflow, a feature, or the exact text the system gives on a refusal or a failure.</p>
+<div class="wrap">
 
-    <h3>Minimal guarantee</h3>
-    <p>Nothing stands before the record keeper agrees to it.</p>
+<section id="l-how" class="row">
+<div class="idx"><b>01</b>Congruence</div>
+<div>
+<h2 class="h2">Each change brings the code and the records into closer agreement.</h2>
+<p class="lede">Agents write code faster than anyone documents it, and the reasons behind it are the first thing lost. The recs files store those reasons as records. When a new record contradicts existing sentences, in other records, in skills or in code, the agent finds each one, proposes its replacement, and lands the record and the replacements in a single commit.</p>
+<div class="cols3">
+<div><div class="id" style="margin-bottom: 12px">1</div>The agent drafts the record and finds every sentence it makes false.</div>
+<div><div class="id" style="margin-bottom: 12px">2</div>The record keeper reviews the draft alongside the proposed replacements, and approves.</div>
+<div><div class="id" style="margin-bottom: 12px">3</div>The record and its replacements land in one commit. Records and code agree again.</div>
+</div>
+</div>
+</section>
 
-    <h3>Success guarantee</h3>
-    <p>The record is written in a file of its own and listed in its category's projection, and every sentence it falsifies is replaced.</p>
+<section class="row">
+<div class="idx"><b>02</b>Events and state</div>
+<div>
+<h2 class="h2">A record is an event. A projection is the current state.</h2>
+<p class="lede">If you know event sourcing, you know this shape. Records are appended in order and never rewritten in substance; a new decision on the same question is a new record that supersedes the old one. Fold the records of one category and you get its projection: the titles of every active record. The projection is what the agent reads.</p>
+<div class="cap">The records, in the order written</div>
+<div class="tl" style="margin-bottom: 48px">
+<div class="ev"><div class="id">F-9</div><div style="margin-top: 8px; color: #6B7280; text-decoration: line-through">A borrower can renew a loan once</div><div class="mono" style="font-size: 12px; margin-top: 8px; color: #6B7280">SUPERSEDED BY F-12</div></div>
+<div class="ev"><div class="id">F-10</div><div style="margin-top: 8px">A borrower can borrow a book</div></div>
+<div class="ev"><div class="id">F-11</div><div style="margin-top: 8px">A borrower can reserve a book</div></div>
+<div class="ev"><div class="id">F-12</div><div style="margin-top: 8px">A borrower can renew a loan</div><div class="mono" style="font-size: 12px; margin-top: 8px; color: #2340D8">SUPERSEDES F-9</div></div>
+</div>
+<div class="cap">features.org: the projection</div>
+<div class="box" style="border-left: 4px solid #2340D8; max-width: 560px">
+<div class="line"><span class="id">F-10</span><span>A borrower can borrow a book</span></div>
+<div class="line"><span class="id">F-11</span><span>A borrower can reserve a book</span></div>
+<div class="line"><span class="id">F-12</span><span>A borrower can renew a loan</span></div>
+</div>
+</div>
+</section>
 
-    <h3>Main success scenario</h3>
-    <ol class="steps">
-      <li>Record keeper tells the agent what is to be recorded</li>
-      <li>Agent places it in a category, and searches the standing records for one that already decides it</li>
-      <li>Agent drafts the record in its category's form and writes it as proposed, with its line under the projection's Proposed heading, and finds every sentence the record falsifies, with the wording that replaces it</li>
-      <li>Agent shows the record keeper the draft and the falsified sentences with their replacements</li>
-      <li>Record keeper agrees</li>
-      <li>Agent marks the record accepted, moves its line out from under the projection's Proposed heading, and writes the replacements</li>
-    </ol>
+<section class="row">
+<div class="idx"><b>03</b>Context</div>
+<div>
+<h2 class="h2">The agent reads every title, then opens only the records the task needs.</h2>
+<p class="lede">A projection costs one line per record, so the agent can read all of it at the start of a task. From the titles it picks the records that bear on the work and opens those files, and only those. Context goes to the decisions in play, at the depth each one needs.</p>
+<div class="cols">
+<div class="box">
+<div class="mono" style="padding: 12px 18px; border-bottom: 1px solid #E6E9EE; font-size: 12px; color: #4A5160">TASK · Can a borrower renew a reserved book?</div>
+<div class="line" style="color: #8A909C"><span class="id" style="color: #8A909C">F-10</span><span>A borrower can borrow a book</span></div>
+<div class="line" style="color: #8A909C"><span class="id" style="color: #8A909C">F-11</span><span>A borrower can reserve a book</span></div>
+<div class="line" style="background: #EEF1FF; font-weight: 600"><span class="id">F-12</span><span>A borrower can renew a loan</span><span class="mono" style="margin-left: auto; font-size: 11px; color: #2340D8">OPENED</span></div>
+<div class="line" style="background: #EEF1FF; font-weight: 600"><span class="id">MSG-4</span><span>A reserved book cannot be renewed</span><span class="mono" style="margin-left: auto; font-size: 11px; color: #2340D8">OPENED</span></div>
+</div>
+<div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid #0E1116">
+<div style="padding: 24px; border-right: 1px solid #0E1116"><div style="font-size: 44px; font-weight: 700; letter-spacing: -.03em">1 line</div><div style="color: #4A5160">per record, read on every task</div></div>
+<div style="padding: 24px"><div style="font-size: 44px; font-weight: 700; letter-spacing: -.03em">1 file</div><div style="color: #4A5160">per relevant record, opened on demand</div></div>
+</div>
+</div>
+</div>
+</section>
 
-    <h3>Extensions</h3>
-    <div class="ext"><b>2a.</b> A standing record already decides it
-      <ol><li data-n="2a1.">Supersede a record (UW-2: Supersede a record); the use case ends</li></ol></div>
-    <div class="ext"><b>2b.</b> The placement tests do not settle the category
-      <ol><li data-n="2b1.">Agent shows what each test found, and the record keeper picks the category</li></ol></div>
-    <div class="ext"><b>3a.</b> The record needs a term the ubiquitous language does not define
-      <ol><li data-n="3a1.">Agent proposes candidate words, built from existing words first, and waits</li>
-          <li data-n="3a2.">Record keeper agrees to one; continue at 3</li></ol></div>
-    <div class="ext"><b>4a.</b> Record keeper rewords the draft
-      <ol><li data-n="4a1.">Agent redrafts; back to 4</li></ol></div>
-    <div class="ext"><b>4b.</b> Record keeper declines
-      <ol><li data-n="4b1.">Agent marks the record rejected and removes its line from the projection; the use case ends</li></ol></div>
-    <div class="ext"><b>6a.</b> Writing turns up a falsified sentence not shown at 4
-      <ol><li data-n="6a1.">Agent shows it to the record keeper; back to 5</li></ol></div>
-  </article>
+<section class="row">
+<div class="idx"><b>04</b>Inverted pyramid</div>
+<div>
+<h2 class="h2">The most important information comes first, at every level.</h2>
+<p class="lede" style="margin-bottom: 16px">Newspapers write in an inverted pyramid: the headline, then the essential facts, then the detail. A reader can stop at any point and still have the story.</p>
+<p class="lede">Records follow the same structure. A record's title states its decision, so a reader who stops at the projection already knows the substance. The record file holds the detail, and the knowledge base holds the sources the idea came from.</p>
+<div style="display: flex; flex-direction: column; gap: 6px; margin-bottom: 48px">
+<div style="background: #0E1116; color: #F4F5F7; padding: 20px 24px; width: 100%; box-sizing: border-box; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap"><span class="mono" style="font-weight: 700">PROJECTION LINE</span><span>F-12 A borrower can renew a loan</span></div>
+<div style="background: #2340D8; color: #FFFFFF; padding: 20px 24px; width: 80%; box-sizing: border-box; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap"><span class="mono" style="font-weight: 700">RECORD FILE</span><span>Four requirements, in EARS</span></div>
+<div style="background: #DCE2FF; color: #0E1116; padding: 20px 24px; width: 60%; box-sizing: border-box; display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap"><span class="mono" style="font-weight: 700">KNOWLEDGE BASE</span><span>Mavin's EARS</span></div>
+</div>
+<figure style="margin: 0; padding-left: 24px; border-left: 3px solid #0E1116; max-width: 760px">
+<blockquote style="margin: 0; font-size: 24px; line-height: 1.4; font-weight: 500; letter-spacing: -.01em">“Reversible summarization at multiple zoom levels. Compress context without losing the ability to expand back to full detail.”</blockquote>
+<figcaption style="margin-top: 14px; color: #4A5160; font-size: 15px">StrongDM's software factory arrived at the same idea and calls it <a href="https://factory.strongdm.ai/techniques">Pyramid Summaries</a>.</figcaption>
+</figure>
+</div>
+</section>
 
-  <footer><a href="https://github.com/Trevoke/the-recs-files">github.com/Trevoke/the-recs-files</a></footer>
-</main>
+<section class="row">
+<div class="idx"><b>05</b>Use cases</div>
+<div>
+<h2 class="h2">Work starts from what a person is trying to achieve.</h2>
+<p class="lede">User workflows follow Alistair Cockburn's use cases. Each states one actor's goal, a main success scenario in numbered steps, and extensions keyed to the steps where things can go differently. Each also states two guarantees: what holds even when the workflow fails, and what the actor gets when it succeeds.</p>
+<div class="cols3">
+<div><div class="cap">Trigger</div>The event that starts the workflow.</div>
+<div><div class="cap">Main success scenario</div>The steps when nothing goes wrong.</div>
+<div><div class="cap">Extensions</div>Branches keyed to steps. 2a: the book is reserved.</div>
+</div>
+</div>
+</section>
+
+<section class="row">
+<div class="idx"><b>06</b>Hub and spokes</div>
+<div>
+<h2 class="h2">Records connect as hubs and spokes, with the user workflow at the center.</h2>
+<p class="lede">The vision states what the system is for, and the ubiquitous language defines the words of its domain. Each user workflow is a hub: it names the features it reaches, the messages its actor can meet, and the terms it uses. Start from a workflow, follow its references, and you have what the system does for that goal.</p>
+<div class="cap">Which records may name which</div>
+<div class="box" style="max-width: 720px">
+<div class="rel"><div style="font-weight: 600">A user workflow</div><div>features, messages, terms, other user workflows</div></div>
+<div class="rel"><div style="font-weight: 600">A feature</div><div>messages, terms, other features</div></div>
+<div class="rel"><div style="font-weight: 600">An architectural decision</div><div>terms, other architectural decisions</div></div>
+<div class="rel"><div style="font-weight: 600">A term</div><div>other terms</div></div>
+</div>
+</div>
+</section>
+
+<section id="l-example" class="row">
+<div class="idx"><b>07</b>Example: a lending library</div>
+<div>
+<h2 class="h2">One goal, traced from the actor to the test.</h2>
+<p class="lede">A borrower wants to keep a book longer. These are the records that govern the renewal, and the code and test that cite them.</p>
+<div class="cols">
+<div class="box" style="padding: 28px">
+<div class="cap">User workflow · Actor: borrower</div>
+<h3 style="font-size: 24px; margin: 0 0 18px; letter-spacing: -.01em">UW-3 Renew a loan</h3>
+<div class="cap" style="color: #2340D8">Main success scenario</div>
+<ol style="margin: 0 0 20px; padding-left: 22px; line-height: 1.6">
+<li>Borrower asks to renew a loan</li>
+<li>Library renews it (F-12: A borrower can renew a loan) and shows the new due date</li>
+</ol>
+<div class="cap" style="color: #2340D8">Extensions</div>
+<p style="margin: 0 0 6px; line-height: 1.5"><b class="mono">2a.</b> The book is reserved</p>
+<p style="margin: 0 0 12px 28px; line-height: 1.5">Library refuses with MSG-4: A reserved book cannot be renewed; the use case ends</p>
+<p style="margin: 0 0 6px; line-height: 1.5"><b class="mono">2b.</b> The loan is overdue beyond the grace period</p>
+<p style="margin: 0 0 0 28px; line-height: 1.5">Library refuses with MSG-5: An overdue loan cannot be renewed; the use case ends</p>
+</div>
+<div class="box" style="padding: 28px">
+<div class="cap">Feature · EARS</div>
+<h3 style="font-size: 24px; margin: 0 0 18px; letter-spacing: -.01em">F-12 A borrower can renew a loan</h3>
+<ol style="margin: 0; padding-left: 22px; line-height: 1.6; display: flex; flex-direction: column; gap: 10px">
+<li>When a borrower renews a loan, the library shall set the loan's due date one loan period after the renewal date.</li>
+<li>If the book is reserved, then the library shall refuse the renewal with <span class="mono" style="font-size: 14px">MSG-4: A reserved book cannot be renewed</span>.</li>
+<li>While a loan is overdue beyond the grace period, the library shall refuse any renewal of it with <span class="mono" style="font-size: 14px">MSG-5: An overdue loan cannot be renewed</span>.</li>
+<li>Where the library sets a renewal limit, the library shall refuse a renewal past it with <span class="mono" style="font-size: 14px">MSG-6: This loan has reached its renewal limit</span>.</li>
+</ol>
+</div>
+</div>
+<div class="cols" style="margin-top: 32px">
+<div>
+<div class="cap">The code cites the requirement</div>
+<pre class="code"><span class="cite"># F-12 §2: A borrower can renew a loan</span>
+return refuse(:msg_4) if loan.book.reserved?
+
+<span class="cite"># F-12 §1: A borrower can renew a loan</span>
+loan.due_on = Date.today + loan.period</pre>
+</div>
+<div>
+<div class="cap">The test asserts the message catalog's text</div>
+<pre class="code"><span class="cite"># F-12 §2: A borrower can renew a loan</span>
+assert_equal "A reserved book cannot be renewed",
+             renew(reserved_loan).message</pre>
+</div>
+</div>
+</div>
+</section>
+
+<section id="l-start" class="row">
+<div class="idx"><b>08</b>Get started</div>
+<div>
+<h2 class="h2">Install the skills, then let kickstart draft your first records.</h2>
+<div class="box" style="margin-bottom: 24px; overflow-x: auto">
+<div class="line"><span class="id" style="min-width: 120px">Claude Code</span><span class="mono" style="font-size: 14px">claude plugin marketplace add Trevoke/the-recs-files-claude</span></div>
+<div class="line"><span class="id" style="min-width: 120px">Codex</span><span class="mono" style="font-size: 14px">codex plugin marketplace add Trevoke/the-recs-files-codex</span></div>
+<div class="line"><span class="id" style="min-width: 120px">pi</span><span class="mono" style="font-size: 14px">pi install git:github.com/Trevoke/the-recs-files-pi@v[VERSION]</span></div>
+<div class="line"><span class="id" style="min-width: 120px">Antigravity</span><span class="mono" style="font-size: 14px">agy plugin install https://github.com/Trevoke/the-recs-files-agy</span></div>
+</div>
+<p style="font-size: 18px; line-height: 1.6; max-width: 700px; margin: 0">Run <span class="mono">recs-kickstart</span> in a project that has code but no records. The agent reads the project and proposes records one category at a time, titles first and then bodies. Nothing is written until you approve each batch, and your code is left untouched.</p>
+</div>
+</section>
+
+</div>
+
+<footer style="border-top: 1px solid #0E1116">
+<div class="wrap" style="padding-top: 40px; padding-bottom: 56px; display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; color: #4A5160; font-size: 15px">
+<span>the recs files · MIT</span>
+<a href="https://github.com/Trevoke/the-recs-files">github.com/Trevoke/the-recs-files</a>
+</div>
+</footer>
+
+</div>
 </body>
 </html>
