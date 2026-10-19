@@ -8,6 +8,12 @@ import { Type } from "typebox";
 const OUTPUT_CAP = 50 * 1024;
 const STDERR_CAP = 10 * 1024;
 const KILL_GRACE_MS = 5000;
+const DEPTH_LIMIT = 2;
+
+function delegateDepth(env: NodeJS.ProcessEnv): number {
+	const value = env.TRF_DELEGATE_DEPTH ?? "";
+	return /^\d+$/.test(value) ? Number(value) : 0;
+}
 
 function piInvocation(args: string[]): { command: string; args: string[] } {
 	const script = process.argv[1];
@@ -25,6 +31,8 @@ function text(message: any): string {
 }
 
 export default function (pi: ExtensionAPI) {
+	const depth = delegateDepth(process.env);
+	if (depth >= DEPTH_LIMIT) return;
 	pi.registerTool({
 		name: "subagent",
 		label: "Subagent",
@@ -64,7 +72,12 @@ export default function (pi: ExtensionAPI) {
 
 				const code = await new Promise<number | null>((resolve) => {
 					const { command, args: argv } = piInvocation(args);
-					const proc = spawn(command, argv, { cwd: ctx.cwd, shell: false, stdio: ["ignore", "pipe", "pipe"] });
+					const proc = spawn(command, argv, {
+						cwd: ctx.cwd,
+						env: { ...process.env, TRF_DELEGATE_DEPTH: String(depth + 1) },
+						shell: false,
+						stdio: ["ignore", "pipe", "pipe"],
+					});
 					let buffer = "";
 					const line = (l: string) => {
 						if (!l.startsWith("{")) return;

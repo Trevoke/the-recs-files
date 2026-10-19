@@ -188,15 +188,67 @@ whose project asks for trust resolves it through `resolveProjectTrusted`
 A pi started with no flags, with the same `PI_CODING_AGENT_DIR`, is therefore
 trusted. The recs files' subagent extension starts its child pi with
 `--mode json -p --no-session` and at most `--model` and `--thinking`, in the
-parent's working directory, and passes no `env`, so the child inherits the
-parent's environment (`packaging/pi/extensions/subagent/index.ts:41-43`,
-`:67`): a parent's `--approve` does not reach the child, and `trust.json`,
+parent's working directory, with the parent's environment and
+`TRF_DELEGATE_DEPTH` one higher
+(`packaging/pi/extensions/subagent/index.ts:50-52`, `:75-77`): a parent's
+`--approve` does not reach the child, and `trust.json`,
 found through the inherited `PI_CODING_AGENT_DIR`, does. Run in bubblewrap,
 2026-10-19: after `--approve` runs the agent directory held no `trust.json`;
 with `trust.json` holding `{"<project>": true}`, a run with no flags loaded
 the package's thirteen skills and its `subagent` extension, the extension
 registering the `subagent` tool, with no load error (pi's
 `DefaultResourceLoader`, run inside the sandbox).
+
+* The subagent extension registers its tool only below `TRF_DELEGATE_DEPTH` 2
+The recs files' subagent extension reads `TRF_DELEGATE_DEPTH` when pi loads
+it, an unset or non-numeric value counting as 0, registers no `subagent`
+tool at 2 or more, and starts its child pi with the parent's environment and
+`TRF_DELEGATE_DEPTH` one higher
+(`packaging/pi/extensions/subagent/index.ts:13-16`, `:34-35`, `:75-77`). pi
+loads an extension in its own process, so the extension sees pi's
+environment, which the child inherits. Run in bubblewrap with
+`OPENROUTER_API_KEY` empty, 2026-10-19, in a project with the pi package
+installed at project scope and trusted: a script inside the sandbox loaded
+the project's extensions with pi 0.87.1's `DefaultResourceLoader` and
+printed each extension's registered tools and the load errors. With
+`--dispatch` it called the `subagent` tool's `execute`; the tool spawned the
+script itself as the child pi (`process.argv[1]`), which loaded the
+extensions again and answered as one `message_end`.
+#+begin_example
+--- TRF_DELEGATE_DEPTH unset
+parent: TRF_DELEGATE_DEPTH=(unset) extensions=1 tools=["subagent"] errors=[]
+child: TRF_DELEGATE_DEPTH=1 extensions=1 tools=["subagent"] errors=[]
+--- TRF_DELEGATE_DEPTH 1
+parent: TRF_DELEGATE_DEPTH=1 extensions=1 tools=["subagent"] errors=[]
+child: TRF_DELEGATE_DEPTH=2 extensions=1 tools=[] errors=[]
+--- TRF_DELEGATE_DEPTH 2
+parent: TRF_DELEGATE_DEPTH=2 extensions=1 tools=[] errors=[]
+--- TRF_DELEGATE_DEPTH nonsense
+parent: TRF_DELEGATE_DEPTH=nonsense extensions=1 tools=["subagent"] errors=[]
+#+end_example
+The script, run as `node probe.mjs [--dispatch]` with the project as its
+working directory:
+#+begin_src js
+import { DefaultResourceLoader } from '/opt/evals/node_modules/@earendil-works/pi-coding-agent/dist/index.js';
+
+const loader = new DefaultResourceLoader({ cwd: process.cwd(), agentDir: process.env.PI_CODING_AGENT_DIR });
+await loader.reload({ resolveProjectTrust: async () => true });
+const { extensions, errors } = loader.getExtensions();
+const tools = extensions.flatMap((e) => [...e.tools.keys()]);
+const depth = process.env.TRF_DELEGATE_DEPTH ?? '(unset)';
+const summary = `TRF_DELEGATE_DEPTH=${depth} extensions=${extensions.length} tools=${JSON.stringify(tools)} errors=${JSON.stringify(errors)}`;
+
+if (process.argv.includes('--mode')) {
+  console.log(JSON.stringify({ type: 'message_end', message: { role: 'assistant', stopReason: 'stop', content: [{ type: 'text', text: `child: ${summary}` }] } }));
+  process.exit(0);
+}
+console.log(`parent: ${summary}`);
+if (process.argv.includes('--dispatch')) {
+  const tool = extensions.flatMap((e) => [...e.tools.values()]).find((t) => t.definition.name === 'subagent');
+  const result = await tool.definition.execute('probe', { prompt: 'report' }, undefined, undefined, { cwd: process.cwd() });
+  console.log(result.content[0].text);
+}
+#+end_src
 
 * `--no-skills` and `--no-extensions` drop a package's skills and extensions
 Each keeps only paths named on the command line, and a package's resources
