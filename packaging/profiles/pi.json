@@ -6,7 +6,7 @@
   "agents": "role file",
   "capabilities": {
     "delegate": {
-      "status": "absent",
+      "status": "extension",
       "brief": "subagent tool ({role})",
       "sentence": "the subagent tool",
       "brief-role-file": "subagent tool (general-purpose, with the text of `{roleFile}` first in its prompt)",
@@ -26,11 +26,13 @@
     },
     "restrict": { "status": "prose" }
   },
+  "copy": { "extensions": "packaging/pi/extensions" },
   "files": {
     "package.json": {
       "name": "{repo}", "version": "{version}", "description": "{description}", "license": "MIT", "repository": "{source}",
       "keywords": ["pi-package"],
-      "pi": { "skills": ["./skills"] }
+      "pi": { "skills": ["./skills"], "extensions": ["./extensions/subagent/index.ts"] },
+      "peerDependencies": { "@earendil-works/pi-coding-agent": "*", "typebox": "*" }
     }
   }
 }

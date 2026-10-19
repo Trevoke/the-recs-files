@@ -1,5 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -20,7 +21,20 @@ for (const harness of ['claude', 'codex', 'pi', 'agy']) {
     const all = fs.readdirSync(out, { recursive: true }).filter((f) => fs.statSync(path.join(out, f)).isFile());
     assert.ok(all.every((f) => !fs.readFileSync(path.join(out, f), 'utf8').includes('{{trf:')));
   });
+
+  test(`the ${harness} package passes the package checks`, (t) => {
+    const out = render(harness, temp(t, `check-${harness}-`), 'v1.2.3');
+    const said = execFileSync(process.execPath, [path.join(root, 'packaging', 'check.mjs'), harness, out], { encoding: 'utf8' });
+    assert.match(said, new RegExp(`^${harness}: package checks pass`));
+  });
 }
+
+test('the pi package declares and carries its subagent extension', (t) => {
+  const out = render('pi', temp(t, 'render-pi-extension-'), 'v1.2.3');
+  const pkg = JSON.parse(fs.readFileSync(path.join(out, 'package.json'), 'utf8'));
+  assert.deepEqual(pkg.pi.extensions, ['./extensions/subagent/index.ts']);
+  assert.ok(fs.existsSync(path.join(out, 'extensions', 'subagent', 'index.ts')));
+});
 
 const fixture = (t) => {
   const from = temp(t, 'render-fixture-');
@@ -58,4 +72,13 @@ test('a rendered skill flow carries no citations', (t) => {
   const flow = fs.readFileSync(path.join(out, 'skills', 'skill-flow.dot'), 'utf8');
   assert.ok(flow.includes('kind="load"'));
   assert.ok(!flow.includes('cite='));
+});
+
+test('the package checks refuse a pi package without its subagent extension', (t) => {
+  const out = render('pi', temp(t, 'check-pi-refused-'), 'v1.2.3');
+  fs.rmSync(path.join(out, 'extensions'), { recursive: true });
+  assert.throws(
+    () => execFileSync(process.execPath, [path.join(root, 'packaging', 'check.mjs'), 'pi', out], { encoding: 'utf8', stdio: 'pipe' }),
+    (e) => e.status === 1 && /extensions\/subagent\/index\.ts, which is missing/.test(e.stderr),
+  );
 });
