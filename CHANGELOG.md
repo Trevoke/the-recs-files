@@ -1,5 +1,21 @@
 # Changelog
 
+## Unreleased
+
+- Each harness's package is rendered from capability markers in the skill
+  text and a harness profile per harness (ADR-10); the Claude Code package is
+  unchanged.
+- The order of the skills is kept in `skills/skill-flow.dot` (ADR-11).
+- pi's package carries a subagent extension; Codex and pi get the reviewer's
+  role as a role file.
+- Every package is checked, and installed where its harness CLI runs, before
+  any is published.
+- The evals render the pi package for each run.
+- Two eval cases, `dispatching-the-code-reviewer` and
+  `keeping-the-task-list`, check that a run on the pi rendering delegates and
+  keeps its memory file as pi's harness profile says. They have not yet been
+  run against a model.
+
 ## 1.0.0-beta — 2026-10-16
 
 The first release. The record forms, the categories, and record management
