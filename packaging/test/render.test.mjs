@@ -140,6 +140,19 @@ test('the package checks report a subagent without a field its harness profile w
   assert.throws(() => checkPackage('agy', out), (e) => e.status === 1 && /agents\/recs-code-reviewer\.md: no mainAgent/.test(e.stderr));
 });
 
+test('the package checks report a subagent whose field differs from its harness profile', (t) => {
+  const out = render('opencode', temp(t, 'check-opencode-mode-'), 'v1.2.3');
+  const file = path.join(out, 'agents', 'recs-code-reviewer.md');
+  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^mode: subagent$/m, 'mode: primary'));
+  assert.throws(() => checkPackage('opencode', out), (e) => e.status === 1 && /agents\/recs-code-reviewer\.md: mode is not subagent/.test(e.stderr));
+});
+
+test('the package checks refuse an opencode package with a markdown file directly under skills/', (t) => {
+  const out = render('opencode', temp(t, 'check-opencode-loose-'), 'v1.2.3');
+  fs.writeFileSync(path.join(out, 'skills', 'notes.md'), '# notes\n');
+  assert.throws(() => checkPackage('opencode', out), (e) => e.status === 1 && /skills: opencode loads notes\.md as a skill/.test(e.stderr));
+});
+
 test('the package checks report a skill without its SKILL.md as a problem', (t) => {
   const out = render('claude', temp(t, 'check-no-skill-md-'), 'v1.2.3');
   fs.rmSync(path.join(out, 'skills', 'recs-writing-records', 'SKILL.md'));

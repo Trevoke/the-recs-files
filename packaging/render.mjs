@@ -5,7 +5,7 @@ import { checkFlow, shippedFlow } from './flow.mjs';
 import { checkProfile, fill, leftovers, renderText } from './markers.mjs';
 
 export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-export const harnesses = ['claude', 'codex', 'pi', 'agy'];
+export const harnesses = ['claude', 'codex', 'pi', 'agy', 'opencode'];
 export const roleFile = 'skills/recs-requesting-code-review/reviewer-role.md';
 const vars = {
   plugin: 'recs-files',

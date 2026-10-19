@@ -82,6 +82,11 @@ function checkSubagents() {
     for (const field of ['name', 'description', ...fields]) {
       check(new RegExp(`^${field}:`, 'm').test(head), `${file}: no ${field}`);
     }
+    for (const [field, value] of Object.entries(harnessProfile.agentFrontmatter ?? {})) {
+      if (['string', 'number', 'boolean'].includes(typeof value) && new RegExp(`^${field}:`, 'm').test(head)) {
+        check(new RegExp(`^${field}: ${value}$`, 'm').test(head), `${file}: ${field} is not ${value}`);
+      }
+    }
   }
 }
 if (['copy', 'generate'].includes(harnessProfile.agents)) checkSubagents();
@@ -119,6 +124,12 @@ if (harness === 'agy') {
   const extra = Object.keys(plugin).filter((k) => !['$schema', 'name', 'description'].includes(k));
   check(extra.length === 0, `plugin.json: agy allows only $schema, name and description; found ${extra.join(', ')}`);
   check(/^[a-zA-Z0-9-_]+$/.test(plugin.name ?? ''), 'plugin.json: name must match ^[a-zA-Z0-9-_]+$');
+}
+
+if (harness === 'opencode') {
+  // docs/knowledge-base/opencode-subagents.org: Skills are read from `skill/` and `skills/` under each configuration directory
+  const loose = exists('skills') ? fs.readdirSync(path.join(dir, 'skills')).filter((f) => f.endsWith('.md')) : [];
+  check(loose.length === 0, `skills: opencode loads ${loose.join(', ')} as a skill`);
 }
 
 const found = [...new Set(problems)];

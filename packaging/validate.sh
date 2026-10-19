@@ -2,7 +2,7 @@
 set -euo pipefail
 
 if [ $# -lt 2 ]; then
-  echo "usage: packaging/validate.sh <claude|codex|pi|agy> <package-dir>" >&2
+  echo "usage: packaging/validate.sh <claude|codex|pi|agy|opencode> <package-dir>" >&2
   exit 2
 fi
 harness=$1
@@ -61,8 +61,39 @@ case "$harness" in
     agy plugin list > "$out" 2>&1
     grep -q "$skills skills, 1 agent" "$out" || fail "agy does not list $skills skills and 1 agent"
     ;;
+  opencode)
+    if ! command -v opencode > /dev/null; then
+      echo "opencode: no opencode CLI here; package checks only"
+      exit 0
+    fi
+    export HOME="$home" XDG_CONFIG_HOME="$home/.config" XDG_DATA_HOME="$home/.local/share" XDG_STATE_HOME="$home/.local/state" XDG_CACHE_HOME="$home/.cache"
+    unset OPENROUTER_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY GEMINI_API_KEY
+    mkdir -p "$home/project/.opencode"
+    cp -R "$dir/skills" "$dir/agents" "$home/project/.opencode/"
+    # docs/knowledge-base/opencode-subagents.org: `opencode serve` lists skills and agents with no model reached
+    export OPENCODE_SERVER_PASSWORD
+    OPENCODE_SERVER_PASSWORD=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
+    (cd "$home/project" && exec opencode serve --hostname 127.0.0.1 --port 0) > "$home/serve" 2>&1 &
+    server=$!
+    trap 'kill "$server" 2> /dev/null; rm -rf "$home"' EXIT
+    api() {
+      curl -s -u "opencode:$OPENCODE_SERVER_PASSWORD" "$url/api/$1?location%5Bdirectory%5D=$home/project"
+    }
+    url=
+    for _ in $(seq 60); do
+      url=$(sed -n 's/^server listening on \(http[^ ]*\).*/\1/p' "$home/serve")
+      [ -n "$url" ] && api skill > "$out" && grep -q '"id":"recs-' "$out" && break
+      sleep 1
+    done
+    [ -n "$url" ] || { cp "$home/serve" "$out"; fail "opencode serve did not start"; }
+    found=$( (grep -o '"id":"recs-[a-z-]*"' "$out" || true) | sort -u | wc -l)
+    [ "$found" -eq "$skills" ] || fail "opencode offers $found skills, not $skills"
+    api agent > "$out"
+    node -e 'const a = JSON.parse(require("fs").readFileSync(process.argv[1], "utf8")).data ?? []; process.exit(a.some((x) => x.id === "recs-code-reviewer" && x.mode === "subagent") ? 0 : 1)' "$out" \
+      || fail "opencode does not offer recs-code-reviewer as a subagent"
+    ;;
   *)
-    echo "usage: packaging/validate.sh <claude|codex|pi|agy> <package-dir>" >&2
+    echo "usage: packaging/validate.sh <claude|codex|pi|agy|opencode> <package-dir>" >&2
     exit 2
     ;;
 esac

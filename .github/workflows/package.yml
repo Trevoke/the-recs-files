@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        harness: [claude, codex, pi, agy]
+        harness: [claude, codex, pi, agy, opencode]
     steps:
       - uses: actions/checkout@v7
         with:
@@ -44,6 +44,7 @@ jobs:
             codex) npm install -g @openai/codex ;;
             pi) npm install -g @earendil-works/pi-coding-agent ;;
             agy) echo "agy has no CLI to install here" ;;
+            opencode) npm install -g @opencode/cli ;;
           esac
       - name: Build the package
         run: |

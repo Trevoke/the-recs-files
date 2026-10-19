@@ -58,16 +58,18 @@ release. The recs files install at project scope by default:
 | Codex | `codex plugin` has no project-scope option | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
 | pi | `pi install -l git:github.com/Trevoke/the-recs-files-pi@v<version>` | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
 | Antigravity | `agy plugin install` has no project-scope option | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+| opencode | Copy the package's `skills` and `agents` into the project's `.opencode/` | Copy the package's `skills` and `agents` into `~/.config/opencode/` |
 
 With the Claude Code package, Claude Code must run with the environment
 variable `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of
 the recs files is undefined.
 
-The Claude Code and Antigravity packages carry the `recs-code-reviewer`
-subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
-the skills from the Claude Code package,
-`Trevoke/the-recs-files-claude`, into a directory the harness reads skills
-from, such as a project's `.agents/skills`.
+The Claude Code, Antigravity and opencode packages carry the
+`recs-code-reviewer` subagent as well as the skills.
+
+The opencode package is built and validated but not yet published, and is
+written for opencode 2 (`@opencode/cli`). Build it locally with
+`node packaging/build.mjs opencode <dir> <version>`, then copy from `<dir>`.
 
 Then open a project and ask for `recs-kickstart`.
 

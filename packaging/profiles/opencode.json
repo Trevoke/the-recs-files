@@ -1,0 +1,40 @@
+{
+  "harness": "opencode",
+  "name": "opencode",
+  "contents": "the skills and the `recs-code-reviewer` subagent",
+  "install": [
+    "git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} /tmp/{repo}",
+    "mkdir -p .opencode && cp -R /tmp/{repo}/skills /tmp/{repo}/agents .opencode/"
+  ],
+  "installUser": [
+    "git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} /tmp/{repo}",
+    "mkdir -p ~/.config/opencode && cp -R /tmp/{repo}/skills /tmp/{repo}/agents ~/.config/opencode/"
+  ],
+  "requirements": [
+    "The package is written for opencode 2 (`@opencode/cli`). opencode 1 (`opencode-ai`) names its tools differently."
+  ],
+  "agents": "generate",
+  "agentFrontmatter": { "mode": "subagent" },
+  "capabilities": {
+    "delegate": {
+      "status": "native",
+      "brief": "`subagent` tool (agent: {role})",
+      "sentence": "the `subagent` tool with the {role} agent",
+      "roles": { "recs-code-reviewer": "native" },
+      "roleNames": { "general-purpose": "general" }
+    },
+    "handoff": { "status": "prose" },
+    "clear": { "status": "native" },
+    "load": { "status": "native", "skill": "{skill}" },
+    "tool": { "status": "native" },
+    "ask": { "status": "native" },
+    "memory": {
+      "status": "prose",
+      "list": "the memory file (`/tmp/recs-files-memory-<the project directory's name>.md`, a checklist)",
+      "in-progress": "in progress in the memory file",
+      "completed": "completed in the memory file"
+    },
+    "restrict": { "status": "prose" }
+  },
+  "files": {}
+}
