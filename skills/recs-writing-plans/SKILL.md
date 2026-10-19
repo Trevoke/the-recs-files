@@ -49,7 +49,7 @@ A project that keeps a ubiquitous language owns its words (check AGENTS.md and t
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use {{trf: load recs-executing-plans}} to implement this plan task-by-task.
+> **For the agent:** REQUIRED SUB-SKILL: Use {{trf: load recs-executing-plans}} to implement this plan task-by-task.
 
 **Goal:** [One sentence describing what this builds]
 
