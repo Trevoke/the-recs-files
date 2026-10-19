@@ -42,6 +42,7 @@ export function renderedPackage(harness) {
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code loads CLAUDE.md and AGENTS.md from the working directory and its parents
 export function prepare(caseName) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
   const project = path.join(root, 'project');
@@ -66,9 +67,12 @@ export function exclude(project, patterns) {
   fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), patterns.map((p) => `${p}\n`).join(''));
 }
 
-// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, node, pi and its own directory
-export function sandbox({ root, project }, binds, env, command) {
-  return [
+const bwrap = fs.realpathSync(execFileSync('sh', ['-c', 'command -v bwrap'], { encoding: 'utf8' }).trim());
+
+// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness and its own directory
+// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: Options read from `--args` keep the environment out of `/proc/<pid>/cmdline`
+export function sandbox({ root, project }, binds, env, command, masks = []) {
+  const options = [
     '--unshare-all', '--share-net', '--die-with-parent', '--clearenv',
     '--ro-bind', '/usr', '/usr',
     '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/lib', '/lib',
@@ -77,16 +81,20 @@ export function sandbox({ root, project }, binds, env, command) {
     '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp',
     '--bind', root, root,
     ...binds.flatMap(([from, to]) => ['--ro-bind', from, to]),
+    ...masks.flatMap((dir) => ['--tmpfs', dir]),
     ...Object.entries(env).flatMap(([k, v]) => ['--setenv', k, v]),
     '--chdir', project,
-    '--', ...command,
   ];
+  return { argv: ['--args', '3', '--', ...command], options: options.map((o) => `${o}\0`).join('') };
 }
 
-export function run(args, timeoutMs, input) {
+export function run({ argv, options }, timeoutMs, input, onSpawn) {
   return new Promise((resolve) => {
-    const child = spawn('bwrap', args, { stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'] });
+    const child = spawn(bwrap, argv, { argv0: 'bwrap', env: {}, stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe', 'pipe'] });
+    child.stdio[3].on('error', () => {});
+    child.stdio[3].end(options);
     if (input !== undefined) child.stdin.end(input);
+    onSpawn?.(child);
     let stdout = '';
     let stderr = '';
     child.stdout.on('data', (d) => (stdout += d));

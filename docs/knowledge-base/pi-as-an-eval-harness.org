@@ -225,3 +225,15 @@ echo '{"type":"get_commands"}' | pi --mode rpc --no-session --offline | grep -o 
 #+begin_example
 13
 #+end_example
+
+* pi's bash tool inherits pi's whole environment, `OPENROUTER_API_KEY` included
+pi's bash tool runs each command with `env ?? getShellEnv()`
+(`dist/core/tools/bash.js:53`, `:123`), and `getShellEnv` returns
+`{...process.env}` with pi's bin directory added to `PATH`
+(`dist/utils/shell.js:115-123`); only the `PI_*` session variables are
+replaced (`dist/core/tools/bash.js:124-140`). Nothing in pi 0.87.1's `dist/`
+scrubs a subprocess's environment (grep for `scrub`, `sanitizeEnv`: no
+match). An agent told to run `env` in a sandboxed run listed
+`OPENROUTER_API_KEY` among its variables
+(bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness
+and its own directory).

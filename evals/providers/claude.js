@@ -16,13 +16,14 @@ function prepare(caseName) {
 }
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: `HOME` and `CLAUDE_CONFIG_DIR` inside the run keep the user's configuration out
-// docs/knowledge-base/claude-code-as-an-eval-harness.org: Inside bubblewrap, bypassing permissions is the sandbox's to confine
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: A tmpfs over `/etc/claude-code` keeps the host's managed settings out
 function sandboxed(dirs, binary, env, args) {
   return sandbox(
     dirs,
     [[binary, '/opt/claude/claude']],
     { PATH: '/opt/claude:/usr/bin', HOME: dirs.home, CLAUDE_CONFIG_DIR: dirs.configDir, LANG: 'C.UTF-8', DISABLE_AUTOUPDATER: '1', ...env },
     ['/opt/claude/claude', ...args],
+    fs.existsSync('/etc/claude-code') ? ['/etc/claude-code'] : [],
   );
 }
 
@@ -76,7 +77,7 @@ async function install(dirs, binary, env) {
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A print-mode run is `claude -p --output-format stream-json --verbose`
 function toolUses(all) {
   return all
-    .filter((e) => e.type === 'assistant')
+    .filter((e) => e.type === 'assistant' && e.parent_tool_use_id == null)
     .flatMap((e) => (e.message?.content ?? []).filter((c) => c.type === 'tool_use'));
 }
 
@@ -90,11 +91,19 @@ function toolResults(all) {
 }
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A skill load is a `Skill` tool use naming the skill
-function skillCalls(all) {
+export function skillCalls(all) {
   const results = toolResults(all);
   return toolUses(all)
     .filter((c) => c.name === 'Skill')
     .map((c) => ({ name: c.input?.skill, is_error: !results.has(c.id) || Boolean(results.get(c.id).is_error) }));
+}
+
+export function initProblem(all, plugin) {
+  const init = all.find((e) => e.type === 'system' && e.subtype === 'init');
+  if (!init) return 'the run reported no init event';
+  if (init.permissionMode !== 'bypassPermissions') return `the run started in permission mode ${init.permissionMode}, not bypassPermissions`;
+  if (plugin && !(init.skills ?? []).some((s) => s.startsWith(`${plugin}:`))) return `the run's init event lists no ${plugin}: skill`;
+  return undefined;
 }
 
 export default class ClaudeCodeProvider {
@@ -137,6 +146,7 @@ export default class ClaudeCodeProvider {
     const env = { ...identity, CLAUDE_CODE_OAUTH_TOKEN: token };
     const args = [
       '-p', '--output-format', 'stream-json', '--verbose', '--no-session-persistence',
+      // docs/knowledge-base/claude-code-as-an-eval-harness.org: Inside bubblewrap, bypassing permissions is the sandbox's to confine
       '--permission-mode', 'bypassPermissions',
       '--model', this.config.model,
       '--', prompt,
@@ -147,6 +157,7 @@ export default class ClaudeCodeProvider {
     fs.writeFileSync(path.join(root, 'claude.stderr'), result.stderr);
     const all = events(result.stdout);
     const final = all.findLast((e) => e.type === 'result');
+    const problem = initProblem(all, pkg ? manifest(pkg, 'plugin.json').name : undefined);
     const metadata = { harness: 'claude-code', workingDir: project, transcript: path.join(root, 'claude.jsonl'), ...(pkg ? { packageDir: pkg, packageSkills } : {}), skillCalls: skillCalls(all), durationMs: Date.now() - started };
     // docs/knowledge-base/claude-code-as-an-eval-harness.org: A failed run ends with a `result` event carrying `is_error`, and exits 1
     if (!final || final.is_error || result.code !== 0) {
@@ -155,6 +166,7 @@ export default class ClaudeCodeProvider {
         metadata,
       };
     }
+    if (problem) return { error: problem, metadata };
     return {
       output: final.result ?? '',
       cost: final.total_cost_usd ?? 0,

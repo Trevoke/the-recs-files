@@ -39,7 +39,7 @@ function toolUses(context) {
       .map((c) => [c.tool_use_id, c]),
   );
   return all
-    .filter((e) => e.type === 'assistant')
+    .filter((e) => e.type === 'assistant' && e.parent_tool_use_id == null)
     .flatMap((e) => (e.message?.content ?? []).filter((c) => c.type === 'tool_use'))
     .map((c) => ({ ...c, succeeded: results.has(c.id) && !results.get(c.id).is_error }));
 }

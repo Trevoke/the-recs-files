@@ -47,12 +47,12 @@ providers:
   - id: file://providers/claude.js
     label: claude-code-sonnet with-skills
     config:
-      model: sonnet
+      model: claude-sonnet-5-5
       skills: true
   - id: file://providers/claude.js
     label: claude-code-sonnet without-skills
     config:
-      model: sonnet
+      model: claude-sonnet-5-5
       skills: false
 
 tests:

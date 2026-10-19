@@ -96,11 +96,12 @@ plugin's cached copy), `backups/`, `telemetry/`, `projects/` and `sessions/`;
 the init event put auto memory at
 `<run>/home/.claude/projects/<project>/memory/` (runs). User settings, user
 CLAUDE.md and auto memory are read from that directory, which starts empty.
-Managed settings are read from `/etc/claude-code/`, which does not exist on
-this machine, so binding `/etc` brings none. The user's own `~/.claude` and
+Managed settings are read from `/etc/claude-code/` (see A tmpfs over
+`/etc/claude-code` keeps the host's managed settings out). The user's own `~/.claude` and
 `~/.claude.json` are not bound and do not exist inside the sandbox. Claude
-Code walks up from the working directory for CLAUDE.md, and above the project
-the run's root holds only `home/`, the transcript and its stderr.
+Code walks up from the working directory for CLAUDE.md (see Claude Code loads
+CLAUDE.md and AGENTS.md from the working directory and its parents), and above
+the project the run's root holds only `home/`, the transcript and its stderr.
 `--setting-sources` narrows which settings files load, and `--bare` skips
 CLAUDE.md discovery, plugin sync and OAuth altogether (`--help`); neither is
 needed once the configuration directory is the run's own, and `--bare` would
@@ -118,8 +119,8 @@ lets every tool run unattended; `--help` recommends it "only for sandboxes
 with no internet access". An eval run needs the network for the model, so the
 sandbox shares it; what confines the run is bubblewrap's view of the
 filesystem and environment
-(bubblewrap-confines-an-eval-run.org: A run sees only the system, node, pi
-and its own directory). The record keeper accepted this for eval runs
+(bubblewrap-confines-an-eval-run.org: A run sees only the system, its
+harness and its own directory). The record keeper accepted this for eval runs
 (2026-10-19). Under `--permission-prompts none`, anything that would prompt is
 denied instead (`--help`).
 
@@ -197,3 +198,84 @@ The init event listed `cc-plugin-agents-md@builtin`,
 `plugins`, and skills such as `deep-research`, `code-review` and `simplify`
 in `skills`, in both a run with the recs files installed and one without
 (runs). They are part of Claude Code as a user has it.
+
+* `/context` in print mode lists the memory files a run loads, with no model reached
+`claude -p --output-format stream-json --verbose -- /context` runs the local
+`/context` command and answers with a table of the session's context,
+including "Memory Files" (type, path, tokens) and "Skills", with no
+credential and no network (run, 2026-10-19). The table named the default
+model as `claude-opus-5-5` for a run with no `--model`.
+
+* Claude Code loads CLAUDE.md and AGENTS.md from the working directory and its parents
+In bubblewrap with no network, a git project at `<root>/project` with
+`CLAUDE.md` in both `<root>` and `<root>/project`, `/context` listed (run,
+2026-10-19):
+#+begin_example
+| Project | <root>/CLAUDE.md | 5 |
+| Project | <root>/project/CLAUDE.md | 5 |
+#+end_example
+The parent's file loaded past the project's git root. With only
+`<root>/project/AGENTS.md`, it listed `| Project | <root>/project/AGENTS.md |
+2 |` (run).
+
+* A command's inline shell runs in print mode with no model reached
+A project command, `.claude/commands/probe.md`, whose body holds
+``!`<shell command>` `` runs that command when `-p` is given `/probe`, before
+any request; with no credential and no network the shell command ran and
+wrote its output to a file (runs, 2026-10-19). A command that exits non-zero
+is reported as `<local-command-stderr>Shell command failed for pattern ...`
+in a `user` event. This runs Claude Code's shell, as the `Bash` tool does,
+without a model.
+
+* A shell run by Claude Code can read `CLAUDE_CODE_OAUTH_TOKEN` from Claude Code's own process
+Claude Code removes `CLAUDE_CODE_OAUTH_TOKEN` from the environment it gives a
+shell: with a dummy token set, `env` in a command's inline shell listed
+`CLAUDE_CONFIG_DIR`, `HOME`, `PATH`, `CLAUDE_CODE_*` session variables and
+others, and no token (run, 2026-10-19). The list of credentials removed
+always, `CLAUDE_CODE_OAUTH_TOKEN` among them, is in the binary's strings
+beside `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN`. The shell shares
+Claude Code's user and pid namespace, though, and the same probe reading each
+`/proc/<pid>/environ` found the dummy token in Claude Code's (run):
+#+begin_example
+/proc/1 bwrap --unshare-all --die-with-parent --clearenv --ro-bind / 1
+/proc/2 /opt/claude/claude -p --output-format stream-json --verbose  1
+/proc/79 /usr/bin/zsh -c source <run>/home/.claude/ 0
+/proc/80 sh <run>/probe.sh  0
+#+end_example
+(`/proc/1` matched because that probe's own launcher passed the token through
+bwrap's command line and environment, which the provider no longer does:
+bubblewrap-confines-an-eval-run.org: Options read from `--args` keep the
+environment out of `/proc/<pid>/cmdline`.) A `Bash` tool call in an eval run
+can therefore read the token with `cat /proc/2/environ`; a model tool call
+was not run to show it.
+
+* `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` needs Claude Code's own sandbox and forces the default permission mode
+The binary reads `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` (on by default under
+GitHub Actions) and, when it is on, removes more variables from what a
+subprocess gets and isolates the subprocess with bubblewrap; its error text
+says "bubblewrap is required for subprocess env scrubbing and isolation"
+(strings read from the binary). With `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1`
+in the eval sandbox (runs, 2026-10-19):
+- stderr said "⚠ Permission mode forced to default —
+  CLAUDE_CODE_SUBPROCESS_ENV_SCRUB is set (allowed_non_write_users
+  hardening). Declare allowedTools explicitly, or set
+  CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0 to opt out.";
+- with `--allowedTools Bash` the command's inline shell did not run:
+  "Sandbox is required but failed to initialize: Sandbox dependencies not
+  available: socat not installed."
+On this machine it stops every shell command, so the provider leaves it unset.
+Whether, given socat, its sandbox would hide Claude Code's
+`/proc/<pid>/environ` from the shell was not established.
+`CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR` is also read: given a file holding
+a dummy token on descriptor 4, a run with no network retried its request
+where one with no credential said "Not logged in" (run); whether that keeps
+the token out of every `/proc` entry a shell can read was not established.
+
+* A tmpfs over `/etc/claude-code` keeps the host's managed settings out
+Claude Code reads managed settings from `/etc/claude-code/`. bubblewrap
+mounts a `--tmpfs` only where the directory exists: over the read-only `/etc`
+bind, `--tmpfs /etc/claude-code` on a machine without it stopped with
+"bwrap: Can't mkdir /etc/claude-code: Read-only file system", and `--tmpfs
+/etc/ssl` on one with it left `ls -A /etc/ssl` empty inside (runs,
+2026-10-19). The provider adds the tmpfs when the host has the directory, and
+where it does not, the bound `/etc` has nothing there to read.

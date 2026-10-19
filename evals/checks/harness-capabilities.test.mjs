@@ -24,7 +24,7 @@ function run(t, events, files = {}, metadata = {}) {
     fs.mkdirSync(path.dirname(path.join(project, file)), { recursive: true });
     fs.writeFileSync(path.join(project, file), text);
   }
-  const transcript = path.join(root, 'pi.jsonl');
+  const transcript = path.join(root, metadata.harness === 'claude-code' ? 'claude.jsonl' : 'pi.jsonl');
   fs.writeFileSync(transcript, `${events.map((e) => JSON.stringify(e)).join('\n')}\nnot json\n`);
   return { providerResponse: { metadata: { workingDir: project, transcript, ...metadata } } };
 }
@@ -144,11 +144,11 @@ test('onlyPlannedFilesWritten fails on a missing planned file', (t) => {
 
 const claudeCode = { harness: 'claude-code' };
 let uses = 0;
-const use = (name, input, isError = false) => {
+const use = (name, input, isError = false, parent = null) => {
   uses += 1;
   return [
-    { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: `toolu_${uses}`, name, input }] }, parent_tool_use_id: null },
-    { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: `toolu_${uses}`, content: 'ok', is_error: isError }] }, parent_tool_use_id: null },
+    { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: `toolu_${uses}`, name, input }] }, parent_tool_use_id: parent },
+    { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: `toolu_${uses}`, content: 'ok', is_error: isError }] }, parent_tool_use_id: parent },
   ];
 };
 const init = { type: 'system', subtype: 'init', tools: ['Task', 'Bash', 'Edit', 'Read', 'Skill', 'TodoWrite', 'Write'], agents: ['recs-files:recs-code-reviewer'] };
@@ -197,4 +197,26 @@ test('memoryFileKept on Claude Code does not count writes to the pi memory file'
 
 test('onlyPlannedFilesWritten passes on Claude Code on exactly the planned files', (t) => {
   assert.equal(onlyPlannedFilesWritten('', run(t, [init, final], notes, claudeCode)).pass, true);
+});
+
+test('reviewerDelegated on Claude Code does not count a reviewer dispatched by a subagent', (t) => {
+  const context = run(t, [
+    init,
+    ...use('Task', { description: 'Work', prompt: 'Do the work.', subagent_type: 'general-purpose' }),
+    ...use('Task', { description: 'Review', prompt: 'Review.', subagent_type: 'recs-files:recs-code-reviewer' }, false, 'toolu_parent'),
+    final,
+  ], {}, claudeCode);
+  const r = reviewerDelegated('', context);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /1 subagent call\(s\); 0 named/);
+});
+
+test('memoryFileKept on Claude Code does not count a subagent\'s TodoWrite calls', (t) => {
+  const context = run(t, [
+    init,
+    ...use('TodoWrite', todos('in_progress')),
+    ...use('TodoWrite', todos('completed'), false, 'toolu_parent'),
+    final,
+  ], {}, claudeCode);
+  assert.equal(memoryFileKept('', context).pass, false);
 });

@@ -120,10 +120,12 @@ npm run eval -- --repeat 3 --filter-providers 'with-skills'
 npm run view            # browse the results
 ```
 
-The runs need `OPENROUTER_API_KEY`, and `ANTHROPIC_API_KEY` for the
-`llm-rubric` grader, and bubblewrap (`bwrap`): each run sees only the system,
-node, pi and its own directory. Each run's transcript is kept beside its
-project, as `pi.jsonl`.
+The pi runs need `OPENROUTER_API_KEY`, the Claude Code runs need
+`CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) and `claude` on `PATH`,
+and the `llm-rubric` grader needs `ANTHROPIC_API_KEY`. Every run needs
+bubblewrap (`bwrap`): each run sees only the system, its harness and its own
+directory. Each run's transcript is kept beside its project, as `pi.jsonl` or
+`claude.jsonl`.
 
 ## License
 
