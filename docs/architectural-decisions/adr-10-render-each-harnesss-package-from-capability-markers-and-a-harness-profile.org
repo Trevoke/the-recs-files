@@ -1,0 +1,23 @@
+* ADR-10 Render each harness's package from capability markers and a harness profile
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+** Context
+The skills reach several harnesses, each with its own means to delegate,
+keep a task list and load a skill. Skill text worded for one harness
+misleads an agent on another, and skill text worded for none degrades the
+harness it was written for.
+** Decision
+We will write each harness-dependent phrase in the skill text as a
+capability marker, ={{trf: <harness capability> <arguments>}}=, and render
+one package per harness, replacing each marker with that harness's entry in
+its harness profile. A harness capability is a kind of action whose means
+differs by harness: delegate, hand off, clear, load, harness tool, ask,
+memory, restrict. A harness profile states, for each harness capability,
+what the harness has and how its skill text says it, and the files its
+package carries.
+** Consequences
+Each harness reads the skill text in its own terms, and a new harness is a
+new harness profile. =skills/= is not a usable skill on its own: evals and
+installs use a rendering. The Claude Code rendering at the commit that
+introduces the markers is byte-identical to the skill text before it.

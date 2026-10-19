@@ -11,3 +11,4 @@
 
 * Proposed
 - ADR-9 :: [[./architectural-decisions/adr-9-the-code-realization-skills-are-a-prototype-adapted-from-superpowers.org][The code realization skills are a prototype adapted from superpowers]]
+- ADR-10 :: [[./architectural-decisions/adr-10-render-each-harnesss-package-from-capability-markers-and-a-harness-profile.org][Render each harness's package from capability markers and a harness profile]]
