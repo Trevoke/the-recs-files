@@ -38,6 +38,11 @@ function files(dir, base = dir) {
   }).sort();
 }
 
+function within(dir, file) {
+  const relative = path.relative(dir, file);
+  return !path.isAbsolute(relative) && relative !== '..' && !relative.startsWith(`..${path.sep}`);
+}
+
 export function render(harness, outArg, versionArg, { root: from = root } = {}) {
   const p = profile(harness, from);
   const out = path.resolve(outArg);
@@ -50,8 +55,7 @@ export function render(harness, outArg, versionArg, { root: from = root } = {}) 
   };
   const copy = (src, to = src) => fs.cpSync(path.join(from, src), path.join(out, to), { recursive: true });
 
-  const relative = path.relative(out, from);
-  if (!path.isAbsolute(relative) && relative !== '..' && !relative.startsWith(`..${path.sep}`)) {
+  if (within(from, out) || within(out, from)) {
     throw new Error(`${harness}: rendering refused\n- ${out} holds the source`);
   }
   fs.rmSync(out, { recursive: true, force: true });
