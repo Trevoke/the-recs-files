@@ -26,18 +26,34 @@ function git(cwd, ...args) {
   });
 }
 
+let rendering;
+function piPackage() {
+  rendering ??= (() => {
+    try {
+      return { pkg: render('pi', fs.mkdtempSync(path.join(os.tmpdir(), 'recs-eval-pi-package-')), 'v0.0.0-eval') };
+    } catch (error) {
+      return { error };
+    }
+  })();
+  if (rendering.error) throw rendering.error;
+  return rendering.pkg;
+}
+
 // docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
 function prepare(caseName, withSkills) {
+  const rendered = withSkills ? piPackage() : undefined;
   const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
   const project = path.join(root, 'project');
   const agentDir = path.join(root, 'agent');
   const home = path.join(root, 'home');
+  const pkg = withSkills ? path.join(root, 'package') : undefined;
   fs.cpSync(path.join(casesDir, caseName, 'fixture'), project, { recursive: true });
-  const pkg = withSkills ? render('pi', path.join(root, 'package'), 'v0.0.0-eval') : undefined;
-  if (withSkills) {
-    fs.cpSync(path.join(pkg, 'skills'), path.join(project, '.agents', 'skills'), { recursive: true });
-  }
   fs.mkdirSync(agentDir);
+  if (withSkills) {
+    fs.cpSync(rendered, pkg, { recursive: true });
+    // docs/knowledge-base/pi-as-an-eval-harness.org: A print-mode run discovers `<agent-dir>/skills` without `--approve`
+    fs.cpSync(path.join(pkg, 'skills'), path.join(agentDir, 'skills'), { recursive: true });
+  }
   fs.mkdirSync(home);
   git(project, 'init', '--quiet', '--initial-branch=main');
   git(project, 'add', '-A');
@@ -117,6 +133,13 @@ function skillCalls(all) {
     .map(({ name, end }) => ({ name, is_error: !end || Boolean(end.isError) }));
 }
 
+// docs/knowledge-base/pi-as-an-eval-harness.org: A tool's `usage` reaches the JSONL on its `tool_execution_end`
+function subagentCost(all) {
+  return all
+    .filter((e) => e.type === 'tool_execution_end' && e.toolName === 'subagent')
+    .reduce((sum, e) => sum + (e.result?.usage?.cost?.total ?? 0), 0);
+}
+
 export default class PiProvider {
   constructor(options = {}) {
     this.config = options.config ?? {};
@@ -130,14 +153,14 @@ export default class PiProvider {
   async callApi(prompt, context) {
     const caseName = context?.vars?.case;
     const dirs = prepare(caseName, this.config.skills);
-    const { root, project, agentDir } = dirs;
+    const { root, project, agentDir, pkg } = dirs;
     // docs/knowledge-base/pi-as-an-eval-harness.org: `--no-skills --skill <dir>` loads exactly that directory's skills
     const args = [
       '-p', '--mode', 'json', '--no-session',
       '--no-skills', '--no-extensions', '--no-prompt-templates', '--no-themes', '--offline',
-      ...(this.config.skills ? ['--skill', path.join(project, '.agents', 'skills')] : []),
+      ...(this.config.skills ? ['--skill', path.join(agentDir, 'skills')] : []),
       // docs/knowledge-base/pi-as-an-eval-harness.org: An explicit `-e` extension loads under `--no-extensions`
-      ...(this.config.skills ? ['-e', path.join(dirs.pkg, 'extensions', 'subagent', 'index.ts')] : []),
+      ...(this.config.skills ? ['-e', path.join(pkg, 'extensions', 'subagent', 'index.ts')] : []),
       '--model', this.config.model,
       '--', prompt,
     ];
@@ -161,7 +184,7 @@ export default class PiProvider {
     }
     return {
       output: text(assistant.at(-1)),
-      cost: assistant.reduce((sum, m) => sum + (m.usage?.cost?.total ?? 0), 0),
+      cost: assistant.reduce((sum, m) => sum + (m.usage?.cost?.total ?? 0), 0) + subagentCost(all),
       metadata,
     };
   }

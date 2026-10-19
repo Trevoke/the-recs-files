@@ -113,3 +113,22 @@ node evals/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js --hel
   --extension, -e <path>         Load an extension file (can be used multiple times)
   --no-extensions, -ne           Disable extension discovery (explicit -e paths still work)
 #+end_example
+
+* A print-mode run discovers `<agent-dir>/skills` without `--approve`
+Auto-discovery adds `<agent-dir>/skills` (the directory
+`PI_CODING_AGENT_DIR` names) and `$HOME/.agents/skills` as user skills,
+outside the project-trust check that gates a project's `.agents/skills`
+and `.pi/skills`. Read from pi 0.87.1's source, with no run:
+`dist/core/package-manager.js:713` (`globalBaseDir = this.agentDir`),
+`:1966` (`skills: join(globalBaseDir, "skills")`), `:1976` (`$HOME/.agents/skills`),
+`:1978` (project skill directories only when `projectTrusted`), and `:2010`
+and `:2017`, which add both user directories unconditionally. The bundle in
+`dist/bundle/chunks/` carries the same code.
+
+* A tool's `usage` reaches the JSONL on its `tool_execution_end`
+A tool's result may carry a `usage`; `tool_execution_end` carries the whole
+result as `result`, so the JSONL has it at `result.usage.cost.total`. Read
+from pi 0.87.1's source, with no run: `pi-agent-core/dist/agent-loop.js:588`
+keeps `usage` on the result, `:611-617` emits it as `result`, and
+`pi-coding-agent/dist/modes/json-event.js:17-18` writes every event but
+`message_update` unchanged.
