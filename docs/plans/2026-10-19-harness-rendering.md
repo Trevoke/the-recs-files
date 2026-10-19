@@ -682,7 +682,7 @@ MIT; see \`LICENSE\`.
   if (p.agents === 'copy') copy('agents');
   if (p.agents === 'generate') {
     for (const a of agents) {
-      const head = [yaml('name', a.name), yaml('description', `${a.description}\n`.replace(/\n$/, '')), ...Object.entries(p.agentFrontmatter).map(([k, val]) => yaml(k, val))];
+      const head = [yaml('name', a.name), `description: |\n${a.description.split('\n').map((l) => `  ${l}`).join('\n')}`, ...Object.entries(p.agentFrontmatter).map(([k, val]) => yaml(k, val))];
       write(a.file, `---\n${head.join('\n')}\n---\n${a.body}`);
     }
   }
@@ -699,11 +699,6 @@ MIT; see \`LICENSE\`.
   return out;
 }
 ```
-
-Today's agy description is always a block (`description: |`), even for one
-line. If Step 7's diff shows the agy agent's `description:` differing, make
-`yaml('description', …)` always emit the block form for that key and nothing
-else.
 
 **Step 6: Replace `packaging/build.mjs` with the command line**
 
