@@ -1,6 +1,6 @@
 * ADR-12 Install the recs files at project scope by default
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 Installing a package decides where its skills apply. Installed at user scope,
