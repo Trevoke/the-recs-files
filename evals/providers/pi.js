@@ -77,7 +77,19 @@ async function install(dirs, env) {
   // docs/knowledge-base/pi-as-an-eval-harness.org: `pi install -l <path>` records the path in `.pi/settings.json` and copies nothing
   const result = await run(sandboxed(dirs, env, ['install', '-l', `./${path.relative(project, pkg)}`]), 60 * 1000);
   if (result.code !== 0) throw new Error(`pi install exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`);
-  return pkg;
+  const settings = JSON.parse(fs.readFileSync(path.join(project, '.pi', 'settings.json'), 'utf8'));
+  if (!(settings.packages ?? []).includes(name)) throw new Error(`.pi/settings.json does not list ${name} in packages`);
+  // docs/knowledge-base/pi-as-an-eval-harness.org: An rpc `get_commands` lists the skills a run loads, with no model reached
+  const offered = await run(sandboxed(dirs, env, ['--mode', 'rpc', '--no-session', '--offline']), 60 * 1000, '{"type":"get_commands"}\n');
+  const said = offered.stdout + offered.stderr;
+  if (said.includes('Failed to load extension')) throw new Error(`pi could not load the package's extension: ${said.slice(-2000)}`);
+  const found = new Set([...offered.stdout.matchAll(/"skill:(recs-[a-z-]+)"/g)].map((m) => m[1]));
+  const missing = fs.readdirSync(path.join(pkg, 'skills'), { withFileTypes: true })
+    .filter((e) => e.isDirectory() && e.name.startsWith('recs-'))
+    .map((e) => e.name)
+    .filter((skill) => !found.has(skill));
+  if (missing.length > 0) throw new Error(`pi does not offer ${missing.join(', ')} from the installed package`);
+  return { pkg, skills: [...found].sort() };
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: Nothing confines pi to its working directory
@@ -100,9 +112,10 @@ function sandboxed({ root, project, home }, env, args) {
   ];
 }
 
-function run(args, timeoutMs) {
+function run(args, timeoutMs, input) {
   return new Promise((resolve) => {
-    const child = spawn('bwrap', args, { stdio: ['ignore', 'pipe', 'pipe'] });
+    const child = spawn('bwrap', args, { stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'] });
+    if (input !== undefined) child.stdin.end(input);
     let stdout = '';
     let stderr = '';
     child.stdout.on('data', (d) => (stdout += d));
@@ -175,8 +188,15 @@ export default class PiProvider {
     const { root, project, agentDir } = dirs;
     // docs/knowledge-base/pi-as-an-eval-harness.org: `PI_CODING_AGENT_DIR` moves settings, models and auth
     const env = { ...identity, PI_CODING_AGENT_DIR: agentDir, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? '' };
-    const pkg = this.config.skills ? await install(dirs, env) : undefined;
-    // docs/knowledge-base/pi-as-an-eval-harness.org: `--no-skills` and `--no-extensions` drop a package's skills and extensions
+    let pkg;
+    let packageSkills;
+    if (this.config.skills) {
+      try {
+        ({ pkg, skills: packageSkills } = await install(dirs, env));
+      } catch (error) {
+        return { error: `the package did not install: ${error.message}`, metadata: { workingDir: project, skillCalls: [] } };
+      }
+    }
     const args = [
       '-p', '--mode', 'json', '--no-session',
       '--no-prompt-templates', '--no-themes', '--offline',
@@ -190,7 +210,7 @@ export default class PiProvider {
     const all = events(result.stdout);
     const messages = all.filter((e) => e.type === 'message_end').map((e) => e.message);
     const assistant = messages.filter((m) => m?.role === 'assistant');
-    const metadata = { workingDir: project, transcript: path.join(root, 'pi.jsonl'), ...(pkg ? { packageDir: pkg } : {}), skillCalls: skillCalls(all), durationMs: Date.now() - started };
+    const metadata = { workingDir: project, transcript: path.join(root, 'pi.jsonl'), ...(pkg ? { packageDir: pkg, packageSkills } : {}), skillCalls: skillCalls(all), durationMs: Date.now() - started };
     // docs/knowledge-base/pi-as-an-eval-harness.org: pi exits 0 when the provider fails
     const failed = assistant.find((m) => m.stopReason === 'error');
     if (failed || result.code !== 0) {

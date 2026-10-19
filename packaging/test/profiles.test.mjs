@@ -15,6 +15,7 @@ for (const harness of harnesses) {
     assert.equal(profile.harness, harness);
     assert.deepEqual(checkProfile(profile), []);
     for (const key of ['name', 'contents', 'install', 'agents', 'files']) assert.ok(profile[key], `no ${key}`);
+    if ('installUser' in profile) assert.ok(Array.isArray(profile.installUser) && profile.installUser.length > 0, 'installUser, where present, lists at least one line');
     assert.ok(!JSON.stringify(profile.capabilities).includes('\\'), 'no entry holds a double quote or a backslash');
   });
 }

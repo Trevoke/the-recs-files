@@ -27,6 +27,22 @@ for (const harness of harnesses) {
     const said = execFileSync(process.execPath, [path.join(root, 'packaging', 'check.mjs'), harness, out], { encoding: 'utf8' });
     assert.match(said, new RegExp(`^${harness}: package checks pass`));
   });
+  test(`the ${harness} package README installs at project scope in its first block, and at user scope only in a second`, (t) => {
+    const out = render(harness, temp(t, `readme-${harness}-`), 'v1.2.3');
+    const profile = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
+    const readme = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
+    const blocks = [...readme.matchAll(/```sh\n([\s\S]*?)\n```/g)].map((m) => m[1].split('\n'));
+    const userScope = /--scope user|^pi install (?!-l )/;
+    assert.deepEqual(blocks[0].length, profile.install.length, 'the first block holds the install lines');
+    for (const line of blocks[0]) assert.ok(!userScope.test(line), `the first block holds no user-scope command: ${line}`);
+    if (profile.installUser) {
+      assert.equal(blocks.length, 2, 'a second block holds the installUser lines');
+      assert.match(readme, /At user scope instead:\n\n```sh\n/, 'the second block follows "At user scope instead:"');
+      assert.equal(blocks[1].length, profile.installUser.length, 'the second block holds the installUser lines');
+    } else {
+      assert.equal(blocks.length, 1, 'a harness with no installUser has one install block');
+    }
+  });
 }
 
 test('the pi package declares and carries its subagent extension', (t) => {

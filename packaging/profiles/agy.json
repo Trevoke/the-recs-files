@@ -3,7 +3,7 @@
   "name": "Antigravity",
   "contents": "the skills and the `recs-code-reviewer` subagent",
   "install": [
-    "# agy plugin install has no project scope.",
+    "# agy plugin install has no project-scope option",
     "agy plugin install https://github.com/Trevoke/{repo}"
   ],
   "agents": "generate",

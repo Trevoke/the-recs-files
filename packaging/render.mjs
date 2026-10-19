@@ -90,7 +90,13 @@ pull requests there; changes made here are overwritten.
 \`\`\`sh
 ${fill(p.install, v).join('\n')}
 \`\`\`
+${p.installUser ? `
+At user scope instead:
 
+\`\`\`sh
+${fill(p.installUser, v).join('\n')}
+\`\`\`
+` : ''}
 Then open a project and ask for \`recs-kickstart\`.
 
 ## License

@@ -180,11 +180,18 @@ decision and never written (`dist/cli/args.js:215-216`,
 `dist/core/project-trust.js:18-19`, `dist/main.js:584`, `:599`). A stored
 decision lives in `trust.json` in the agent directory, keyed by the
 canonical project path, a parent's entry covering its children
-(`dist/core/trust-manager.js:20-33`, `:170-200`); pi reads it on every run
-(`dist/core/project-trust.js:37-40`, `dist/main.js:585`), and writes it when
-a person answers "Trust" at the interactive prompt
-(`dist/core/project-trust.js:52-55`). A pi started with no flags, with the
-same `PI_CODING_AGENT_DIR`, is therefore trusted. Run in bubblewrap,
+(`dist/core/trust-manager.js:20-33`, `:170-200`). A run with no `--approve`
+whose project asks for trust resolves it through `resolveProjectTrusted`
+(`dist/main.js:580-583`, `:595-600`), which reads `trust.json`
+(`dist/core/project-trust.js:37-40`); pi writes it when a person answers
+"Trust" at the interactive prompt (`dist/core/project-trust.js:52-55`).
+A pi started with no flags, with the same `PI_CODING_AGENT_DIR`, is therefore
+trusted. The recs files' subagent extension starts its child pi with
+`--mode json -p --no-session` and at most `--model` and `--thinking`, in the
+parent's working directory, and passes no `env`, so the child inherits the
+parent's environment (`packaging/pi/extensions/subagent/index.ts:41-43`,
+`:67`): a parent's `--approve` does not reach the child, and `trust.json`,
+found through the inherited `PI_CODING_AGENT_DIR`, does. Run in bubblewrap,
 2026-10-19: after `--approve` runs the agent directory held no `trust.json`;
 with `trust.json` holding `{"<project>": true}`, a run with no flags loaded
 the package's thirteen skills and its `subagent` extension, the extension
@@ -202,3 +209,19 @@ It holds patterns in the form of `.gitignore` that apply to one repository and
 are not committed (gitignore(5)). An excluded untracked path is absent from
 `git status --porcelain` and from `git ls-files --others --exclude-standard`,
 and `git add -A` does not add it (run, 2026-10-19).
+
+* An rpc `get_commands` lists the skills a run loads, with no model reached
+`pi --mode rpc --no-session --offline`, given `{"type":"get_commands"}` on
+stdin, answers with every extension command, prompt template and skill the
+run loaded, each skill as `skill:<name>` with its `sourceInfo`, and exits
+when stdin closes; it needs no API key (`dist/modes/rpc/rpc-mode.js:542-569`).
+`packaging/validate.sh` counts the `skill:recs-*` entries this way to check a
+user-scope install. Run in bubblewrap with `OPENROUTER_API_KEY` empty,
+2026-10-19, in a project with the pi package installed at project scope and
+trusted:
+#+begin_src sh
+echo '{"type":"get_commands"}' | pi --mode rpc --no-session --offline | grep -o '"skill:recs-[a-z-]*"' | wc -l
+#+end_src
+#+begin_example
+13
+#+end_example

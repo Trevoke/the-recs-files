@@ -3,8 +3,9 @@
   "name": "pi",
   "contents": "the skills",
   "install": [
-    "pi install -l git:github.com/Trevoke/{repo}@v{version}",
-    "# At user scope instead:",
+    "pi install -l git:github.com/Trevoke/{repo}@v{version}"
+  ],
+  "installUser": [
     "pi install git:github.com/Trevoke/{repo}@v{version}"
   ],
   "agents": "role file",

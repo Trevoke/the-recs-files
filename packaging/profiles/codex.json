@@ -3,7 +3,7 @@
   "name": "Codex",
   "contents": "the skills",
   "install": [
-    "# codex plugin has no project scope.",
+    "# codex plugin has no project-scope option",
     "codex plugin marketplace add Trevoke/{repo}",
     "codex plugin add {plugin}@the-recs-files"
   ],

@@ -4,8 +4,9 @@
   "contents": "the skills and the `recs-code-reviewer` subagent",
   "install": [
     "claude plugin marketplace add --scope project Trevoke/{repo}",
-    "claude plugin install --scope project {plugin}@the-recs-files",
-    "# At user scope instead:",
+    "claude plugin install --scope project {plugin}@the-recs-files"
+  ],
+  "installUser": [
     "claude plugin marketplace add --scope user Trevoke/{repo}",
     "claude plugin install --scope user {plugin}@the-recs-files"
   ],
