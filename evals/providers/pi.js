@@ -40,7 +40,7 @@ function piPackage() {
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
-export function prepare(caseName, withSkills) {
+function prepare(caseName, withSkills) {
   const rendered = withSkills ? piPackage() : undefined;
   const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
   const project = path.join(root, 'project');
