@@ -61,8 +61,9 @@ release:
 
 The Claude Code and Antigravity packages carry the `recs-code-reviewer`
 subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
-`skills/recs-*` into a directory the harness reads skills from, such as a
-project's `.agents/skills`.
+the skills from the Claude Code package,
+`Trevoke/the-recs-files-claude`, into a directory the harness reads skills
+from, such as a project's `.agents/skills`.
 
 Then open a project and ask for `recs-kickstart`.
 

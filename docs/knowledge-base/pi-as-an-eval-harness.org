@@ -102,3 +102,14 @@ this way. `PROMPTFOO_DISABLE_ADAPTIVE_SCHEDULER=true` removes the queue and the
 back-off with it: the same six runs all failed on OpenRouter's 429 "Rate limit
 exceeded: new-account-rpm/google/gemini-3.1-pro-preview" (`dist/src/shared-*.js`,
 `RateLimitRegistry`; runs, 2026-10-15).
+
+* An explicit `-e` extension loads under `--no-extensions`
+`--no-extensions` turns off discovery only; an extension named with `-e`
+still loads beside it (pi 0.87.1, `--help`, 2026-10-19).
+#+begin_src sh
+node evals/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js --help | grep -E 'no-extensions|--extension'
+#+end_src
+#+begin_example
+  --extension, -e <path>         Load an extension file (can be used multiple times)
+  --no-extensions, -ne           Disable extension discovery (explicit -e paths still work)
+#+end_example

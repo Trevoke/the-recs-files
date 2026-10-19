@@ -3,9 +3,9 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { render } from '../../packaging/render.mjs';
 
 const evalsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const skillsDir = path.join(evalsDir, '..', 'skills');
 const casesDir = path.join(evalsDir, 'cases');
 const modulesDir = path.join(evalsDir, 'node_modules');
 const pi = path.join(modulesDir, '@earendil-works', 'pi-coding-agent', 'dist', 'bundle', 'cli.js');
@@ -33,15 +33,16 @@ function prepare(caseName, withSkills) {
   const agentDir = path.join(root, 'agent');
   const home = path.join(root, 'home');
   fs.cpSync(path.join(casesDir, caseName, 'fixture'), project, { recursive: true });
+  const pkg = withSkills ? render('pi', path.join(root, 'package'), 'v0.0.0-eval') : undefined;
   if (withSkills) {
-    fs.cpSync(skillsDir, path.join(project, '.agents', 'skills'), { recursive: true });
+    fs.cpSync(path.join(pkg, 'skills'), path.join(project, '.agents', 'skills'), { recursive: true });
   }
   fs.mkdirSync(agentDir);
   fs.mkdirSync(home);
   git(project, 'init', '--quiet', '--initial-branch=main');
   git(project, 'add', '-A');
   git(project, 'commit', '--quiet', '-m', 'Start the project');
-  return { root, project, agentDir, home };
+  return { root, project, agentDir, home, pkg };
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: Nothing confines pi to its working directory
@@ -135,6 +136,8 @@ export default class PiProvider {
       '-p', '--mode', 'json', '--no-session',
       '--no-skills', '--no-extensions', '--no-prompt-templates', '--no-themes', '--offline',
       ...(this.config.skills ? ['--skill', path.join(project, '.agents', 'skills')] : []),
+      // docs/knowledge-base/pi-as-an-eval-harness.org: An explicit `-e` extension loads under `--no-extensions`
+      ...(this.config.skills ? ['-e', path.join(dirs.pkg, 'extensions', 'subagent', 'index.ts')] : []),
       '--model', this.config.model,
       '--', prompt,
     ];

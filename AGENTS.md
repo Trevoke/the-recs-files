@@ -329,7 +329,7 @@ A second worktree gives a second index and does not, on its own, give a second
 copy of the code under test. Where the ecosystem links a package to one path,
 every test run resolves it there whatever directory it starts in, and a
 worktree's tests read the main tree's modules, reporting green or red for code
-the run never touched. This project's evals copy the skills from the
+the run never touched. This project's evals render the skills from the
 `skills/` beside their own `evals/` into each run's project, so a worktree's
 evals run that worktree's skills; run them from the worktree's own `evals/`.
 With both, two agents may write at once; with only the index, the second is
