@@ -29,7 +29,15 @@ function run(t, events, files = {}) {
   return { providerResponse: { metadata: { workingDir: project, transcript } } };
 }
 
-const start = (toolName, args) => ({ type: 'tool_execution_start', toolCallId: Math.random().toString(), toolName, args });
+let ids = 0;
+const call = (toolName, args, isError = false) => {
+  ids += 1;
+  return [
+    { type: 'tool_execution_start', toolCallId: `c${ids}`, toolName, args },
+    { type: 'tool_execution_end', toolCallId: `c${ids}`, toolName, isError },
+  ];
+};
+const start = (toolName, args) => call(toolName, args)[0];
 const memory = '/tmp/recs-files-memory-project.md';
 
 test('the reviewer role is the first line of the code reviewer body', () => {
@@ -40,6 +48,34 @@ test('the reviewer role is the first line of the code reviewer body', () => {
 test('reviewerDelegated passes when a subagent prompt opens with the role', (t) => {
   const context = run(t, [start('subagent', { prompt: `${reviewerRole()}\n\nReview src/inspection.js.` })]);
   assert.equal(reviewerDelegated('', context).pass, true);
+});
+
+test('reviewerDelegated passes when a heading or a fence comes before the role', (t) => {
+  for (const prompt of [
+    `# Code review\n\n${reviewerRole()}\n\nReview src/inspection.js.`,
+    `Your role:\n\n\`\`\`\n${reviewerRole()}\n\`\`\``,
+    `---\n## Role\n${reviewerRole()}`,
+  ]) {
+    const r = reviewerDelegated('', run(t, [start('subagent', { prompt })]));
+    assert.equal(r.pass, true, prompt);
+    assert.match(r.reason, /at line \d+/);
+  }
+});
+
+test('reviewerDelegated fails when the template opening comes before the role', (t) => {
+  const prompt = `# Code Review Agent\n\nYou are reviewing code changes against the plan task and the records it cites.\n\n${reviewerRole()}`;
+  const r = reviewerDelegated('', run(t, [start('subagent', { prompt })]));
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /found at line 5/);
+});
+
+test('reviewerRole reads the rendered role file from the run package', (t) => {
+  const pkg = fs.mkdtempSync(path.join(os.tmpdir(), 'recs-check-pkg-'));
+  t.after(() => fs.rmSync(pkg, { recursive: true, force: true }));
+  fs.mkdirSync(path.join(pkg, 'skills', 'recs-requesting-code-review'), { recursive: true });
+  fs.writeFileSync(path.join(pkg, 'skills', 'recs-requesting-code-review', 'reviewer-role.md'), 'You are the rendered role.\n\nMore.\n');
+  const context = { providerResponse: { metadata: { packageDir: pkg } } };
+  assert.equal(reviewerRole(context), 'You are the rendered role.');
 });
 
 test('reviewerDelegated fails when the role is not first in the prompt', (t) => {
@@ -53,14 +89,35 @@ test('reviewerDelegated fails when nothing is delegated', (t) => {
 });
 
 test('memoryFileKept passes on a write and an edit of the memory file', (t) => {
-  const context = run(t, [start('write', { path: memory, content: '- [ ] one' }), start('edit', { path: memory, edits: [] })]);
+  const context = run(t, [...call('write', { path: memory, content: '- [ ] one' }), ...call('edit', { path: memory, edits: [] })]);
   assert.equal(memoryFileKept('', context).pass, true);
 });
 
 test('memoryFileKept fails on one write, or writes elsewhere', (t) => {
-  assert.equal(memoryFileKept('', run(t, [start('write', { path: memory })])).pass, false);
-  assert.equal(memoryFileKept('', run(t, [start('write', { path: 'TODO.md' }), start('edit', { path: 'TODO.md' })])).pass, false);
-  assert.equal(memoryFileKept('', run(t, [start('write', { path: '/tmp/x/recs-files-memory-project.md' }), start('edit', { path: '/tmp/x/recs-files-memory-project.md' })])).pass, false);
+  assert.equal(memoryFileKept('', run(t, [...call('write', { path: memory })])).pass, false);
+  assert.equal(memoryFileKept('', run(t, [...call('write', { path: 'TODO.md' }), ...call('edit', { path: 'TODO.md' })])).pass, false);
+  assert.equal(memoryFileKept('', run(t, [...call('write', { path: '/tmp/x/recs-files-memory-project.md' }), ...call('edit', { path: '/tmp/x/recs-files-memory-project.md' })])).pass, false);
+});
+
+test('memoryFileKept counts bash writes to the memory file', (t) => {
+  for (const command of [
+    `printf -- '- [ ] one\\n' > ${memory}`,
+    `echo '- [x] one' >> ${memory}`,
+    `echo '- [ ] two' | tee -a ${memory}`,
+    `sed -i 's/- \\[ \\] one/- [x] one/' ${memory}`,
+  ]) {
+    assert.equal(memoryFileKept('', run(t, [...call('bash', { command }), ...call('write', { path: memory })])).pass, true, command);
+  }
+});
+
+test('memoryFileKept does not count a bash read of the memory file', (t) => {
+  assert.equal(memoryFileKept('', run(t, [...call('bash', { command: `cat ${memory}` }), ...call('write', { path: memory })])).pass, false);
+  assert.equal(memoryFileKept('', run(t, [...call('bash', { command: `grep one ${memory} > /dev/null` }), ...call('write', { path: memory })])).pass, false);
+});
+
+test('memoryFileKept does not count failed or unfinished calls', (t) => {
+  assert.equal(memoryFileKept('', run(t, [...call('write', { path: memory }), ...call('edit', { path: memory }, true)])).pass, false);
+  assert.equal(memoryFileKept('', run(t, [...call('write', { path: memory }), start('edit', { path: memory })])).pass, false);
 });
 
 test('memoryFileKept throws without a transcript', () => {

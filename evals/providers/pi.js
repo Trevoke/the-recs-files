@@ -40,7 +40,7 @@ function piPackage() {
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
-function prepare(caseName, withSkills) {
+export function prepare(caseName, withSkills) {
   const rendered = withSkills ? piPackage() : undefined;
   const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
   const project = path.join(root, 'project');
@@ -58,6 +58,12 @@ function prepare(caseName, withSkills) {
   git(project, 'init', '--quiet', '--initial-branch=main');
   git(project, 'add', '-A');
   git(project, 'commit', '--quiet', '-m', 'Start the project');
+  const change = path.join(casesDir, caseName, 'change');
+  if (fs.existsSync(change)) {
+    fs.cpSync(change, project, { recursive: true });
+    git(project, 'add', '-A');
+    git(project, 'commit', '--quiet', '-m', 'Add the change under review');
+  }
   return { root, project, agentDir, home, pkg };
 }
 
@@ -173,7 +179,7 @@ export default class PiProvider {
     const all = events(result.stdout);
     const messages = all.filter((e) => e.type === 'message_end').map((e) => e.message);
     const assistant = messages.filter((m) => m?.role === 'assistant');
-    const metadata = { workingDir: project, transcript: path.join(root, 'pi.jsonl'), skillCalls: skillCalls(all), durationMs: Date.now() - started };
+    const metadata = { workingDir: project, transcript: path.join(root, 'pi.jsonl'), ...(pkg ? { packageDir: pkg } : {}), skillCalls: skillCalls(all), durationMs: Date.now() - started };
     // docs/knowledge-base/pi-as-an-eval-harness.org: pi exits 0 when the provider fails
     const failed = assistant.find((m) => m.stopReason === 'error');
     if (failed || result.code !== 0) {
