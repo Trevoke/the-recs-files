@@ -29,13 +29,15 @@ const fixture = (t) => {
   }
   fs.mkdirSync(path.join(from, 'skills', 'recs-a'), { recursive: true });
   fs.writeFileSync(path.join(from, 'skills', 'recs-a', 'SKILL.md'), '{{trf: teleport}}\n');
+  fs.writeFileSync(path.join(from, 'skills', 'skill-flow.dot'), 'digraph skill_flow {\n  "recs-a";\n}\n');
   return from;
 };
 
 test('refuses a render with a marker it cannot render, and leaves no package', (t) => {
   const from = fixture(t);
   const out = path.join(temp(t, 'render-refused-'), 'out');
-  assert.throws(() => render('claude', out, 'v1.2.3', { root: from }), /rendering refused/);
+  assert.throws(() => render('claude', out, 'v1.2.3', { root: from }), (e) =>
+    /rendering refused/.test(e.message) && /teleport is not a harness capability/.test(e.message));
   assert.ok(!fs.existsSync(out), 'the refused render leaves no output directory');
 });
 
@@ -45,10 +47,12 @@ test('refuses an output inside the source, and deletes nothing', (t) => {
   assert.ok(fs.existsSync(path.join(from, 'packaging', 'profiles')), 'the source survives the refused render');
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('the skill flow matches the skills and the records', () => {
   assert.deepEqual(checkFlow(root), []);
 });
 
+// ADR-2 §Consequences: The recs files live apart from any project that uses them
 test('a rendered skill flow carries no citations', (t) => {
   const out = render('pi', temp(t, 'render-flow-'), 'v1.2.3');
   const flow = fs.readFileSync(path.join(out, 'skills', 'skill-flow.dot'), 'utf8');

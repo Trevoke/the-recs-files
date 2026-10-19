@@ -19,7 +19,7 @@
     "load": { "status": "native", "skill": "{skill}" },
     "tool": { "status": "native" },
     "ask": { "status": "prose" },
-    "memory": { "status": "native", "list": "the `update_plan` plan", "in-progress": "in_progress", "completed": "completed" },
+    "memory": { "status": "native", "list": "the `update_plan` plan", "in-progress": "in_progress in the `update_plan` plan", "completed": "completed in the `update_plan` plan" },
     "restrict": { "status": "prose" }
   },
   "files": {
