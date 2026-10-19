@@ -208,3 +208,37 @@ tests:
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:kickstart
+
+  - description: Memory is kept in the harness's own way
+    providers:
+      - claude-sonnet-5.5 with-skills
+      - gpt-5.5 with-skills
+      - gemini-3.1-pro with-skills
+      - qwen3.8-max with-skills
+    vars:
+      case: keeping-the-task-list
+      request: file://cases/keeping-the-task-list/prompt.md
+    assert:
+      # ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+      - type: javascript
+        metric: memory file kept
+        value: file://checks/harness-capabilities.js:memoryFileKept
+      # ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+      - type: javascript
+        metric: only planned files written
+        value: file://checks/harness-capabilities.js:onlyPlannedFilesWritten
+
+  - description: The code reviewer is delegated in the harness's own way
+    providers:
+      - claude-sonnet-5.5 with-skills
+      - gpt-5.5 with-skills
+      - gemini-3.1-pro with-skills
+      - qwen3.8-max with-skills
+    vars:
+      case: dispatching-the-code-reviewer
+      request: file://cases/dispatching-the-code-reviewer/prompt.md
+    assert:
+      # ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+      - type: javascript
+        metric: reviewer delegated
+        value: file://checks/harness-capabilities.js:reviewerDelegated
