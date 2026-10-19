@@ -1,6 +1,6 @@
 * ADR-11 Keep the order of the skills in a skill flow beside them
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 The order of the skills is spread through their text, as instructions to
