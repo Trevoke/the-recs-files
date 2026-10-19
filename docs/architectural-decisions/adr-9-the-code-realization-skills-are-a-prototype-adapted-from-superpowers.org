@@ -1,6 +1,6 @@
 * ADR-9 The code realization skills are a prototype adapted from superpowers
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 Realizing a project's records in code needed a flow from brainstorming to a
