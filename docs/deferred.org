@@ -1,0 +1,4 @@
+#+TITLE: Deferred
+
+* A pluggable task tracking and memory system
+The memory harness capability is rendered from each harness profile today. The record keeper wants task tracking and memory to be pluggable, so that a system such as MattWin's Yaks can stand in for a harness's own.

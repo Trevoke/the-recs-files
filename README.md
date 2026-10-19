@@ -65,6 +65,10 @@ the skills from the Claude Code package,
 `Trevoke/the-recs-files-claude`, into a directory the harness reads skills
 from, such as a project's `.agents/skills`.
 
+Claude Code must run with the environment variable
+`CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of the recs
+files is undefined.
+
 Then open a project and ask for `recs-kickstart`.
 
 ### Releasing

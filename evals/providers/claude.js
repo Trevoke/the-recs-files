@@ -17,11 +17,12 @@ function prepare(caseName) {
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: `HOME` and `CLAUDE_CONFIG_DIR` inside the run keep the user's configuration out
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A tmpfs over `/etc/claude-code` keeps the host's managed settings out
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code 2.1.304 offers claude-sonnet-5-5 no TodoWrite in print mode
 function sandboxed(dirs, binary, env, args) {
   return sandbox(
     dirs,
     [[binary, '/opt/claude/claude']],
-    { PATH: '/opt/claude:/usr/bin', HOME: dirs.home, CLAUDE_CONFIG_DIR: dirs.configDir, LANG: 'C.UTF-8', DISABLE_AUTOUPDATER: '1', ...env },
+    { PATH: '/opt/claude:/usr/bin', HOME: dirs.home, CLAUDE_CONFIG_DIR: dirs.configDir, LANG: 'C.UTF-8', DISABLE_AUTOUPDATER: '1', CLAUDE_CODE_ENABLE_TODO_TOOLS: '1', ...env },
     ['/opt/claude/claude', ...args],
     fs.existsSync('/etc/claude-code') ? ['/etc/claude-code'] : [],
   );

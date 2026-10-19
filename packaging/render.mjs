@@ -84,7 +84,11 @@ The [recs files](${v.source}) packaged for ${p.name}: ${p.contents}, version ${v
 
 This repository is generated from ${v.source} on each release. Open issues and
 pull requests there; changes made here are overwritten.
+${p.requirements ? `
+## Requirements
 
+${p.requirements.map((r) => `- ${r}`).join('\n')}
+` : ''}
 ## Install
 
 \`\`\`sh

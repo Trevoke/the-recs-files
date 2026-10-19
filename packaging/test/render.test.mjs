@@ -45,6 +45,28 @@ for (const harness of harnesses) {
   });
 }
 
+for (const harness of harnesses) {
+  test(`the ${harness} package README lists its harness profile's requirements under Requirements, or has no Requirements section`, (t) => {
+    const out = render(harness, temp(t, `requirements-${harness}-`), 'v1.2.3');
+    const profile = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
+    const readme = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
+    if (!profile.requirements) {
+      assert.doesNotMatch(readme, /^## Requirements$/m, 'a harness with no requirements has no Requirements section');
+      return;
+    }
+    const section = readme.match(/^## Requirements\n\n([\s\S]*?)\n\n## /m)?.[1];
+    assert.equal(section, profile.requirements.map((r) => `- ${r}`).join('\n'), 'the Requirements section lists each requirement');
+  });
+}
+
+test('the Claude Code package README says CLAUDE_CODE_ENABLE_TODO_TOOLS=1 must be set, and that without it the behaviour is undefined', (t) => {
+  const out = render('claude', temp(t, 'requirements-claude-note-'), 'v1.2.3');
+  const readme = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
+  const section = readme.match(/^## Requirements\n\n([\s\S]*?)\n\n## /m)?.[1] ?? '';
+  assert.match(section, /`CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set/, 'the Requirements section names CLAUDE_CODE_ENABLE_TODO_TOOLS=1 as set');
+  assert.match(section, /Without it, the behaviour of the recs files is undefined\./, 'the Requirements section says the behaviour is undefined without it');
+});
+
 test('the pi package declares and carries its subagent extension', (t) => {
   const out = render('pi', temp(t, 'render-pi-extension-'), 'v1.2.3');
   const pkg = JSON.parse(fs.readFileSync(path.join(out, 'package.json'), 'utf8'));

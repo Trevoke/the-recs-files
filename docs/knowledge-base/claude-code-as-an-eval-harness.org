@@ -88,6 +88,47 @@ The binary turns the todo tools on for a list of older models
 in place of `TodoWrite` unless `CLAUDE_CODE_ENABLE_TASKS` is false (strings
 read from the binary).
 
+A second pair of runs inside bubblewrap, with no credential, `--model sonnet`
+and the provider's sandbox, reported `claude-sonnet-5-5` in the init event and
+these `tools` (run, 2026-10-19):
+#+begin_example
+unset:                              Task, Bash, CronCreate, CronDelete, CronList, DesignSync, Edit,
+                                    EnterWorktree, ExitWorktree, ListAgents, NotebookEdit, Read,
+                                    ReportFindings, ScheduleWakeup, SendMessage, Skill, TaskStop,
+                                    ToolSearch, WebFetch, WebSearch, Workflow, Write
+CLAUDE_CODE_ENABLE_TODO_TOOLS=1:    the same, with TaskCreate, TaskGet, TaskList and TaskUpdate
+                                    beside TaskStop
+#+end_example
+Both runs then ended "Not logged in · Please run /login" and exited 1.
+
+* `TaskCreate` adds a task to the task list, and `TaskUpdate` sets its status
+`TaskCreate` ("Create a task in the task list") takes `subject`,
+`description`, an optional `activeForm` and optional `metadata`; "All tasks
+are created with status `pending`", and its result reads "Task #<id> created
+successfully: <subject>". `TaskUpdate` ("Update a task in the task list")
+takes `taskId` and optional `subject`, `description`, `activeForm`, `status`,
+`addBlocks`, `addBlockedBy`, `owner` and `metadata`. Its `status` is
+`pending`, `in_progress`, `completed` or `deleted`: "Status progresses:
+`pending` → `in_progress` → `completed`", and "Setting status to `deleted`
+permanently removes the task", with the examples
+~{"taskId": "1", "status": "in_progress"}~ and
+~{"taskId": "1", "status": "completed"}~ (the tools' prompts and schemas, read
+from `strings -n 8` of the 2.1.304 binary).
+
+* `TaskList` reads the task list back, and `TaskGet` reads one task
+`TaskList` ("List all tasks in the task list") takes no input and returns each
+task's `id`, `subject`, `status`, `owner` and `blockedBy`. `TaskGet` ("Get a
+task by ID from the task list") takes `taskId` and returns the task's
+`subject`, `description`, `status`, `blocks` and `blockedBy`. `TaskUpdate`'s
+result on completing a task says "Call TaskList now to find your next
+available task" (strings read from the 2.1.304 binary).
+
+* The task tools are deferred tools
+`TaskCreate`, `TaskGet`, `TaskList` and `TaskUpdate` each carry
+`shouldDefer: true` in the 2.1.304 binary (strings read from the binary),
+beside `ToolSearch` in the init event's `tools`. That a model loads them
+through `ToolSearch` before calling them is not established by a run.
+
 * `HOME` and `CLAUDE_CONFIG_DIR` inside the run keep the user's configuration out
 With `HOME` set to `<run>/home` and `CLAUDE_CONFIG_DIR` to `<run>/home/.claude`,
 everything Claude Code wrote outside the project went under that directory:

@@ -151,9 +151,10 @@ const use = (name, input, isError = false, parent = null) => {
     { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: `toolu_${uses}`, content: 'ok', is_error: isError }] }, parent_tool_use_id: parent },
   ];
 };
-const init = { type: 'system', subtype: 'init', tools: ['Task', 'Bash', 'Edit', 'Read', 'Skill', 'TodoWrite', 'Write'], agents: ['recs-files:recs-code-reviewer'] };
+const init = { type: 'system', subtype: 'init', tools: ['Task', 'Bash', 'Edit', 'Read', 'Skill', 'TaskCreate', 'TaskGet', 'TaskList', 'TaskUpdate', 'Write'], agents: ['recs-files:recs-code-reviewer'] };
 const final = { type: 'result', subtype: 'success', is_error: false, result: 'Done.', total_cost_usd: 0.12 };
-const todos = (status) => ({ todos: [{ content: 'Task 1', status, activeForm: 'Doing Task 1' }] });
+const created = { subject: 'Task 1', description: 'Do Task 1' };
+const updated = (status) => ({ taskId: '1', status });
 
 test('reviewerDelegated passes on Claude Code when a Task tool use names the plugin reviewer agent', (t) => {
   for (const subagent_type of ['recs-files:recs-code-reviewer', 'recs-code-reviewer']) {
@@ -179,15 +180,20 @@ test('reviewerDelegated fails on Claude Code when nothing is delegated', (t) => 
   assert.equal(reviewerDelegated('', context).pass, false);
 });
 
-test('memoryFileKept passes on Claude Code on two TodoWrite calls', (t) => {
-  const context = run(t, [init, ...use('TodoWrite', todos('in_progress')), ...use('TodoWrite', todos('completed')), final], {}, claudeCode);
-  assert.equal(memoryFileKept('', context).pass, true);
+test('memoryFileKept passes on Claude Code on a TaskCreate and a TaskUpdate call, or two TaskUpdate calls', (t) => {
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), ...use('TaskUpdate', updated('in_progress')), final], {}, claudeCode)).pass, true);
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskUpdate', updated('in_progress')), ...use('TaskUpdate', updated('completed')), final], {}, claudeCode)).pass, true);
 });
 
-test('memoryFileKept fails on Claude Code on one TodoWrite call, a failed one, or an unanswered one', (t) => {
-  assert.equal(memoryFileKept('', run(t, [init, ...use('TodoWrite', todos('in_progress')), final], {}, claudeCode)).pass, false);
-  assert.equal(memoryFileKept('', run(t, [init, ...use('TodoWrite', todos('in_progress')), ...use('TodoWrite', todos('completed'), true), final], {}, claudeCode)).pass, false);
-  assert.equal(memoryFileKept('', run(t, [init, ...use('TodoWrite', todos('in_progress')), use('TodoWrite', todos('completed'))[0], final], {}, claudeCode)).pass, false);
+test('memoryFileKept fails on Claude Code on one TaskCreate or TaskUpdate call, a failed one, or an unanswered one', (t) => {
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), final], {}, claudeCode)).pass, false);
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), ...use('TaskUpdate', updated('completed'), true), final], {}, claudeCode)).pass, false);
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), use('TaskUpdate', updated('completed'))[0], final], {}, claudeCode)).pass, false);
+});
+
+test('memoryFileKept on Claude Code does not count TaskList, TaskGet or TodoWrite calls', (t) => {
+  const context = run(t, [init, ...use('TaskCreate', created), ...use('TaskList', {}), ...use('TaskGet', { taskId: '1' }), ...use('TodoWrite', { todos: [] }), final], {}, claudeCode);
+  assert.equal(memoryFileKept('', context).pass, false);
 });
 
 test('memoryFileKept on Claude Code does not count writes to the pi memory file', (t) => {
@@ -211,11 +217,11 @@ test('reviewerDelegated on Claude Code does not count a reviewer dispatched by a
   assert.match(r.reason, /1 subagent call\(s\); 0 named/);
 });
 
-test('memoryFileKept on Claude Code does not count a subagent\'s TodoWrite calls', (t) => {
+test('memoryFileKept on Claude Code does not count a subagent\'s TaskCreate or TaskUpdate calls', (t) => {
   const context = run(t, [
     init,
-    ...use('TodoWrite', todos('in_progress')),
-    ...use('TodoWrite', todos('completed'), false, 'toolu_parent'),
+    ...use('TaskCreate', created),
+    ...use('TaskUpdate', updated('completed'), false, 'toolu_parent'),
     final,
   ], {}, claudeCode);
   assert.equal(memoryFileKept('', context).pass, false);

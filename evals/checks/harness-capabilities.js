@@ -124,8 +124,9 @@ function writesMemoryByBash(command) {
 
 export function memoryFileKept(output, context) {
   if (claudeCode(context)) {
-    const kept = toolUses(context).filter((c) => c.name === 'TodoWrite' && c.succeeded);
-    return result(kept.length >= 2, `${kept.length} TodoWrite call(s)`);
+    // docs/knowledge-base/claude-code-as-an-eval-harness.org: `TaskCreate` adds a task to the task list, and `TaskUpdate` sets its status
+    const kept = toolUses(context).filter((c) => ['TaskCreate', 'TaskUpdate'].includes(c.name) && c.succeeded);
+    return result(kept.length >= 2, `${kept.length} TaskCreate or TaskUpdate call(s)`);
   }
   const writes = succeeded(calls(context)).filter(
     (e) =>
