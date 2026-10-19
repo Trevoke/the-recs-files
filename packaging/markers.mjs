@@ -7,7 +7,7 @@ const pattern = /\{\{trf:\s*([^}]*?)\s*\}\}/g;
 const entries = { delegate: ['brief', 'sentence'], load: ['skill'], memory: ['list', 'in-progress', 'completed'] };
 
 export function fill(value, vars) {
-  if (typeof value === 'string') return value.replace(/\{(\w+)\}/g, (m, k) => (vars[k] === undefined ? m : vars[k]));
+  if (typeof value === 'string') return value.replace(/\{(\w+)\}/g, (m, k) => (Object.hasOwn(vars, k) ? vars[k] : m));
   if (Array.isArray(value)) return value.map((v) => fill(v, vars));
   if (value && typeof value === 'object') return Object.fromEntries(Object.entries(value).map(([k, v]) => [k, fill(v, vars)]));
   return value;
@@ -31,8 +31,10 @@ function entry(profile, { keyword, args }, context) {
     if (role !== 'general-purpose' && !(context.roles ?? []).includes(role)) return { problem: `${role} is not general-purpose or an agent under agents/` };
     const how = role === 'general-purpose' ? 'native' : c.roles?.[role];
     if (!how) return { problem: `the ${profile.harness} harness profile does not say how it carries ${role}` };
-    const roleFile = path.posix.relative(path.posix.dirname(context.file ?? ''), context.roleFile ?? '');
-    return { template: c[how === 'role file' ? `${form}-role-file` : form], vars: { role: c.roleNames?.[role] ?? role, roleFile } };
+    if (how === 'role file' && !context.roleFile) return { problem: `${role} needs a role file and none was given` };
+    const vars = { role: c.roleNames?.[role] ?? role };
+    if (how === 'role file') vars.roleFile = path.posix.relative(path.posix.dirname(context.file ?? ''), context.roleFile);
+    return { template: c[how === 'role file' ? `${form}-role-file` : form], vars };
   }
   if (keyword === 'memory') {
     if (args.length > 1 || (args.length === 1 && !['in-progress', 'completed'].includes(args[0]))) return { problem: 'memory takes nothing, in-progress or completed' };
@@ -43,7 +45,7 @@ function entry(profile, { keyword, args }, context) {
     if (context.skills && !context.skills.includes(args[0])) return { problem: `${args[0]} is not a skill under skills/` };
     return { template: c.skill, vars: { skill: args[0] } };
   }
-  return { problem: `${keyword} has no capability marker yet` };
+  return { problem: `${keyword} is not rendered by a capability marker` };
 }
 
 export function renderText(text, profile, context = {}) {
@@ -68,10 +70,12 @@ export function checkProfile(profile) {
   const problems = [];
   const c = profile.capabilities ?? {};
   for (const name of capabilities) {
-    if (!c[name]) problems.push(`${profile.harness}: ${name} is missing`);
-    else if (!statuses.includes(c[name].status)) problems.push(`${profile.harness}: ${name} has status ${c[name].status}, not ${statuses.slice(0, -1).join(', ')} or ${statuses.at(-1)}`);
+    if (c[name] && !statuses.includes(c[name].status)) problems.push(`${profile.harness}: ${name} has status ${c[name].status}, not ${statuses.slice(0, -1).join(', ')} or ${statuses.at(-1)}`);
   }
-  problems.sort((a, b) => a.includes('is missing') - b.includes('is missing'));
+  for (const name of capabilities) if (!c[name]) problems.push(`${profile.harness}: ${name} is missing`);
+  for (const [role, how] of Object.entries(c.delegate?.roles ?? {})) {
+    if (!['native', 'role file'].includes(how)) problems.push(`${profile.harness}: delegate carries ${role} as ${how}, not native or role file`);
+  }
   for (const [name, keys] of Object.entries(entries)) {
     const needed = name === 'delegate' && Object.values(c.delegate?.roles ?? {}).includes('role file')
       ? [...keys, 'brief-role-file', 'sentence-role-file']

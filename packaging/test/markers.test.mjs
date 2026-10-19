@@ -37,7 +37,7 @@ test('finds capability markers and their arguments', () => {
   ]);
 });
 
-test('renders each harness capability from the harness profile', () => {
+test('renders delegate, memory and load from the harness profile', () => {
   const { text, problems } = renderText(
     [
       '{{trf: delegate general-purpose brief}}:',
@@ -80,7 +80,21 @@ test('refuses what it cannot render', () => {
   assert.match(problems[2], /stranger is not general-purpose or an agent under agents/);
   assert.match(problems[3], /memory takes nothing, in-progress or completed/);
   assert.match(problems[4], /recs-z is not a skill under skills/);
-  assert.match(problems[5], /ask has no capability marker yet/);
+  assert.match(problems[5], /ask is not rendered by a capability marker/);
+});
+
+test('refuses a marker its harness profile or context cannot carry', () => {
+  assert.match(renderText('{{trf: load}}', profile, context).problems[0], /load takes one skill/);
+  const noLoad = structuredClone(profile);
+  delete noLoad.capabilities.load;
+  assert.match(renderText('{{trf: load recs-b}}', noLoad, context).problems[0], /the test harness profile has no load/);
+  const unknownRole = { ...context, roles: [...context.roles, 'recs-planner'] };
+  assert.match(renderText('{{trf: delegate recs-planner brief}}', profile, unknownRole).problems[0], /does not say how it carries recs-planner/);
+  const noList = structuredClone(profile);
+  delete noList.capabilities.memory.list;
+  assert.match(renderText('{{trf: memory}}', noList, context).problems[0], /has no entry for it/);
+  const noRoleFile = { ...context, roleFile: undefined };
+  assert.match(renderText('{{trf: delegate recs-code-reviewer brief}}', profile, noRoleFile).problems[0], /recs-code-reviewer needs a role file and none was given/);
 });
 
 test('a harness profile names every harness capability, with a status and its entries', () => {
@@ -95,6 +109,11 @@ test('a harness profile names every harness capability, with a status and its en
     'test: restrict is missing',
     'test: delegate has no sentence-role-file entry',
     'test: memory has no completed entry',
+  ]);
+  const misdeclared = structuredClone(profile);
+  misdeclared.capabilities.delegate.roles['recs-code-reviewer'] = 'carrier pigeon';
+  assert.deepEqual(checkProfile(misdeclared), [
+    'test: delegate carries recs-code-reviewer as carrier pigeon, not native or role file',
   ]);
   assert.equal(capabilities.length, 8);
 });
