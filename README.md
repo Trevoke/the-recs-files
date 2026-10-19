@@ -59,15 +59,15 @@ release. The recs files install at project scope by default:
 | pi | `pi install -l git:github.com/Trevoke/the-recs-files-pi@v<version>` | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
 | Antigravity | `agy plugin install` has no project-scope option | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
 
+With the Claude Code package, Claude Code must run with the environment
+variable `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of
+the recs files is undefined.
+
 The Claude Code and Antigravity packages carry the `recs-code-reviewer`
 subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
 the skills from the Claude Code package,
 `Trevoke/the-recs-files-claude`, into a directory the harness reads skills
 from, such as a project's `.agents/skills`.
-
-Claude Code must run with the environment variable
-`CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of the recs
-files is undefined.
 
 Then open a project and ask for `recs-kickstart`.
 

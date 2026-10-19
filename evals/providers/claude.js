@@ -69,10 +69,17 @@ async function install(dirs, binary, env) {
     .map((e) => e.name)
     .filter((skill) => !found.includes(skill));
   if (missing.length > 0) throw new Error(`Claude Code does not offer ${missing.join(', ')} from the installed plugin`);
+  const unoffered = taskToolsMissing(init);
+  if (unoffered.length > 0) throw new Error(`Claude Code does not offer ${unoffered.join(', ')} with CLAUDE_CODE_ENABLE_TODO_TOOLS=1 set`);
   const agents = fs.readdirSync(path.join(pkg, 'agents')).map((f) => `${prefix}${path.basename(f, '.md')}`);
   const absent = agents.filter((a) => !(init.agents ?? []).includes(a));
   if (absent.length > 0) throw new Error(`Claude Code does not offer ${absent.join(', ')} from the installed plugin`);
   return { pkg, skills: found.sort() };
+}
+
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code 2.1.304 offers claude-sonnet-5-5 no TodoWrite in print mode
+export function taskToolsMissing(init) {
+  return ['TaskCreate', 'TaskUpdate'].filter((tool) => !(init.tools ?? []).includes(tool));
 }
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A print-mode run is `claude -p --output-format stream-json --verbose`

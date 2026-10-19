@@ -82,6 +82,13 @@ export function checkProfile(profile) {
       : keys;
     for (const key of needed) if (c[name] && typeof c[name][key] !== 'string') problems.push(`${profile.harness}: ${name} has no ${key} entry`);
   }
+  for (const field of ['requirements', 'installUser']) {
+    if (!(field in profile)) continue;
+    const value = profile[field];
+    if (!Array.isArray(value) || value.length === 0 || !value.every((v) => typeof v === 'string' && v.length > 0)) {
+      problems.push(`${profile.harness}: ${field} is not a non-empty list of strings`);
+    }
+  }
   return problems;
 }
 

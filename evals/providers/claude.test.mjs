@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { initProblem, skillCalls } from './claude.js';
+import { initProblem, skillCalls, taskToolsMissing } from './claude.js';
 
 const use = (id, name, input, parent = null) => ({
   type: 'assistant',
@@ -60,4 +60,11 @@ test('initProblem reports a run not bypassing permissions', () => {
 
 test('initProblem reports a run with no init event', () => {
   assert.match(initProblem([], undefined), /no init event/);
+});
+
+test('taskToolsMissing names TaskCreate and TaskUpdate where the init event\'s tools lack them', () => {
+  assert.deepEqual(taskToolsMissing(init({ tools: ['Task', 'TaskCreate', 'TaskGet', 'TaskList', 'TaskStop', 'TaskUpdate'] })), []);
+  assert.deepEqual(taskToolsMissing(init({ tools: ['Task', 'TaskStop'] })), ['TaskCreate', 'TaskUpdate']);
+  assert.deepEqual(taskToolsMissing(init({ tools: ['Task', 'TaskCreate'] })), ['TaskUpdate']);
+  assert.deepEqual(taskToolsMissing(init()), ['TaskCreate', 'TaskUpdate']);
 });

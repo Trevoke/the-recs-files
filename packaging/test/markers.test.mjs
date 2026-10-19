@@ -118,6 +118,18 @@ test('a harness profile names every harness capability, with a status and its en
   assert.equal(capabilities.length, 8);
 });
 
+test('a harness profile\'s requirements and installUser, where present, are non-empty lists of strings', () => {
+  assert.deepEqual(checkProfile({ ...profile, requirements: ['Set X.'], installUser: ['install x'] }), []);
+  assert.deepEqual(checkProfile({ ...profile, requirements: [], installUser: 'install x' }), [
+    'test: requirements is not a non-empty list of strings',
+    'test: installUser is not a non-empty list of strings',
+  ]);
+  assert.deepEqual(checkProfile({ ...profile, requirements: ['Set X.', ''], installUser: [3] }), [
+    'test: requirements is not a non-empty list of strings',
+    'test: installUser is not a non-empty list of strings',
+  ]);
+});
+
 test('a memory file kept in prose is named by an absolute path', () => {
   const prose = structuredClone(profile);
   prose.capabilities.memory = { status: 'prose', list: 'the memory file (`/tmp/m-<the project>.md`, a checklist)', 'in-progress': 'doing', completed: 'done' };

@@ -180,15 +180,20 @@ test('reviewerDelegated fails on Claude Code when nothing is delegated', (t) => 
   assert.equal(reviewerDelegated('', context).pass, false);
 });
 
-test('memoryFileKept passes on Claude Code on a TaskCreate and a TaskUpdate call, or two TaskUpdate calls', (t) => {
+test('memoryFileKept passes on Claude Code on a successful TaskUpdate among two or more successful TaskCreate or TaskUpdate calls', (t) => {
   assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), ...use('TaskUpdate', updated('in_progress')), final], {}, claudeCode)).pass, true);
   assert.equal(memoryFileKept('', run(t, [init, ...use('TaskUpdate', updated('in_progress')), ...use('TaskUpdate', updated('completed')), final], {}, claudeCode)).pass, true);
 });
 
-test('memoryFileKept fails on Claude Code on one TaskCreate or TaskUpdate call, a failed one, or an unanswered one', (t) => {
-  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), final], {}, claudeCode)).pass, false);
+test('memoryFileKept fails on Claude Code on fewer than two successful TaskCreate or TaskUpdate calls', (t) => {
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskUpdate', updated('in_progress')), final], {}, claudeCode)).pass, false);
   assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), ...use('TaskUpdate', updated('completed'), true), final], {}, claudeCode)).pass, false);
   assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), use('TaskUpdate', updated('completed'))[0], final], {}, claudeCode)).pass, false);
+});
+
+test('memoryFileKept fails on Claude Code with no successful TaskUpdate call', (t) => {
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), ...use('TaskCreate', created), final], {}, claudeCode)).pass, false);
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TaskCreate', created), ...use('TaskCreate', created), ...use('TaskUpdate', updated('completed'), true), final], {}, claudeCode)).pass, false);
 });
 
 test('memoryFileKept on Claude Code does not count TaskList, TaskGet or TodoWrite calls', (t) => {

@@ -126,7 +126,8 @@ export function memoryFileKept(output, context) {
   if (claudeCode(context)) {
     // docs/knowledge-base/claude-code-as-an-eval-harness.org: `TaskCreate` adds a task to the task list, and `TaskUpdate` sets its status
     const kept = toolUses(context).filter((c) => ['TaskCreate', 'TaskUpdate'].includes(c.name) && c.succeeded);
-    return result(kept.length >= 2, `${kept.length} TaskCreate or TaskUpdate call(s)`);
+    const updates = kept.filter((c) => c.name === 'TaskUpdate').length;
+    return result(kept.length >= 2 && updates >= 1, `${kept.length} TaskCreate or TaskUpdate call(s), ${updates} of them TaskUpdate`);
   }
   const writes = succeeded(calls(context)).filter(
     (e) =>
