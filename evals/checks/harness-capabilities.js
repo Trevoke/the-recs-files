@@ -4,7 +4,7 @@ import { memoryFile } from '../../packaging/markers.mjs';
 import { roleFile, root } from '../../packaging/render.mjs';
 import { changedFiles, result } from './workspace.js';
 
-function calls(context) {
+function transcript(context) {
   const file = context.providerResponse?.metadata?.transcript;
   if (!file || !fs.existsSync(file)) throw new Error('the provider reported no transcript');
   return fs
@@ -17,8 +17,31 @@ function calls(context) {
       } catch {
         return [];
       }
-    })
-    .filter((e) => e.type === 'tool_execution_start' || e.type === 'tool_execution_end');
+    });
+}
+
+function calls(context) {
+  return transcript(context).filter((e) => e.type === 'tool_execution_start' || e.type === 'tool_execution_end');
+}
+
+function claudeCode(context) {
+  return context.providerResponse?.metadata?.harness === 'claude-code';
+}
+
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: A print-mode run is `claude -p --output-format stream-json --verbose`
+function toolUses(context) {
+  const all = transcript(context);
+  const results = new Map(
+    all
+      .filter((e) => e.type === 'user' && Array.isArray(e.message?.content))
+      .flatMap((e) => e.message.content)
+      .filter((c) => c.type === 'tool_result')
+      .map((c) => [c.tool_use_id, c]),
+  );
+  return all
+    .filter((e) => e.type === 'assistant')
+    .flatMap((e) => (e.message?.content ?? []).filter((c) => c.type === 'tool_use'))
+    .map((c) => ({ ...c, succeeded: results.has(c.id) && !results.get(c.id).is_error }));
 }
 
 function succeeded(all) {
@@ -57,7 +80,18 @@ function opening(prompt) {
   return { line: i + 1, text: (lines[i] ?? '').trim() };
 }
 
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: A subagent is a `Task` tool use naming its `subagent_type`
+function reviewerDelegatedOnClaudeCode(context) {
+  const delegated = toolUses(context).filter((c) => ['Task', 'Agent'].includes(c.name));
+  const named = delegated.filter((c) => /(?:^|:)recs-code-reviewer$/.test(c.input?.subagent_type ?? ''));
+  return result(
+    named.length > 0,
+    `${delegated.length} subagent call(s); ${named.length} named the recs-code-reviewer agent`,
+  );
+}
+
 export function reviewerDelegated(output, context) {
+  if (claudeCode(context)) return reviewerDelegatedOnClaudeCode(context);
   const role = reviewerRole(context);
   const delegated = calls(context).filter((e) => e.type === 'tool_execution_start' && e.toolName === 'subagent');
   const prompts = delegated.map((e) => e.args?.prompt ?? '');
@@ -89,6 +123,10 @@ function writesMemoryByBash(command) {
 }
 
 export function memoryFileKept(output, context) {
+  if (claudeCode(context)) {
+    const kept = toolUses(context).filter((c) => c.name === 'TodoWrite' && c.succeeded);
+    return result(kept.length >= 2, `${kept.length} TodoWrite call(s)`);
+  }
   const writes = succeeded(calls(context)).filter(
     (e) =>
       (['write', 'edit'].includes(e.toolName) && memoryPath.test(e.args?.path ?? '')) ||

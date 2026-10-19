@@ -6,7 +6,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { memoryFileKept, onlyPlannedFilesWritten, reviewerDelegated, reviewerRole } from './harness-capabilities.js';
 
-function run(t, events, files = {}) {
+function run(t, events, files = {}, metadata = {}) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), 'recs-check-'));
   t.after(() => fs.rmSync(root, { recursive: true, force: true }));
   const project = path.join(root, 'project');
@@ -26,7 +26,7 @@ function run(t, events, files = {}) {
   }
   const transcript = path.join(root, 'pi.jsonl');
   fs.writeFileSync(transcript, `${events.map((e) => JSON.stringify(e)).join('\n')}\nnot json\n`);
-  return { providerResponse: { metadata: { workingDir: project, transcript } } };
+  return { providerResponse: { metadata: { workingDir: project, transcript, ...metadata } } };
 }
 
 let ids = 0;
@@ -140,4 +140,61 @@ test('onlyPlannedFilesWritten fails on a missing planned file', (t) => {
   const r = onlyPlannedFilesWritten('', run(t, [], { 'notes/one.txt': 'one\n' }));
   assert.equal(r.pass, false);
   assert.match(r.reason, /notes\/two\.txt/);
+});
+
+const claudeCode = { harness: 'claude-code' };
+let uses = 0;
+const use = (name, input, isError = false) => {
+  uses += 1;
+  return [
+    { type: 'assistant', message: { role: 'assistant', content: [{ type: 'tool_use', id: `toolu_${uses}`, name, input }] }, parent_tool_use_id: null },
+    { type: 'user', message: { role: 'user', content: [{ type: 'tool_result', tool_use_id: `toolu_${uses}`, content: 'ok', is_error: isError }] }, parent_tool_use_id: null },
+  ];
+};
+const init = { type: 'system', subtype: 'init', tools: ['Task', 'Bash', 'Edit', 'Read', 'Skill', 'TodoWrite', 'Write'], agents: ['recs-files:recs-code-reviewer'] };
+const final = { type: 'result', subtype: 'success', is_error: false, result: 'Done.', total_cost_usd: 0.12 };
+const todos = (status) => ({ todos: [{ content: 'Task 1', status, activeForm: 'Doing Task 1' }] });
+
+test('reviewerDelegated passes on Claude Code when a Task tool use names the plugin reviewer agent', (t) => {
+  for (const subagent_type of ['recs-files:recs-code-reviewer', 'recs-code-reviewer']) {
+    const context = run(t, [init, ...use('Task', { description: 'Review', prompt: 'Review src/inspection.js.', subagent_type }), final], {}, claudeCode);
+    assert.equal(reviewerDelegated('', context).pass, true, subagent_type);
+  }
+});
+
+test('reviewerDelegated passes on Claude Code when an Agent tool use names the reviewer agent', (t) => {
+  const context = run(t, [init, ...use('Agent', { description: 'Review', prompt: 'Review.', subagent_type: 'recs-files:recs-code-reviewer' }), final], {}, claudeCode);
+  assert.equal(reviewerDelegated('', context).pass, true);
+});
+
+test('reviewerDelegated fails on Claude Code when the subagent is another type, even with the role in its prompt', (t) => {
+  const context = run(t, [init, ...use('Task', { description: 'Review', prompt: `${reviewerRole()}\n\nReview.`, subagent_type: 'general-purpose' }), final], {}, claudeCode);
+  const r = reviewerDelegated('', context);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /1 subagent call\(s\); 0 named/);
+});
+
+test('reviewerDelegated fails on Claude Code when nothing is delegated', (t) => {
+  const context = run(t, [init, ...use('Read', { file_path: 'src/inspection.js' }), final], {}, claudeCode);
+  assert.equal(reviewerDelegated('', context).pass, false);
+});
+
+test('memoryFileKept passes on Claude Code on two TodoWrite calls', (t) => {
+  const context = run(t, [init, ...use('TodoWrite', todos('in_progress')), ...use('TodoWrite', todos('completed')), final], {}, claudeCode);
+  assert.equal(memoryFileKept('', context).pass, true);
+});
+
+test('memoryFileKept fails on Claude Code on one TodoWrite call, a failed one, or an unanswered one', (t) => {
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TodoWrite', todos('in_progress')), final], {}, claudeCode)).pass, false);
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TodoWrite', todos('in_progress')), ...use('TodoWrite', todos('completed'), true), final], {}, claudeCode)).pass, false);
+  assert.equal(memoryFileKept('', run(t, [init, ...use('TodoWrite', todos('in_progress')), use('TodoWrite', todos('completed'))[0], final], {}, claudeCode)).pass, false);
+});
+
+test('memoryFileKept on Claude Code does not count writes to the pi memory file', (t) => {
+  const context = run(t, [init, ...use('Write', { file_path: memory, content: '- [ ] one' }), ...use('Edit', { file_path: memory }), final], {}, claudeCode);
+  assert.equal(memoryFileKept('', context).pass, false);
+});
+
+test('onlyPlannedFilesWritten passes on Claude Code on exactly the planned files', (t) => {
+  assert.equal(onlyPlannedFilesWritten('', run(t, [init, final], notes, claudeCode)).pass, true);
 });

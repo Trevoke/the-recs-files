@@ -1,76 +1,25 @@
-import { execFileSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { render } from '../../packaging/render.mjs';
+import { evalsDir, events, exclude, identity, prepare as prepareProject, renderedPackage, run, sandbox } from './common.js';
 
-const evalsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const casesDir = path.join(evalsDir, 'cases');
 const modulesDir = path.join(evalsDir, 'node_modules');
 const pi = path.join(modulesDir, '@earendil-works', 'pi-coding-agent', 'dist', 'bundle', 'cli.js');
 const nodeDir = path.dirname(path.dirname(process.execPath));
 
-const identity = {
-  GIT_AUTHOR_NAME: 'Record Keeper',
-  GIT_AUTHOR_EMAIL: 'keeper@example.com',
-  GIT_COMMITTER_NAME: 'Record Keeper',
-  GIT_COMMITTER_EMAIL: 'keeper@example.com',
-};
-
-function git(cwd, ...args) {
-  execFileSync('git', args, {
-    cwd,
-    stdio: 'ignore',
-    env: { ...process.env, ...identity, GIT_AUTHOR_DATE: '2026-01-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-01-01T00:00:00Z' },
-  });
-}
-
-let rendering;
-function piPackage() {
-  rendering ??= (() => {
-    try {
-      const pkg = render('pi', fs.mkdtempSync(path.join(os.tmpdir(), 'recs-eval-pi-package-')), 'v0.0.0-eval');
-      process.once('exit', () => fs.rmSync(pkg, { recursive: true, force: true }));
-      return { pkg };
-    } catch (error) {
-      return { error };
-    }
-  })();
-  if (rendering.error) throw rendering.error;
-  return rendering.pkg;
-}
-
-// docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
 function prepare(caseName) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
-  const project = path.join(root, 'project');
-  const agentDir = path.join(root, 'agent');
-  const home = path.join(root, 'home');
-  fs.cpSync(path.join(casesDir, caseName, 'fixture'), project, { recursive: true });
+  const dirs = prepareProject(caseName);
+  const agentDir = path.join(dirs.root, 'agent');
   fs.mkdirSync(agentDir);
-  fs.mkdirSync(home);
-  git(project, 'init', '--quiet', '--initial-branch=main');
-  git(project, 'add', '-A');
-  git(project, 'commit', '--quiet', '-m', 'Start the project');
-  const change = path.join(casesDir, caseName, 'change');
-  if (fs.existsSync(change)) {
-    fs.cpSync(change, project, { recursive: true });
-    git(project, 'add', '-A');
-    git(project, 'commit', '--quiet', '-m', 'Add the change under review');
-  }
-  return { root, project, agentDir, home };
+  return { ...dirs, agentDir };
 }
 
 async function install(dirs, env) {
   const { project, agentDir } = dirs;
-  const rendered = piPackage();
+  const rendered = renderedPackage('pi');
   const name = JSON.parse(fs.readFileSync(path.join(rendered, 'package.json'), 'utf8')).name;
   const pkg = path.join(project, '.pi', name);
   fs.cpSync(rendered, pkg, { recursive: true });
-  // docs/knowledge-base/pi-as-an-eval-harness.org: `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
-  fs.mkdirSync(path.join(project, '.git', 'info'), { recursive: true });
-  fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), `/.pi/settings.json\n/.pi/${name}/\n`);
+  exclude(project, ['/.pi/settings.json', `/.pi/${name}/`]);
   // docs/knowledge-base/pi-as-an-eval-harness.org: A project package loads only under project trust
   // docs/knowledge-base/pi-as-an-eval-harness.org: `<agent-dir>/trust.json` keeps a project trust decision; `--approve` lasts one run
   fs.writeFileSync(path.join(agentDir, 'trust.json'), `${JSON.stringify({ [project]: true }, null, 2)}\n`);
@@ -93,53 +42,13 @@ async function install(dirs, env) {
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: Nothing confines pi to its working directory
-// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, node, pi and its own directory
-function sandboxed({ root, project, home }, env, args) {
-  return [
-    '--unshare-all', '--share-net', '--die-with-parent', '--clearenv',
-    '--ro-bind', '/usr', '/usr',
-    '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/lib', '/lib',
-    '--symlink', 'usr/lib', '/lib64', '--symlink', 'usr/bin', '/sbin',
-    '--ro-bind', '/etc', '/etc',
-    '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp',
-    '--bind', root, root,
-    '--ro-bind', nodeDir, '/opt/node',
-    '--ro-bind', modulesDir, '/opt/evals/node_modules',
-    ...Object.entries({ PATH: '/opt/node/bin:/usr/bin', HOME: home, LANG: 'C.UTF-8', ...env })
-      .flatMap(([k, v]) => ['--setenv', k, v]),
-    '--chdir', project,
-    '--', '/opt/node/bin/node', path.join('/opt/evals/node_modules', path.relative(modulesDir, pi)), ...args,
-  ];
-}
-
-function run(args, timeoutMs, input) {
-  return new Promise((resolve) => {
-    const child = spawn('bwrap', args, { stdio: [input === undefined ? 'ignore' : 'pipe', 'pipe', 'pipe'] });
-    if (input !== undefined) child.stdin.end(input);
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => (stdout += d));
-    child.stderr.on('data', (d) => (stderr += d));
-    const timer = setTimeout(() => child.kill('SIGKILL'), timeoutMs);
-    child.on('close', (code, signal) => {
-      clearTimeout(timer);
-      resolve({ code, signal, stdout, stderr });
-    });
-  });
-}
-
-// docs/knowledge-base/pi-as-an-eval-harness.org: The JSONL is split on LF only
-function events(stdout) {
-  return stdout
-    .split('\n')
-    .filter((line) => line.startsWith('{'))
-    .flatMap((line) => {
-      try {
-        return [JSON.parse(line)];
-      } catch {
-        return [];
-      }
-    });
+function sandboxed(dirs, env, args) {
+  return sandbox(
+    dirs,
+    [[nodeDir, '/opt/node'], [modulesDir, '/opt/evals/node_modules']],
+    { PATH: '/opt/node/bin:/usr/bin', HOME: dirs.home, LANG: 'C.UTF-8', ...env },
+    ['/opt/node/bin/node', path.join('/opt/evals/node_modules', path.relative(modulesDir, pi)), ...args],
+  );
 }
 
 function text(message) {

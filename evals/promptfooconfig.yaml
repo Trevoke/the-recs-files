@@ -44,6 +44,16 @@ providers:
     config:
       model: openrouter/qwen/qwen3.8-max-0902
       skills: false
+  - id: file://providers/claude.js
+    label: claude-code-sonnet with-skills
+    config:
+      model: sonnet
+      skills: true
+  - id: file://providers/claude.js
+    label: claude-code-sonnet without-skills
+    config:
+      model: sonnet
+      skills: false
 
 tests:
   - description: The record keeper rejects a proposed record
@@ -215,6 +225,7 @@ tests:
       - gpt-5.5 with-skills
       - gemini-3.1-pro with-skills
       - qwen3.8-max with-skills
+      - claude-code-sonnet with-skills
     vars:
       case: keeping-the-task-list
       request: file://cases/keeping-the-task-list/prompt.md
@@ -234,6 +245,7 @@ tests:
       - gpt-5.5 with-skills
       - gemini-3.1-pro with-skills
       - qwen3.8-max with-skills
+      - claude-code-sonnet with-skills
     vars:
       case: dispatching-the-code-reviewer
       request: file://cases/dispatching-the-code-reviewer/prompt.md
