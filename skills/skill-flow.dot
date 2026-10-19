@@ -23,6 +23,7 @@ digraph skill_flow {
   "recs-subagent-driven-development" -> "recs-subagent-driven-development/spec-reviewer-prompt.md" [kind="delegate", cite="UW-7 §5: Realize a change to the system; ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];
   "recs-subagent-driven-development" -> "recs-subagent-driven-development/code-quality-reviewer-prompt.md" [kind="delegate", cite="UW-7 §5: Realize a change to the system; ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];
   "recs-test-driven-development" -> "recs-systematic-debugging" [kind="load", cite="UW-7 §5a: Realize a change to the system; ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];
+  "recs-systematic-debugging" -> "recs-test-driven-development" [kind="load", cite="UW-7 §5a: Realize a change to the system; ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];
   "recs-requesting-code-review" -> "recs-requesting-code-review/code-reviewer.md" [kind="delegate", cite="UW-7 §5: Realize a change to the system; ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];
   "recs-executing-plans" -> "recs-finishing-a-development-branch" [kind="load", cite="ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];
   "recs-subagent-driven-development" -> "recs-finishing-a-development-branch" [kind="load", cite="ADR-9 §Decision: The code realization skills are a prototype adapted from superpowers"];

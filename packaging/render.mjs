@@ -6,7 +6,7 @@ import { checkProfile, fill, leftovers, renderText } from './markers.mjs';
 
 export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const harnesses = ['claude', 'codex', 'pi', 'agy'];
-const roleFile = 'skills/recs-requesting-code-review/reviewer-role.md';
+export const roleFile = 'skills/recs-requesting-code-review/reviewer-role.md';
 const vars = {
   plugin: 'recs-files',
   description: 'Skills for working on a project whose records are the source of truth.',
@@ -14,7 +14,7 @@ const vars = {
   source: 'https://github.com/Trevoke/the-recs-files',
 };
 
-export function profile(harness, from = root) {
+function profile(harness, from = root) {
   return JSON.parse(fs.readFileSync(path.join(from, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
 }
 

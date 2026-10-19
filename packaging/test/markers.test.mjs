@@ -1,6 +1,6 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { markers, renderText, checkProfile, capabilities } from '../markers.mjs';
+import { markers, renderText, checkProfile, capabilities, checkMemoryFile, memoryFile } from '../markers.mjs';
 
 const profile = {
   harness: 'test',
@@ -116,4 +116,16 @@ test('a harness profile names every harness capability, with a status and its en
     'test: delegate carries recs-code-reviewer as carrier pigeon, not native or role file',
   ]);
   assert.equal(capabilities.length, 8);
+});
+
+test('a memory file kept in prose is named by an absolute path', () => {
+  const prose = structuredClone(profile);
+  prose.capabilities.memory = { status: 'prose', list: 'the memory file (`/tmp/m-<the project>.md`, a checklist)', 'in-progress': 'doing', completed: 'done' };
+  assert.equal(memoryFile(prose), '/tmp/m-<the project>.md');
+  assert.deepEqual(checkMemoryFile(prose), []);
+  prose.capabilities.memory.list = 'the memory file (`notes/m.md`, a checklist)';
+  assert.deepEqual(checkMemoryFile(prose), ['test: the memory file notes/m.md is not an absolute path']);
+  prose.capabilities.memory.list = 'the memory file';
+  assert.deepEqual(checkMemoryFile(prose), ['test: the memory file is not named by a path']);
+  assert.deepEqual(checkMemoryFile(profile), []);
 });

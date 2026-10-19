@@ -36,7 +36,7 @@ function escape(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
-export function checkCitation(root, citation) {
+function checkCitation(root, citation) {
   const cite = citation.trim();
   const m = /^(UW|ADR)-(\d+) §([^:]+): (.+)$/.exec(cite);
   if (!m) return `${cite}: not a citation of a record's section`;

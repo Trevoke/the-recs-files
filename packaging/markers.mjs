@@ -2,7 +2,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 export const capabilities = ['delegate', 'handoff', 'clear', 'load', 'tool', 'ask', 'memory', 'restrict'];
-export const statuses = ['native', 'extension', 'prose', 'absent'];
+const statuses = ['native', 'extension', 'prose', 'absent'];
 const pattern = /\{\{trf:\s*([^}]*?)\s*\}\}/g;
 const entries = { delegate: ['brief', 'sentence'], load: ['skill'], memory: ['list', 'in-progress', 'completed'] };
 
@@ -83,6 +83,17 @@ export function checkProfile(profile) {
     for (const key of needed) if (c[name] && typeof c[name][key] !== 'string') problems.push(`${profile.harness}: ${name} has no ${key} entry`);
   }
   return problems;
+}
+
+export function memoryFile(profile) {
+  return profile.capabilities?.memory?.list?.match(/`([^`]+)`/)?.[1];
+}
+
+export function checkMemoryFile(profile) {
+  if (profile.capabilities?.memory?.status !== 'prose') return [];
+  const file = memoryFile(profile);
+  if (!file) return [`${profile.harness}: the memory file is not named by a path`];
+  return file.startsWith('/') ? [] : [`${profile.harness}: the memory file ${file} is not an absolute path`];
 }
 
 export function leftovers(dir, base = dir) {

@@ -3,7 +3,7 @@
 ## Unreleased
 
 - Each harness's package is rendered from capability markers in the skill
-  text and a harness profile per harness (ADR-10); the Claude Code package is
+  text and a harness profile per harness (ADR-10); the Claude Code skills are
   unchanged.
 - The order of the skills is kept in `skills/skill-flow.dot` (ADR-11).
 - pi's package carries a subagent extension; Codex and pi get the reviewer's

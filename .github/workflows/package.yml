@@ -53,7 +53,9 @@ jobs:
       - name: Test the packaging
         if: matrix.harness == 'claude'
         working-directory: source
-        run: node --test 'packaging/test/*.test.mjs'
+        run: |
+          node --test 'packaging/test/*.test.mjs'
+          node --test 'evals/checks/*.test.mjs'
       - name: Validate the package
         run: source/packaging/validate.sh "${{ matrix.harness }}" "$RUNNER_TEMP/package"
 

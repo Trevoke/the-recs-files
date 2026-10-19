@@ -1,12 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { checkMemoryFile } from './markers.mjs';
+import { harnesses, roleFile, root } from './render.mjs';
 
-const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const [harness, dirArg] = process.argv.slice(2);
-const profileFile = path.join(root, 'packaging', 'profiles', `${harness}.json`);
-if (!harness || !dirArg || !fs.existsSync(profileFile)) {
-  console.error('usage: node packaging/check.mjs <harness> <package-dir>');
+if (!harnesses.includes(harness) || !dirArg) {
+  console.error(`usage: node packaging/check.mjs <${harnesses.join('|')}> <package-dir>`);
   process.exit(2);
 }
 const dir = path.resolve(dirArg);
@@ -70,12 +69,10 @@ for (const [action, version] of Object.entries(actions(dir, '.github/workflows/r
   check(!pinned[action] || pinned[action] === version, `release.yml uses ${action}@${version}; .github/workflows/package.yml uses @${pinned[action]}`);
 }
 
-const harnessProfile = JSON.parse(fs.readFileSync(profileFile, 'utf8'));
-const subagents = harnessProfile.agents === 'copy' || harnessProfile.agents === 'generate'
-  ? fs.readdirSync(path.join(root, 'agents')).map((f) => f.replace(/\.md$/, ''))
-  : [];
-function checkSubagents(fields) {
-  for (const name of subagents) {
+const harnessProfile = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
+function checkSubagents() {
+  const fields = Object.keys(harnessProfile.agentFrontmatter ?? {});
+  for (const name of fs.readdirSync(path.join(root, 'agents')).map((f) => f.replace(/\.md$/, ''))) {
     const file = `agents/${name}.md`;
     if (!exists(file)) {
       problems.push(`${file} is missing`);
@@ -87,7 +84,9 @@ function checkSubagents(fields) {
     }
   }
 }
-if (harnessProfile.agents === 'role file') check(exists('skills/recs-requesting-code-review/reviewer-role.md'), 'the role file is missing');
+if (['copy', 'generate'].includes(harnessProfile.agents)) checkSubagents();
+if (harnessProfile.agents === 'role file') check(exists(roleFile), 'the role file is missing');
+problems.push(...checkMemoryFile(harnessProfile));
 check(exists('skills/skill-flow.dot'), 'skills/skill-flow.dot is missing');
 
 if (harness === 'claude') {
@@ -95,7 +94,6 @@ if (harness === 'claude') {
   const market = json('.claude-plugin/marketplace.json');
   check(plugin.name && plugin.version, '.claude-plugin/plugin.json: name or version missing');
   check(market.plugins?.some((p) => p.name === plugin.name), '.claude-plugin/marketplace.json does not list the plugin');
-  checkSubagents([]);
 }
 
 if (harness === 'codex') {
@@ -121,7 +119,6 @@ if (harness === 'agy') {
   const extra = Object.keys(plugin).filter((k) => !['$schema', 'name', 'description'].includes(k));
   check(extra.length === 0, `plugin.json: agy allows only $schema, name and description; found ${extra.join(', ')}`);
   check(/^[a-zA-Z0-9-_]+$/.test(plugin.name ?? ''), 'plugin.json: name must match ^[a-zA-Z0-9-_]+$');
-  checkSubagents(['tools']);
 }
 
 const found = [...new Set(problems)];

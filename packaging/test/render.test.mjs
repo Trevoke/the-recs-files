@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { checkFlow } from '../flow.mjs';
-import { render, root } from '../render.mjs';
+import { harnesses, render, root } from '../render.mjs';
 
 const temp = (t, name) => {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), name));
@@ -13,7 +13,7 @@ const temp = (t, name) => {
   return dir;
 };
 
-for (const harness of ['claude', 'codex', 'pi', 'agy']) {
+for (const harness of harnesses) {
   test(`renders the ${harness} package with no capability marker left`, (t) => {
     const out = render(harness, temp(t, `render-${harness}-`), 'v1.2.3');
     assert.ok(fs.existsSync(path.join(out, 'skills', 'recs-writing-records', 'SKILL.md')));
@@ -88,6 +88,18 @@ const checkPackage = (harness, dir) => execFileSync(process.execPath, [path.join
 test('the package checks refuse an unknown harness with the usage line', (t) => {
   const out = temp(t, 'check-unknown-');
   assert.throws(() => checkPackage('teleport', out), (e) => e.status === 2 && /^usage: node packaging\/check\.mjs/.test(e.stderr));
+});
+
+test('the package checks refuse a harness outside the harness list with the usage line', (t) => {
+  const out = render('claude', temp(t, 'check-outside-'), 'v1.2.3');
+  assert.throws(() => checkPackage('../profiles/claude', out), (e) => e.status === 2 && /^usage: node packaging\/check\.mjs/.test(e.stderr));
+});
+
+test('the package checks report a subagent without a field its harness profile writes', (t) => {
+  const out = render('agy', temp(t, 'check-agy-field-'), 'v1.2.3');
+  const file = path.join(out, 'agents', 'recs-code-reviewer.md');
+  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^mainAgent:.*\n/m, ''));
+  assert.throws(() => checkPackage('agy', out), (e) => e.status === 1 && /agents\/recs-code-reviewer\.md: no mainAgent/.test(e.stderr));
 });
 
 test('the package checks report a skill without its SKILL.md as a problem', (t) => {

@@ -30,7 +30,9 @@ let rendering;
 function piPackage() {
   rendering ??= (() => {
     try {
-      return { pkg: render('pi', fs.mkdtempSync(path.join(os.tmpdir(), 'recs-eval-pi-package-')), 'v0.0.0-eval') };
+      const pkg = render('pi', fs.mkdtempSync(path.join(os.tmpdir(), 'recs-eval-pi-package-')), 'v0.0.0-eval');
+      process.once('exit', () => fs.rmSync(pkg, { recursive: true, force: true }));
+      return { pkg };
     } catch (error) {
       return { error };
     }

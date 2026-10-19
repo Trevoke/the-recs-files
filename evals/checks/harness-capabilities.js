@@ -1,5 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { memoryFile } from '../../packaging/markers.mjs';
+import { roleFile, root } from '../../packaging/render.mjs';
 import { changedFiles, result } from './workspace.js';
 
 function calls(context) {
@@ -28,7 +30,7 @@ export function reviewerRole(context) {
   const pkg = context?.providerResponse?.metadata?.packageDir;
   if (pkg) {
     return fs
-      .readFileSync(path.join(pkg, 'skills', 'recs-requesting-code-review', 'reviewer-role.md'), 'utf8')
+      .readFileSync(path.join(pkg, roleFile), 'utf8')
       .trim()
       .split('\n')[0];
   }
@@ -70,8 +72,11 @@ export function reviewerDelegated(output, context) {
   );
 }
 
-const memoryPath = /^\/tmp\/recs-files-memory-[^/]+\.md$/;
-const memoryInCommand = /\/tmp\/recs-files-memory-[^/\s'"]+\.md/;
+const memoryParts = memoryFile(JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', 'pi.json'), 'utf8')))
+  .split(/<[^>]*>/)
+  .map((part) => part.replace(/[.*+?^${}()|[\]\\/]/g, '\\$&'));
+export const memoryPath = new RegExp(`^${memoryParts.join('[^/]+')}$`);
+const memoryInCommand = new RegExp(memoryParts.join(`[^/\\s'"]+`));
 
 function writesMemoryByBash(command) {
   if (!memoryInCommand.test(command)) return false;
