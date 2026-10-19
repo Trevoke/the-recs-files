@@ -14,3 +14,4 @@
 
 * Proposed
 - ADR-12 :: [[./architectural-decisions/adr-12-install-the-recs-files-at-project-scope-by-default.org][Install the recs files at project scope by default]]
+- ADR-13 :: [[./architectural-decisions/adr-13-stop-delegation-two-levels-deep.org][Stop delegation two levels deep]]
