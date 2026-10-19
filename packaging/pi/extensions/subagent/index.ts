@@ -35,7 +35,7 @@ export default function (pi: ExtensionAPI) {
 		].join(" "),
 		parameters: Type.Object({
 			description: Type.Optional(Type.String({ description: "A few words saying what the subagent is for" })),
-			prompt: Type.String({ description: "The complete prompt for the subagent" }),
+			prompt: Type.String({ minLength: 1, description: "The complete prompt for the subagent" }),
 		}),
 
 		async execute(_toolCallId, params, signal, _onUpdate, ctx) {
@@ -60,7 +60,7 @@ export default function (pi: ExtensionAPI) {
 			const promptFile = path.join(promptDir, "prompt.md");
 			try {
 				await fs.promises.writeFile(promptFile, params.prompt, { encoding: "utf-8", mode: 0o600 });
-				args.push("--", `@${promptFile}`);
+				args.push("--", `@${promptFile}`, "Carry out the task in the file above. It is your whole prompt.");
 
 				const code = await new Promise<number | null>((resolve) => {
 					const { command, args: argv } = piInvocation(args);
