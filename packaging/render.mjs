@@ -1,6 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { checkFlow, shippedFlow } from './flow.mjs';
 import { checkProfile, fill, leftovers, renderText } from './markers.mjs';
 
 export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
@@ -47,7 +48,7 @@ export function render(harness, outArg, versionArg, { root: from = root } = {}) 
   const p = profile(harness, from);
   const out = path.resolve(outArg);
   const v = { ...vars, version: versionArg.replace(/^v/, ''), repo: `the-recs-files-${harness}` };
-  const problems = [...checkProfile(p)];
+  const problems = [...checkProfile(p), ...checkFlow(from)];
   const write = (file, content) => {
     const full = path.join(out, file);
     fs.mkdirSync(path.dirname(full), { recursive: true });
@@ -64,6 +65,7 @@ export function render(harness, outArg, versionArg, { root: from = root } = {}) 
     const agents = fs.readdirSync(path.join(from, 'agents')).sort().map((f) => frontmatter(from, path.join('agents', f)));
     const skills = fs.readdirSync(path.join(from, 'skills'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
     for (const rel of files(path.join(from, 'skills'))) {
+      if (rel === 'skill-flow.dot') { write(path.join('skills', rel), shippedFlow(fs.readFileSync(path.join(from, 'skills', rel), 'utf8'))); continue; }
       const file = path.join('skills', rel);
       const result = renderText(fs.readFileSync(path.join(from, file), 'utf8'), p, {
         file, roleFile, roles: agents.map((a) => a.name), skills,

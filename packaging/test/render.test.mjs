@@ -3,6 +3,7 @@ import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
+import { checkFlow } from '../flow.mjs';
 import { render, root } from '../render.mjs';
 
 const temp = (t, name) => {
@@ -42,4 +43,15 @@ test('refuses an output inside the source, and deletes nothing', (t) => {
   const from = fixture(t);
   assert.throws(() => render('claude', path.join(from, 'packaging'), 'v1.2.3', { root: from }), /holds the source/);
   assert.ok(fs.existsSync(path.join(from, 'packaging', 'profiles')), 'the source survives the refused render');
+});
+
+test('the skill flow matches the skills and the records', () => {
+  assert.deepEqual(checkFlow(root), []);
+});
+
+test('a rendered skill flow carries no citations', (t) => {
+  const out = render('pi', temp(t, 'render-flow-'), 'v1.2.3');
+  const flow = fs.readFileSync(path.join(out, 'skills', 'skill-flow.dot'), 'utf8');
+  assert.ok(flow.includes('kind="load"'));
+  assert.ok(!flow.includes('cite='));
 });

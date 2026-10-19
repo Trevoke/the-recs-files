@@ -12,7 +12,7 @@ tree, and never `git add`/`git commit`. The template says so; do not trim
 that part out.
 
 ```
-Task tool (recs-code-reviewer):
+{{trf: delegate recs-code-reviewer brief}}:
   Use template at recs-requesting-code-review/code-reviewer.md
 
   WHAT_WAS_IMPLEMENTED: [from implementer's report]

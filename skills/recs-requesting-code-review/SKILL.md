@@ -35,7 +35,7 @@ The SHAs freeze what is reviewed. Anything you commit afterwards is outside the 
 
 **2. Dispatch code-reviewer subagent:**
 
-Use Task tool with recs-code-reviewer type, fill template at `code-reviewer.md` — it opens by telling the reviewer it is read-only; keep that.
+Use {{trf: delegate recs-code-reviewer sentence}}, fill template at `code-reviewer.md` — it opens by telling the reviewer it is read-only; keep that.
 
 **Placeholders:**
 - `{WHAT_WAS_IMPLEMENTED}` - What you just built
