@@ -82,3 +82,29 @@ test('the package checks refuse a pi package without its subagent extension', (t
     (e) => e.status === 1 && /extensions\/subagent\/index\.ts, which is missing/.test(e.stderr),
   );
 });
+
+const checkPackage = (harness, dir) => execFileSync(process.execPath, [path.join(root, 'packaging', 'check.mjs'), harness, dir], { encoding: 'utf8', stdio: 'pipe' });
+
+test('the package checks refuse an unknown harness with the usage line', (t) => {
+  const out = temp(t, 'check-unknown-');
+  assert.throws(() => checkPackage('teleport', out), (e) => e.status === 2 && /^usage: node packaging\/check\.mjs/.test(e.stderr));
+});
+
+test('the package checks report a skill without its SKILL.md as a problem', (t) => {
+  const out = render('claude', temp(t, 'check-no-skill-md-'), 'v1.2.3');
+  fs.rmSync(path.join(out, 'skills', 'recs-writing-records', 'SKILL.md'));
+  assert.throws(() => checkPackage('claude', out), (e) => e.status === 1 && /skills\/recs-writing-records\/SKILL\.md is missing/.test(e.stderr));
+});
+
+test('the package checks report a missing release workflow as a problem', (t) => {
+  const out = render('claude', temp(t, 'check-no-release-'), 'v1.2.3');
+  fs.rmSync(path.join(out, '.github'), { recursive: true });
+  assert.throws(() => checkPackage('claude', out), (e) => e.status === 1 && /\.github\/workflows\/release\.yml is missing/.test(e.stderr));
+});
+
+test('validate.sh refuses a missing package directory with the usage line', () => {
+  assert.throws(
+    () => execFileSync(path.join(root, 'packaging', 'validate.sh'), ['pi'], { encoding: 'utf8', stdio: 'pipe' }),
+    (e) => e.status === 2 && /^usage: packaging\/validate\.sh/.test(e.stderr),
+  );
+});

@@ -1,9 +1,13 @@
 import { spawn } from "node:child_process";
 import * as fs from "node:fs";
+import * as os from "node:os";
+import * as path from "node:path";
 import type { ExtensionAPI } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 
 const OUTPUT_CAP = 50 * 1024;
+const STDERR_CAP = 10 * 1024;
+const KILL_GRACE_MS = 5000;
 
 function piInvocation(args: string[]): { command: string; args: string[] } {
 	const script = process.argv[1];
@@ -38,10 +42,11 @@ export default function (pi: ExtensionAPI) {
 			const args = ["--mode", "json", "-p", "--no-session"];
 			if (ctx.model) args.push("--model", `${ctx.model.provider}/${ctx.model.id}`);
 			if (ctx.thinkingLevel) args.push("--thinking", ctx.thinkingLevel);
-			args.push("--", params.prompt);
 
 			const messages: any[] = [];
 			let stderr = "";
+			let spawnError: string | undefined;
+			let aborted = false;
 			const usage = {
 				input: 0,
 				output: 0,
@@ -51,53 +56,78 @@ export default function (pi: ExtensionAPI) {
 				cost: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, total: 0 },
 			};
 
-			const code = await new Promise<number>((resolve) => {
-				const { command, args: argv } = piInvocation(args);
-				const proc = spawn(command, argv, { cwd: ctx.cwd, shell: false, stdio: ["ignore", "pipe", "pipe"] });
-				let buffer = "";
-				const line = (l: string) => {
-					if (!l.startsWith("{")) return;
-					let event: any;
-					try {
-						event = JSON.parse(l);
-					} catch {
-						return;
-					}
-					if (event.type === "message_end" && event.message?.role === "assistant") {
-						messages.push(event.message);
-						const u = event.message.usage;
-						if (u) {
-							for (const k of ["input", "output", "cacheRead", "cacheWrite", "totalTokens"] as const) usage[k] += u[k] || 0;
-							for (const k of ["input", "output", "cacheRead", "cacheWrite", "total"] as const) usage.cost[k] += u.cost?.[k] || 0;
-						}
-					}
-				};
-				proc.stdout.on("data", (d) => {
-					buffer += d.toString();
-					const lines = buffer.split("\n");
-					buffer = lines.pop() ?? "";
-					lines.forEach(line);
-				});
-				proc.stderr.on("data", (d) => (stderr += d.toString()));
-				proc.on("close", (c) => {
-					line(buffer);
-					resolve(c ?? 0);
-				});
-				proc.on("error", () => resolve(1));
-				signal?.addEventListener("abort", () => proc.kill("SIGTERM"), { once: true });
-			});
+			const promptDir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "pi-subagent-"));
+			const promptFile = path.join(promptDir, "prompt.md");
+			try {
+				await fs.promises.writeFile(promptFile, params.prompt, { encoding: "utf-8", mode: 0o600 });
+				args.push("--", `@${promptFile}`);
 
-			if (signal?.aborted) throw new Error("The subagent was aborted");
-			const last = messages.at(-1);
-			if (code !== 0 || !last || last.stopReason === "error") {
-				throw new Error(last?.errorMessage ?? `The subagent exited ${code}: ${stderr.slice(-2000)}`);
+				const code = await new Promise<number | null>((resolve) => {
+					const { command, args: argv } = piInvocation(args);
+					const proc = spawn(command, argv, { cwd: ctx.cwd, shell: false, stdio: ["ignore", "pipe", "pipe"] });
+					let buffer = "";
+					const line = (l: string) => {
+						if (!l.startsWith("{")) return;
+						let event: any;
+						try {
+							event = JSON.parse(l);
+						} catch {
+							return;
+						}
+						if (event.type === "message_end" && event.message?.role === "assistant") {
+							messages.push(event.message);
+							const u = event.message.usage;
+							if (u) {
+								for (const k of ["input", "output", "cacheRead", "cacheWrite", "totalTokens"] as const) usage[k] += u[k] || 0;
+								for (const k of ["input", "output", "cacheRead", "cacheWrite", "total"] as const) usage.cost[k] += u.cost?.[k] || 0;
+							}
+						}
+					};
+					proc.stdout.on("data", (d) => {
+						buffer += d.toString();
+						const lines = buffer.split("\n");
+						buffer = lines.pop() ?? "";
+						lines.forEach(line);
+					});
+					proc.stderr.on("data", (d) => {
+						stderr = (stderr + d.toString()).slice(-STDERR_CAP);
+					});
+					proc.on("close", (c) => {
+						line(buffer);
+						resolve(c);
+					});
+					proc.on("error", (e) => {
+						spawnError = e.message;
+						resolve(1);
+					});
+					if (signal) {
+						const kill = () => {
+							aborted = true;
+							proc.kill("SIGTERM");
+							setTimeout(() => {
+								if (proc.exitCode === null && proc.signalCode === null) proc.kill("SIGKILL");
+							}, KILL_GRACE_MS).unref();
+						};
+						if (signal.aborted) kill();
+						else signal.addEventListener("abort", kill, { once: true });
+					}
+				});
+
+				if (aborted || signal?.aborted) throw new Error("The subagent was aborted");
+				const last = messages.at(-1);
+				if (spawnError) throw new Error(`The subagent could not start: ${spawnError}`);
+				if (code !== 0 || !last || last.stopReason === "error" || last.stopReason === "aborted") {
+					throw new Error(last?.errorMessage ?? `The subagent exited ${code ?? "on a signal"}: ${stderr.slice(-2000)}`);
+				}
+				const reply = text(last);
+				return {
+					content: [{ type: "text", text: reply.length > OUTPUT_CAP ? `${reply.slice(0, OUTPUT_CAP)}\n[truncated]` : reply }],
+					details: { description: params.description, turns: messages.length },
+					usage,
+				};
+			} finally {
+				await fs.promises.rm(promptDir, { recursive: true, force: true });
 			}
-			const reply = text(last);
-			return {
-				content: [{ type: "text", text: reply.length > OUTPUT_CAP ? `${reply.slice(0, OUTPUT_CAP)}\n[truncated]` : reply }],
-				details: { description: params.description, turns: messages.length },
-				usage,
-			};
 		},
 	});
 }

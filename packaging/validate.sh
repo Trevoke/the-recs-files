@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+if [ $# -lt 2 ]; then
+  echo "usage: packaging/validate.sh <claude|codex|pi|agy> <package-dir>" >&2
+  exit 2
+fi
 harness=$1
 dir=$(realpath "$2")
 here=$(dirname "$(realpath "$0")")

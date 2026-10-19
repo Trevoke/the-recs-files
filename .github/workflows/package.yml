@@ -8,8 +8,11 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to package and publish, such as v1.0.0-beta.2
+        description: Release tag to package and publish, such as v1.0.0-beta.2; only tags with capability markers and skills/skill-flow.dot can be packaged
         required: true
+
+permissions:
+  contents: read
 
 env:
   TAG: ${{ inputs.tag || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || '' }}
@@ -25,10 +28,12 @@ jobs:
       - uses: actions/checkout@v7
         with:
           path: tools
+          persist-credentials: false
       - uses: actions/checkout@v7
         with:
           ref: ${{ env.TAG || github.sha }}
           path: source
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: 24
@@ -45,6 +50,10 @@ jobs:
           rm -rf source/packaging
           cp -r tools/packaging source/packaging
           node source/packaging/build.mjs "${{ matrix.harness }}" "$RUNNER_TEMP/package" "${TAG:-0.0.0-dev.${{ github.run_number }}}"
+      - name: Test the packaging
+        if: matrix.harness == 'claude'
+        working-directory: source
+        run: node --test 'packaging/test/*.test.mjs'
       - name: Validate the package
         run: source/packaging/validate.sh "${{ matrix.harness }}" "$RUNNER_TEMP/package"
 
@@ -67,13 +76,21 @@ jobs:
     env:
       REPO: the-recs-files-${{ matrix.harness }}
     steps:
+      - name: Refuse a tag that is not a release tag
+        run: |
+          if ! [[ "$TAG" =~ ^v[0-9] ]]; then
+            echo "::error::$TAG is not a release tag; a release tag starts with v and a digit"
+            exit 1
+          fi
       - uses: actions/checkout@v7
         with:
           path: tools
+          persist-credentials: false
       - uses: actions/checkout@v7
         with:
           ref: ${{ env.TAG }}
           path: source
+          persist-credentials: false
       - uses: actions/setup-node@v7
         with:
           node-version: 24

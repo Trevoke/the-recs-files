@@ -4,7 +4,8 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const [harness, dirArg] = process.argv.slice(2);
-if (!harness || !dirArg) {
+const profileFile = path.join(root, 'packaging', 'profiles', `${harness}.json`);
+if (!harness || !dirArg || !fs.existsSync(profileFile)) {
   console.error('usage: node packaging/check.mjs <harness> <package-dir>');
   process.exit(2);
 }
@@ -28,8 +29,21 @@ function json(file) {
   }
 }
 
+function read(from, file) {
+  try {
+    return fs.readFileSync(path.join(from, file), 'utf8');
+  } catch {
+    problems.push(`${file} is missing`);
+    return '';
+  }
+}
+
 function frontmatter(file) {
-  const m = fs.readFileSync(path.join(dir, file), 'utf8').match(/^---\n([\s\S]*?)\n---\n/);
+  if (!exists(file)) {
+    problems.push(`${file} is missing`);
+    return '';
+  }
+  const m = read(dir, file).match(/^---\n([\s\S]*?)\n---\n/);
   check(m, `${file}: no frontmatter`);
   return m?.[1] ?? '';
 }
@@ -47,16 +61,16 @@ for (const file of ['LICENSE', 'README.md', 'CHANGELOG.md', '.github/workflows/r
   check(exists(file), `${file} is missing`);
 }
 
-function actions(file) {
-  const text = fs.readFileSync(file, 'utf8');
+function actions(from, file) {
+  const text = read(from, file);
   return Object.fromEntries([...text.matchAll(/uses: ([\w.-]+\/[\w.-]+)@(\S+)/g)].map((m) => [m[1], m[2]]));
 }
-const pinned = actions(path.join(root, '.github', 'workflows', 'package.yml'));
-for (const [action, version] of Object.entries(actions(path.join(dir, '.github', 'workflows', 'release.yml')))) {
+const pinned = actions(root, '.github/workflows/package.yml');
+for (const [action, version] of Object.entries(actions(dir, '.github/workflows/release.yml'))) {
   check(!pinned[action] || pinned[action] === version, `release.yml uses ${action}@${version}; .github/workflows/package.yml uses @${pinned[action]}`);
 }
 
-const harnessProfile = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
+const harnessProfile = JSON.parse(fs.readFileSync(profileFile, 'utf8'));
 const subagents = harnessProfile.agents === 'copy' || harnessProfile.agents === 'generate'
   ? fs.readdirSync(path.join(root, 'agents')).map((f) => f.replace(/\.md$/, ''))
   : [];
@@ -110,8 +124,9 @@ if (harness === 'agy') {
   checkSubagents(['tools']);
 }
 
-if (problems.length) {
-  console.error(`${harness}: ${problems.length} problem(s)\n- ${problems.join('\n- ')}`);
+const found = [...new Set(problems)];
+if (found.length) {
+  console.error(`${harness}: ${found.length} problem(s)\n- ${found.join('\n- ')}`);
   process.exit(1);
 }
 console.log(`${harness}: package checks pass`);
