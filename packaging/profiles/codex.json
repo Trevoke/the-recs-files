@@ -9,9 +9,10 @@
       "status": "native",
       "brief": "spawn_agent ({role})",
       "sentence": "spawn_agent ({role})",
-      "brief-role-file": "spawn_agent (general-purpose, with `{roleFile}` first in its prompt)",
-      "sentence-role-file": "spawn_agent with `{roleFile}` first in its prompt",
-      "roles": { "recs-code-reviewer": "role file" }
+      "brief-role-file": "spawn_agent (default, with the text of `{roleFile}` first in its prompt)",
+      "sentence-role-file": "spawn_agent with the text of `{roleFile}` first in its prompt",
+      "roles": { "recs-code-reviewer": "role file" },
+      "roleNames": { "general-purpose": "default" }
     },
     "handoff": { "status": "prose" },
     "clear": { "status": "native" },

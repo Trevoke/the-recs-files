@@ -13,6 +13,6 @@ for (const harness of ['claude', 'codex', 'pi', 'agy']) {
     assert.equal(profile.harness, harness);
     assert.deepEqual(checkProfile(profile), []);
     for (const key of ['name', 'contents', 'install', 'agents', 'files']) assert.ok(profile[key], `no ${key}`);
-    assert.ok(!JSON.stringify(profile.capabilities).includes('\\"'), 'an entry holds a double quote, which breaks a Graphviz label');
+    assert.ok(!JSON.stringify(profile.capabilities).includes('\\'), 'no entry holds a double quote or a backslash, which break a Graphviz label');
   });
 }
