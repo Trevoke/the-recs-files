@@ -1,0 +1,43 @@
+#+TITLE: How Antigravity invokes a subagent
+
+Established 2026-10-19 from Antigravity's documentation, read on the web; no
+run. Sources: https://antigravity.google/docs/subagents/,
+https://antigravity.google/docs/hooks/, https://antigravity.google/docs/plugins/,
+https://antigravity.google/docs/changelog/.
+
+* A subagent is spawned with `invoke_subagent`
+"The parent agent calls the `invoke_subagent` tool to spawn a new concurrent
+session" (docs/subagents). Its arguments are "`Subagents` (array of specs
+with `Prompt`, `Role`, `TypeName`, `Workspace` (optional))" (docs/hooks).
+`Workspace` is `inherit`, `branch` (an isolated Git worktree) or `share`
+(docs/subagents).
+
+* `self` is the built-in subagent that clones its caller
+The built-in subagents are `research`, `browser` and `self`; `self` is "A
+direct clone of the calling agent, sharing identical system instructions and
+toolsets" (docs/subagents). The changelog names "`self` subagents" (v1.1.22,
+2026-08-27). No subagent is called general-purpose.
+
+* The documentation does not say what `TypeName` takes
+docs/hooks lists `TypeName` and gives no values; docs/subagents names the
+built-in subagents and never names `TypeName`. That `TypeName` is `self` for
+the built-in clone, or a custom agent's `name`, is inferred, not stated.
+
+* A custom agent is identified by its `name`, and `subagent: true` lets `invoke_subagent` reach it
+Frontmatter `name` is "The unique identifier for the custom agent";
+`subagent`, default true, "allows invocation using the `invoke_subagent`
+tool"; `mainAgent`, default true, allows selection as the primary agent;
+`model` is `inherit`, `flash` or `pro`; `tools` lists permitted tool names
+(docs/subagents). An agent listing `agents: [child.md]` "can invoke `child`"
+(changelog v1.3.1, 2026-10-07). An agent that lists `invoke_subagent` in its
+tools receives "the roster of available subagents" in its system prompt
+(changelog v1.2.5, 2026-09-17).
+
+* A plugin carries its agents under `agents/`, or declares them in a root `agents.json`
+`agents/<agent-name>.md`: "Markdown files defining custom subagents and
+persona configurations" (docs/plugins); installed under
+`plugins/<plugin_name>/agents/` (docs/subagents). A root-level `agents.json`
+declares a plugin's subagents (changelog v1.3.3, 2026-10-10). `/plugin` lists
+"every loaded agent by name instead of by its `agents/` folder name"
+(changelog v1.3.4, 2026-10-13). Whether a plugin's agent is namespaced by its
+plugin when invoked is not documented.

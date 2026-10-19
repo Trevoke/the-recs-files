@@ -1,0 +1,36 @@
+{
+  "harness": "pi",
+  "name": "pi",
+  "contents": "the skills",
+  "install": ["pi install git:github.com/Trevoke/{repo}@v{version}"],
+  "agents": "role file",
+  "capabilities": {
+    "delegate": {
+      "status": "absent",
+      "brief": "subagent tool ({role})",
+      "sentence": "the subagent tool",
+      "brief-role-file": "subagent tool (general-purpose, with `{roleFile}` first in its prompt)",
+      "sentence-role-file": "the subagent tool with `{roleFile}` first in its prompt",
+      "roles": { "recs-code-reviewer": "role file" }
+    },
+    "handoff": { "status": "prose" },
+    "clear": { "status": "native" },
+    "load": { "status": "native", "skill": "{skill}" },
+    "tool": { "status": "native" },
+    "ask": { "status": "prose" },
+    "memory": {
+      "status": "prose",
+      "list": "the memory file (`/tmp/recs-files-memory-<the project directory's name>.md`, a checklist)",
+      "in-progress": "in progress in the memory file",
+      "completed": "completed in the memory file"
+    },
+    "restrict": { "status": "prose" }
+  },
+  "files": {
+    "package.json": {
+      "name": "{repo}", "version": "{version}", "description": "{description}", "license": "MIT", "repository": "{source}",
+      "keywords": ["pi-package"],
+      "pi": { "skills": ["./skills"] }
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "harness": "agy",
+  "name": "Antigravity",
+  "contents": "the skills and the `recs-code-reviewer` subagent",
+  "install": ["agy plugin install https://github.com/Trevoke/{repo}"],
+  "agents": "generate",
+  "agentFrontmatter": { "tools": ["view_file", "grep_search", "run_command"], "mainAgent": false, "subagent": true, "model": "inherit" },
+  "capabilities": {
+    "delegate": {
+      "status": "native",
+      "brief": "invoke_subagent ({role})",
+      "sentence": "invoke_subagent with the {role} agent",
+      "roles": { "recs-code-reviewer": "native" },
+      "roleNames": { "general-purpose": "self" }
+    },
+    "handoff": { "status": "prose" },
+    "clear": { "status": "prose" },
+    "load": { "status": "native", "skill": "{skill}" },
+    "tool": { "status": "native" },
+    "ask": { "status": "prose" },
+    "memory": {
+      "status": "native",
+      "list": "the task artifact (a markdown checklist)",
+      "in-progress": "in progress in the task artifact",
+      "completed": "done in the task artifact"
+    },
+    "restrict": { "status": "native" }
+  },
+  "files": {
+    "plugin.json": { "$schema": "https://antigravity.google/schemas/v1/plugin.json", "name": "{plugin}", "description": "{description}" }
+  }
+}

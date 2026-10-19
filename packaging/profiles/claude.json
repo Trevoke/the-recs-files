@@ -1,0 +1,32 @@
+{
+  "harness": "claude",
+  "name": "Claude Code",
+  "contents": "the skills and the `recs-code-reviewer` subagent",
+  "install": ["claude plugin marketplace add Trevoke/{repo}", "claude plugin install {plugin}@the-recs-files"],
+  "agents": "copy",
+  "capabilities": {
+    "delegate": {
+      "status": "native",
+      "brief": "Task tool ({role})",
+      "sentence": "Task tool with {role} type",
+      "roles": { "recs-code-reviewer": "native" }
+    },
+    "handoff": { "status": "prose" },
+    "clear": { "status": "native" },
+    "load": { "status": "native", "skill": "{skill}" },
+    "tool": { "status": "native" },
+    "ask": { "status": "native" },
+    "memory": { "status": "native", "list": "TodoWrite", "in-progress": "in_progress", "completed": "completed" },
+    "restrict": { "status": "prose" }
+  },
+  "files": {
+    ".claude-plugin/plugin.json": {
+      "name": "{plugin}", "version": "{version}", "description": "{description}", "author": { "name": "{author}" },
+      "homepage": "{source}", "repository": "{source}", "license": "MIT"
+    },
+    ".claude-plugin/marketplace.json": {
+      "name": "the-recs-files", "description": "{description}", "owner": { "name": "{author}" },
+      "plugins": [{ "name": "{plugin}", "source": "./", "description": "{description}", "version": "{version}" }]
+    }
+  }
+}
