@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { fill, leftovers, renderText } from './markers.mjs';
+import { checkProfile, fill, leftovers, renderText } from './markers.mjs';
 
 export const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 export const harnesses = ['claude', 'codex', 'pi', 'agy'];
@@ -13,12 +13,12 @@ const vars = {
   source: 'https://github.com/Trevoke/the-recs-files',
 };
 
-export function profile(harness) {
-  return JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
+export function profile(harness, from = root) {
+  return JSON.parse(fs.readFileSync(path.join(from, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
 }
 
-function frontmatter(file) {
-  const text = fs.readFileSync(path.join(root, file), 'utf8');
+function frontmatter(from, file) {
+  const text = fs.readFileSync(path.join(from, file), 'utf8');
   const [, head, body] = text.match(/^---\n([\s\S]*?)\n---\n([\s\S]*)$/);
   const description = head.match(/^description: \|\n((?:  .*\n?)+)/m)?.[1].replace(/^  /gm, '').trim()
     ?? head.match(/^description: (.*)$/m)[1].trim();
@@ -38,37 +38,41 @@ function files(dir, base = dir) {
   }).sort();
 }
 
-export function render(harness, outArg, versionArg) {
-  const p = profile(harness);
+export function render(harness, outArg, versionArg, { root: from = root } = {}) {
+  const p = profile(harness, from);
   const out = path.resolve(outArg);
   const v = { ...vars, version: versionArg.replace(/^v/, ''), repo: `the-recs-files-${harness}` };
-  const problems = [];
+  const problems = [...checkProfile(p)];
   const write = (file, content) => {
     const full = path.join(out, file);
     fs.mkdirSync(path.dirname(full), { recursive: true });
     fs.writeFileSync(full, typeof content === 'string' ? content : `${JSON.stringify(content, null, 2)}\n`);
   };
-  const copy = (from, to = from) => fs.cpSync(path.join(root, from), path.join(out, to), { recursive: true });
+  const copy = (src, to = src) => fs.cpSync(path.join(from, src), path.join(out, to), { recursive: true });
 
+  const relative = path.relative(out, from);
+  if (!path.isAbsolute(relative) && relative !== '..' && !relative.startsWith(`..${path.sep}`)) {
+    throw new Error(`${harness}: rendering refused\n- ${out} holds the source`);
+  }
   fs.rmSync(out, { recursive: true, force: true });
   fs.mkdirSync(out, { recursive: true });
+  try {
+    const agents = fs.readdirSync(path.join(from, 'agents')).sort().map((f) => frontmatter(from, path.join('agents', f)));
+    const skills = fs.readdirSync(path.join(from, 'skills'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
+    for (const rel of files(path.join(from, 'skills'))) {
+      const file = path.join('skills', rel);
+      const result = renderText(fs.readFileSync(path.join(from, file), 'utf8'), p, {
+        file, roleFile, roles: agents.map((a) => a.name), skills,
+      });
+      problems.push(...result.problems.map((m) => `${file}: ${m}`));
+      write(file, result.text);
+      fs.chmodSync(path.join(out, file), fs.statSync(path.join(from, file)).mode);
+    }
 
-  const agents = fs.readdirSync(path.join(root, 'agents')).sort().map((f) => frontmatter(path.join('agents', f)));
-  const skills = fs.readdirSync(path.join(root, 'skills'), { withFileTypes: true }).filter((e) => e.isDirectory()).map((e) => e.name);
-  for (const rel of files(path.join(root, 'skills'))) {
-    const file = path.join('skills', rel);
-    const result = renderText(fs.readFileSync(path.join(root, file), 'utf8'), p, {
-      file, roleFile, roles: agents.map((a) => a.name), skills,
-    });
-    problems.push(...result.problems.map((m) => `${file}: ${m}`));
-    write(file, result.text);
-    fs.chmodSync(path.join(out, file), fs.statSync(path.join(root, file)).mode);
-  }
-
-  copy('LICENSE');
-  copy('CHANGELOG.md');
-  write('.github/workflows/release.yml', fs.readFileSync(path.join(root, 'packaging', 'templates', 'release.yml'), 'utf8'));
-  write('README.md', `# ${v.repo}
+    copy('LICENSE');
+    copy('CHANGELOG.md');
+    write('.github/workflows/release.yml', fs.readFileSync(path.join(from, 'packaging', 'templates', 'release.yml'), 'utf8'));
+    write('README.md', `# ${v.repo}
 
 The [recs files](${v.source}) packaged for ${p.name}: ${p.contents}, version ${v.version}.
 
@@ -87,22 +91,32 @@ Then open a project and ask for \`recs-kickstart\`.
 
 MIT; see \`LICENSE\`.
 `);
-  for (const [file, content] of Object.entries(p.files)) write(file, fill(content, v));
-  for (const [to, from] of Object.entries(p.copy ?? {})) copy(from, to);
+    for (const [file, content] of Object.entries(p.files)) write(file, fill(content, v));
+    for (const [to, src] of Object.entries(p.copy ?? {})) copy(src, to);
 
-  if (p.agents === 'copy') copy('agents');
-  if (p.agents === 'generate') {
-    for (const a of agents) {
-      const head = [yaml('name', a.name), `description: |\n${a.description.split('\n').map((l) => `  ${l}`).join('\n')}`, ...Object.entries(p.agentFrontmatter).map(([k, val]) => yaml(k, val))];
-      write(a.file, `---\n${head.join('\n')}\n---\n${a.body}`);
+    if (p.agents === 'copy') copy('agents');
+    if (p.agents === 'generate') {
+      for (const a of agents) {
+        const head = [yaml('name', a.name), `description: |\n${a.description.split('\n').map((l) => `  ${l}`).join('\n')}`, ...Object.entries(p.agentFrontmatter).map(([k, val]) => yaml(k, val))];
+        write(a.file, `---\n${head.join('\n')}\n---\n${a.body}`);
+      }
     }
-  }
-  if (p.agents === 'role file') {
-    const reviewer = agents.find((a) => a.name === 'recs-code-reviewer');
-    write(roleFile, reviewer.body.replace(/^\n+/, ''));
+    if (!['copy', 'generate', 'role file'].includes(p.agents)) {
+      problems.push(`the ${harness} harness profile carries agents as ${p.agents}, not copy, generate or role file`);
+    }
+    if (Object.values(p.capabilities?.delegate?.roles ?? {}).includes('role file') && p.agents !== 'role file') {
+      problems.push(`the ${harness} harness profile carries a role by role file but writes none`);
+    }
+    if (p.agents === 'role file') {
+      const reviewer = agents.find((a) => a.name === 'recs-code-reviewer');
+      write(roleFile, reviewer.body.replace(/^\n+/, ''));
+    }
+
+    problems.push(...leftovers(out));
+  } catch (e) {
+    problems.push(e.message);
   }
 
-  problems.push(...leftovers(out));
   if (problems.length) {
     fs.rmSync(out, { recursive: true, force: true });
     throw new Error(`${harness}: rendering refused\n- ${problems.join('\n- ')}`);
