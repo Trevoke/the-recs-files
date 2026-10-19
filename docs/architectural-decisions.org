@@ -9,7 +9,7 @@
 - ADR-7 :: [[./architectural-decisions/adr-7-the-agent-speaks-in-the-ubiquitous-language.org][The agent speaks in the ubiquitous language]]
 - ADR-8 :: [[./architectural-decisions/adr-8-each-term-is-a-record-of-its-own.org][Each term is a record of its own]]
 - ADR-9 :: [[./architectural-decisions/adr-9-the-code-realization-skills-are-a-prototype-adapted-from-superpowers.org][The code realization skills are a prototype adapted from superpowers]]
+- ADR-10 :: [[./architectural-decisions/adr-10-render-each-harnesss-package-from-capability-markers-and-a-harness-profile.org][Render each harness's package from capability markers and a harness profile]]
 
 * Proposed
-- ADR-10 :: [[./architectural-decisions/adr-10-render-each-harnesss-package-from-capability-markers-and-a-harness-profile.org][Render each harness's package from capability markers and a harness profile]]
 - ADR-11 :: [[./architectural-decisions/adr-11-keep-the-order-of-the-skills-in-a-skill-flow-beside-them.org][Keep the order of the skills in a skill flow beside them]]

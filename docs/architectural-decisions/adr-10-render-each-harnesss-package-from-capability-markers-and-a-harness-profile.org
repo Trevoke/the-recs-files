@@ -1,6 +1,6 @@
 * ADR-10 Render each harness's package from capability markers and a harness profile
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 The skills reach several harnesses, each with its own means to delegate,
