@@ -1,6 +1,6 @@
 * ADR-13 Stop delegation two levels deep
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A subagent that can dispatch subagents can nest without end, each level
