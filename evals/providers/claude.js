@@ -40,6 +40,7 @@ async function install(dirs, binary, env) {
   const pkg = path.join(project, '.claude', marketplace);
   fs.cpSync(rendered, pkg, { recursive: true });
   exclude(project, ['/.claude/settings.json', `/.claude/${marketplace}/`]);
+  // ADR-12 §Consequences: Install the recs files at project scope by default
   // docs/knowledge-base/claude-code-as-an-eval-harness.org: The plugin commands install a local marketplace at project scope with no network
   for (const args of [
     ['plugin', 'marketplace', 'add', `./${path.relative(project, pkg)}`, '--scope', 'project'],

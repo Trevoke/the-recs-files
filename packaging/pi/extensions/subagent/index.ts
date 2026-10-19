@@ -8,6 +8,7 @@ import { Type } from "typebox";
 const OUTPUT_CAP = 50 * 1024;
 const STDERR_CAP = 10 * 1024;
 const KILL_GRACE_MS = 5000;
+// ADR-13 §Decision: Stop delegation two levels deep
 const DEPTH_LIMIT = 2;
 
 function delegateDepth(env: NodeJS.ProcessEnv): number {
@@ -32,6 +33,7 @@ function text(message: any): string {
 
 export default function (pi: ExtensionAPI) {
 	const depth = delegateDepth(process.env);
+	// ADR-13 §Decision: Stop delegation two levels deep
 	if (depth >= DEPTH_LIMIT) return;
 	pi.registerTool({
 		name: "subagent",
@@ -74,6 +76,7 @@ export default function (pi: ExtensionAPI) {
 					const { command, args: argv } = piInvocation(args);
 					const proc = spawn(command, argv, {
 						cwd: ctx.cwd,
+						// ADR-13 §Decision: Stop delegation two levels deep
 						env: { ...process.env, TRF_DELEGATE_DEPTH: String(depth + 1) },
 						shell: false,
 						stdio: ["ignore", "pipe", "pipe"],

@@ -78,6 +78,7 @@ export function render(harness, outArg, versionArg, { root: from = root } = {}) 
     copy('LICENSE');
     copy('CHANGELOG.md');
     write('.github/workflows/release.yml', fs.readFileSync(path.join(from, 'packaging', 'templates', 'release.yml'), 'utf8'));
+    // ADR-12 §Consequences: Install the recs files at project scope by default
     write('README.md', `# ${v.repo}
 
 The [recs files](${v.source}) packaged for ${p.name}: ${p.contents}, version ${v.version}.
