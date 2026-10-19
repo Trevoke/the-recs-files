@@ -2,7 +2,11 @@
   "harness": "pi",
   "name": "pi",
   "contents": "the skills",
-  "install": ["pi install git:github.com/Trevoke/{repo}@v{version}"],
+  "install": [
+    "pi install -l git:github.com/Trevoke/{repo}@v{version}",
+    "# At user scope instead:",
+    "pi install git:github.com/Trevoke/{repo}@v{version}"
+  ],
   "agents": "role file",
   "capabilities": {
     "delegate": {

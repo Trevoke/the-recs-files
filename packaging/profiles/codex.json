@@ -2,7 +2,11 @@
   "harness": "codex",
   "name": "Codex",
   "contents": "the skills",
-  "install": ["codex plugin marketplace add Trevoke/{repo}", "codex plugin add {plugin}@the-recs-files"],
+  "install": [
+    "# codex plugin has no project scope.",
+    "codex plugin marketplace add Trevoke/{repo}",
+    "codex plugin add {plugin}@the-recs-files"
+  ],
   "agents": "role file",
   "capabilities": {
     "delegate": {

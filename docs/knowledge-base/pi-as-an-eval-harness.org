@@ -132,3 +132,73 @@ from pi 0.87.1's source, with no run: `pi-agent-core/dist/agent-loop.js:588`
 keeps `usage` on the result, `:611-617` emits it as `result`, and
 `pi-coding-agent/dist/modes/json-event.js:17-18` writes every event but
 `message_update` unchanged.
+
+* `pi install -l <path>` records the path in `.pi/settings.json` and copies nothing
+A project-scoped install of a local path appends that path, relative to the
+project's `.pi`, to `packages` in `<project>/.pi/settings.json`; it checks
+that the path exists and does nothing else, so it needs no network. Read from
+pi 0.87.1's source: `dist/package-manager-cli.js:825` (`installAndPersist`
+with `local`), `dist/core/package-manager.js:777-783` (a local source is only
+checked for existence), `:787-790` and `:618-646` (the source added to the
+project's `packages`), `:1138-1146` and `:1785-1788` (the path made relative
+to `<cwd>/.pi`), `dist/core/settings-manager.js:62` (the project settings
+file). A first install needs no `--approve`: before `.pi/settings.json`
+exists the project has nothing that asks for trust
+(`dist/core/project-trust.js:21-23`, `dist/core/trust-manager.js:8-16`);
+once it exists, a second install without trust stops with "Project is not
+trusted. Use --approve to modify local package config."
+(`dist/package-manager-cli.js:809-810`). Run in bubblewrap with no network
+namespace shared, 2026-10-19:
+#+begin_src sh
+pi install -l ./.pi/the-recs-files-pi
+cat .pi/settings.json
+#+end_src
+#+begin_example
+Installing ./.pi/the-recs-files-pi...
+Installed ./.pi/the-recs-files-pi
+{
+  "packages": [
+    "the-recs-files-pi"
+  ]
+}
+#+end_example
+
+* A project package loads only under project trust
+`.pi/settings.json` is a project resource that asks for trust
+(`dist/core/trust-manager.js:8-16`, `:150-169`), and an untrusted project's
+settings load as empty, so its `packages` are never read
+(`dist/core/settings-manager.js:195-198`). In a run with no UI and no saved
+decision, trust defaults to no, silently (`dist/core/project-trust.js:37-51`,
+`dist/main.js:578-585`). Run in bubblewrap, 2026-10-19, after the install
+above: `pi --mode rpc` answered `get_commands` with no `skill:` entry, and with
+`--approve` with all thirteen `skill:recs-*` entries, each with
+`"scope":"project","origin":"package"`.
+
+* `<agent-dir>/trust.json` keeps a project trust decision; `--approve` lasts one run
+`--approve` sets a per-run override that is returned before any stored
+decision and never written (`dist/cli/args.js:215-216`,
+`dist/core/project-trust.js:18-19`, `dist/main.js:584`, `:599`). A stored
+decision lives in `trust.json` in the agent directory, keyed by the
+canonical project path, a parent's entry covering its children
+(`dist/core/trust-manager.js:20-33`, `:170-200`); pi reads it on every run
+(`dist/core/project-trust.js:37-40`, `dist/main.js:585`), and writes it when
+a person answers "Trust" at the interactive prompt
+(`dist/core/project-trust.js:52-55`). A pi started with no flags, with the
+same `PI_CODING_AGENT_DIR`, is therefore trusted. Run in bubblewrap,
+2026-10-19: after `--approve` runs the agent directory held no `trust.json`;
+with `trust.json` holding `{"<project>": true}`, a run with no flags loaded
+the package's thirteen skills and its `subagent` extension, the extension
+registering the `subagent` tool, with no load error (pi's
+`DefaultResourceLoader`, run inside the sandbox).
+
+* `--no-skills` and `--no-extensions` drop a package's skills and extensions
+Each keeps only paths named on the command line, and a package's resources
+are not among them (`dist/core/resource-loader.js:316-318`, `:330-332`). Run
+in bubblewrap, 2026-10-19: with the project trusted, `DefaultResourceLoader`
+with `noSkills` and `noExtensions` loaded no skill and no extension.
+
+* `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
+It holds patterns in the form of `.gitignore` that apply to one repository and
+are not committed (gitignore(5)). An excluded untracked path is absent from
+`git status --porcelain` and from `git ls-files --others --exclude-standard`,
+and `git add -A` does not add it (run, 2026-10-19).

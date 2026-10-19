@@ -2,7 +2,10 @@
   "harness": "agy",
   "name": "Antigravity",
   "contents": "the skills and the `recs-code-reviewer` subagent",
-  "install": ["agy plugin install https://github.com/Trevoke/{repo}"],
+  "install": [
+    "# agy plugin install has no project scope.",
+    "agy plugin install https://github.com/Trevoke/{repo}"
+  ],
   "agents": "generate",
   "agentFrontmatter": { "tools": ["view_file", "grep_search", "run_command"], "mainAgent": false, "subagent": true, "model": "inherit" },
   "capabilities": {

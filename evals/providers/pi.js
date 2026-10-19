@@ -42,20 +42,13 @@ function piPackage() {
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
-function prepare(caseName, withSkills) {
-  const rendered = withSkills ? piPackage() : undefined;
+function prepare(caseName) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
   const project = path.join(root, 'project');
   const agentDir = path.join(root, 'agent');
   const home = path.join(root, 'home');
-  const pkg = withSkills ? path.join(root, 'package') : undefined;
   fs.cpSync(path.join(casesDir, caseName, 'fixture'), project, { recursive: true });
   fs.mkdirSync(agentDir);
-  if (withSkills) {
-    fs.cpSync(rendered, pkg, { recursive: true });
-    // docs/knowledge-base/pi-as-an-eval-harness.org: A print-mode run discovers `<agent-dir>/skills` without `--approve`
-    fs.cpSync(path.join(pkg, 'skills'), path.join(agentDir, 'skills'), { recursive: true });
-  }
   fs.mkdirSync(home);
   git(project, 'init', '--quiet', '--initial-branch=main');
   git(project, 'add', '-A');
@@ -66,7 +59,25 @@ function prepare(caseName, withSkills) {
     git(project, 'add', '-A');
     git(project, 'commit', '--quiet', '-m', 'Add the change under review');
   }
-  return { root, project, agentDir, home, pkg };
+  return { root, project, agentDir, home };
+}
+
+async function install(dirs, env) {
+  const { project, agentDir } = dirs;
+  const rendered = piPackage();
+  const name = JSON.parse(fs.readFileSync(path.join(rendered, 'package.json'), 'utf8')).name;
+  const pkg = path.join(project, '.pi', name);
+  fs.cpSync(rendered, pkg, { recursive: true });
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
+  fs.mkdirSync(path.join(project, '.git', 'info'), { recursive: true });
+  fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), `/.pi/settings.json\n/.pi/${name}/\n`);
+  // docs/knowledge-base/pi-as-an-eval-harness.org: A project package loads only under project trust
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `<agent-dir>/trust.json` keeps a project trust decision; `--approve` lasts one run
+  fs.writeFileSync(path.join(agentDir, 'trust.json'), `${JSON.stringify({ [project]: true }, null, 2)}\n`);
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `pi install -l <path>` records the path in `.pi/settings.json` and copies nothing
+  const result = await run(sandboxed(dirs, env, ['install', '-l', `./${path.relative(project, pkg)}`]), 60 * 1000);
+  if (result.code !== 0) throw new Error(`pi install exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`);
+  return pkg;
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: Nothing confines pi to its working directory
@@ -160,20 +171,18 @@ export default class PiProvider {
 
   async callApi(prompt, context) {
     const caseName = context?.vars?.case;
-    const dirs = prepare(caseName, this.config.skills);
-    const { root, project, agentDir, pkg } = dirs;
-    // docs/knowledge-base/pi-as-an-eval-harness.org: `--no-skills --skill <dir>` loads exactly that directory's skills
+    const dirs = prepare(caseName);
+    const { root, project, agentDir } = dirs;
+    // docs/knowledge-base/pi-as-an-eval-harness.org: `PI_CODING_AGENT_DIR` moves settings, models and auth
+    const env = { ...identity, PI_CODING_AGENT_DIR: agentDir, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? '' };
+    const pkg = this.config.skills ? await install(dirs, env) : undefined;
+    // docs/knowledge-base/pi-as-an-eval-harness.org: `--no-skills` and `--no-extensions` drop a package's skills and extensions
     const args = [
       '-p', '--mode', 'json', '--no-session',
-      '--no-skills', '--no-extensions', '--no-prompt-templates', '--no-themes', '--offline',
-      ...(this.config.skills ? ['--skill', path.join(agentDir, 'skills')] : []),
-      // docs/knowledge-base/pi-as-an-eval-harness.org: An explicit `-e` extension loads under `--no-extensions`
-      ...(this.config.skills ? ['-e', path.join(pkg, 'extensions', 'subagent', 'index.ts')] : []),
+      '--no-prompt-templates', '--no-themes', '--offline',
       '--model', this.config.model,
       '--', prompt,
     ];
-    // docs/knowledge-base/pi-as-an-eval-harness.org: `PI_CODING_AGENT_DIR` moves settings, models and auth
-    const env = { ...identity, PI_CODING_AGENT_DIR: agentDir, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? '' };
     const started = Date.now();
     const result = await run(sandboxed(dirs, env, args), this.config.timeoutMs ?? 15 * 60 * 1000);
     fs.writeFileSync(path.join(root, 'pi.jsonl'), result.stdout);

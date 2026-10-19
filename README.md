@@ -50,14 +50,14 @@ ecosystem example list beside npm, cargo and pytest.
 ## Installing
 
 Each harness has a package of its own, published from this repository on each
-release:
+release. The recs files install at project scope by default:
 
-| Harness | Install |
-|---|---|
-| Claude Code | `claude plugin marketplace add Trevoke/the-recs-files-claude`, then `claude plugin install recs-files@the-recs-files` |
-| Codex | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
-| pi | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
-| Antigravity | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+| Harness | Project scope (the default) | User scope |
+|---|---|---|
+| Claude Code | `claude plugin marketplace add --scope project Trevoke/the-recs-files-claude`, then `claude plugin install --scope project recs-files@the-recs-files` | `claude plugin marketplace add --scope user Trevoke/the-recs-files-claude`, then `claude plugin install --scope user recs-files@the-recs-files` |
+| Codex | none: `codex plugin` has no project scope | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
+| pi | `pi install -l git:github.com/Trevoke/the-recs-files-pi@v<version>` | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
+| Antigravity | none: `agy plugin install` has no project scope | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
 
 The Claude Code and Antigravity packages carry the `recs-code-reviewer`
 subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
