@@ -153,6 +153,28 @@ test('the package checks refuse an opencode package with a markdown file directl
   assert.throws(() => checkPackage('opencode', out), (e) => e.status === 1 && /skills: opencode loads notes\.md as a skill/.test(e.stderr));
 });
 
+test('the opencode package README installs with one command per scope, on a private temporary directory', (t) => {
+  const out = render('opencode', temp(t, 'readme-opencode-'), 'v1.2.3');
+  const readme = fs.readFileSync(path.join(out, 'README.md'), 'utf8');
+  const blocks = [...readme.matchAll(/```sh\n([\s\S]*?)\n```/g)].map((m) => m[1].split('\n'));
+  assert.deepEqual(blocks.map((b) => b.length), [1, 1], 'one command at project scope and one at user scope');
+  assert.ok(!readme.includes('/tmp/the-recs-files'), 'no clone into a shared /tmp directory');
+});
+
+test('a harness profile with agentName false writes no name into a generated subagent', (t) => {
+  const out = render('opencode', temp(t, 'render-opencode-agent-'), 'v1.2.3');
+  const head = fs.readFileSync(path.join(out, 'agents', 'recs-code-reviewer.md'), 'utf8').match(/^---\n([\s\S]*?)\n---\n/)[1];
+  assert.doesNotMatch(head, /^name:/m, 'no name in the frontmatter');
+  assert.match(head, /^description: /m, 'a description in the frontmatter');
+});
+
+test('the package checks report a generated subagent without the name its harness profile writes', (t) => {
+  const out = render('agy', temp(t, 'check-agy-name-'), 'v1.2.3');
+  const file = path.join(out, 'agents', 'recs-code-reviewer.md');
+  fs.writeFileSync(file, fs.readFileSync(file, 'utf8').replace(/^name:.*\n/m, ''));
+  assert.throws(() => checkPackage('agy', out), (e) => e.status === 1 && /agents\/recs-code-reviewer\.md: no name/.test(e.stderr));
+});
+
 test('the package checks report a skill without its SKILL.md as a problem', (t) => {
   const out = render('claude', temp(t, 'check-no-skill-md-'), 'v1.2.3');
   fs.rmSync(path.join(out, 'skills', 'recs-writing-records', 'SKILL.md'));

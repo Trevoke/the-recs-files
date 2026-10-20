@@ -89,6 +89,7 @@ export function checkProfile(profile) {
       problems.push(`${profile.harness}: ${field} is not a non-empty list of strings`);
     }
   }
+  if ('agentName' in profile && typeof profile.agentName !== 'boolean') problems.push(`${profile.harness}: agentName is not true or false`);
   return problems;
 }
 

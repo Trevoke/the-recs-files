@@ -11,6 +11,7 @@ const KILL_GRACE_MS = 5000;
 // ADR-13 §Decision: Stop delegation two levels deep
 const DEPTH_LIMIT = 2;
 
+// ADR-13 §Decision: Stop delegation two levels deep
 function delegateDepth(env: NodeJS.ProcessEnv): number {
 	const value = env.TRF_DELEGATE_DEPTH ?? "";
 	return /^\d+$/.test(value) ? Number(value) : 0;

@@ -79,7 +79,7 @@ function checkSubagents() {
       continue;
     }
     const head = frontmatter(file);
-    for (const field of ['name', 'description', ...fields]) {
+    for (const field of [...(harnessProfile.agentName === false ? [] : ['name']), 'description', ...fields]) {
       check(new RegExp(`^${field}:`, 'm').test(head), `${file}: no ${field}`);
     }
     for (const [field, value] of Object.entries(harnessProfile.agentFrontmatter ?? {})) {

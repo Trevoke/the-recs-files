@@ -3,16 +3,16 @@
   "name": "opencode",
   "contents": "the skills and the `recs-code-reviewer` subagent",
   "install": [
-    "git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} /tmp/{repo}",
-    "mkdir -p .opencode && cp -R /tmp/{repo}/skills /tmp/{repo}/agents .opencode/"
+    "tmp=$(mktemp -d) && git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} \"$tmp\" && mkdir -p .opencode/skills .opencode/agents && find .opencode/skills -maxdepth 1 -name 'recs-*' -exec rm -rf {} + && rm -f .opencode/agents/recs-code-reviewer.md && cp -R \"$tmp/skills\" \"$tmp/agents\" .opencode/ && rm -rf \"$tmp\""
   ],
   "installUser": [
-    "git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} /tmp/{repo}",
-    "mkdir -p ~/.config/opencode && cp -R /tmp/{repo}/skills /tmp/{repo}/agents ~/.config/opencode/"
+    "tmp=$(mktemp -d) && git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} \"$tmp\" && mkdir -p ~/.config/opencode/skills ~/.config/opencode/agents && find ~/.config/opencode/skills -maxdepth 1 -name 'recs-*' -exec rm -rf {} + && rm -f ~/.config/opencode/agents/recs-code-reviewer.md && cp -R \"$tmp/skills\" \"$tmp/agents\" ~/.config/opencode/ && rm -rf \"$tmp\""
   ],
   "requirements": [
-    "The package is written for opencode 2 (`@opencode/cli`). opencode 1 (`opencode-ai`) names its tools differently."
+    "The package is written for opencode 2 (`@opencode/cli`). opencode 1 (`opencode-ai`) names its tools differently.",
+    "opencode keeps its own subagent depth limit, `experimental.subagent_depth`, which defaults to 1: by default a subagent cannot dispatch another."
   ],
+  "agentName": false,
   "agents": "generate",
   "agentFrontmatter": { "mode": "subagent" },
   "capabilities": {

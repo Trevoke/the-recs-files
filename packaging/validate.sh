@@ -66,18 +66,25 @@ case "$harness" in
       echo "opencode: no opencode CLI here; package checks only"
       exit 0
     fi
+    # docs/knowledge-base/opencode-subagents.org: Skills are read from `skill/` and `skills/` under each configuration directory
+    if [ -e /etc/opencode ]; then
+      echo "opencode: /etc/opencode exists, and opencode would read it; refusing to validate" >&2
+      exit 1
+    fi
+    for name in $(compgen -e); do
+      case "$name" in OPENCODE_*) unset "$name" ;; esac
+    done
     export HOME="$home" XDG_CONFIG_HOME="$home/.config" XDG_DATA_HOME="$home/.local/share" XDG_STATE_HOME="$home/.local/state" XDG_CACHE_HOME="$home/.cache"
     unset OPENROUTER_API_KEY ANTHROPIC_API_KEY OPENAI_API_KEY GEMINI_API_KEY
     mkdir -p "$home/project/.opencode"
     cp -R "$dir/skills" "$dir/agents" "$home/project/.opencode/"
     # docs/knowledge-base/opencode-subagents.org: `opencode serve` lists skills and agents with no model reached
-    export OPENCODE_SERVER_PASSWORD
-    OPENCODE_SERVER_PASSWORD=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
-    (cd "$home/project" && exec opencode serve --hostname 127.0.0.1 --port 0) > "$home/serve" 2>&1 &
+    password=$(od -An -N16 -tx1 /dev/urandom | tr -d ' \n')
+    (cd "$home/project" && OPENCODE_SERVER_PASSWORD="$password" exec opencode serve --hostname 127.0.0.1 --port 0) > "$home/serve" 2>&1 &
     server=$!
-    trap 'kill "$server" 2> /dev/null; rm -rf "$home"' EXIT
+    trap 'kill "$server" 2> /dev/null || true; wait "$server" 2> /dev/null || true; rm -rf "$home"' EXIT
     api() {
-      curl -s -u "opencode:$OPENCODE_SERVER_PASSWORD" "$url/api/$1?location%5Bdirectory%5D=$home/project"
+      printf 'user = "opencode:%s"\n' "$password" | curl -s -m 5 -K - "$url/api/$1?location%5Bdirectory%5D=$home/project"
     }
     url=
     for _ in $(seq 60); do

@@ -67,20 +67,31 @@ agents.
 A run with `.opencode/agents/recs-code-reviewer.md` holding `name`,
 `description` and `mode: subagent` listed it as
 `recs-code-reviewer subagent`; with the file under
-`$HOME/.config/opencode/agents/` instead, it was listed the same way.
+`$HOME/.config/opencode/agents/` instead, it was listed the same way. With
+`description` and `mode: subagent` alone, no `name`, `packaging/validate.sh`
+found `recs-code-reviewer` in `GET /api/agent` with mode `subagent` (run,
+2026-10-19, opencode 2.0.29).
 
 * Skills are read from `skill/` and `skills/` under each configuration directory
 `packages/core/src/config/plugin/skill.ts` adds `<dir>/skill` and
 `<dir>/skills` for each configuration directory, and a configuration's
 `skills` list adds directories or URLs. In each it reads `{*.md,**/SKILL.md}`,
 so a markdown file directly under `skills/` is a skill named by its file
-(`skill-file.ts`). The configuration directories are the global configuration
-directory (`~/.config/opencode`), `~/.claude`, `~/.agents`, and each
-`.claude`, `.agents` and `.opencode` from the working directory up
-(`packages/core/src/config/discovery.ts`). Frontmatter `name` and
+(`skill-file.ts`). The configuration directories are the system directory
+(`/etc/opencode` on Linux, `/Library/Application Support/opencode` on macOS,
+`%ProgramData%\opencode` on Windows), the global configuration directory
+(`~/.config/opencode`), `~/.claude`, `~/.agents`, and each `.claude`,
+`.agents` and `.opencode` in the working directory and every directory above
+it (`packages/core/src/config/discovery.ts`, `systemDirectory` and
+`fs.up`). Frontmatter `name` and
 `description` are read; the skill's id is its directory's name. The docs list
 `.opencode/skills`, `.claude/skills` and `.agents/skills` in the project, and
 `~/.config/opencode/skills`, `~/.claude/skills` and `~/.agents/skills`.
+
+The `skills` list in `opencode.json` could serve as an install path, naming a
+clone of the package's `skills/` or an `index.json` URL; it carries no agents,
+so `recs-code-reviewer` would still need a copy under `agents/` (inferred from
+`config/plugin/skill.ts` and `skill/discovery.ts`).
 
 A run with the thirteen recs skills copied to `.opencode/skills/` offered
 them beside the built-in `opencode` and `report`; copied to

@@ -130,6 +130,11 @@ test('a harness profile\'s requirements and installUser, where present, are non-
   ]);
 });
 
+test('a harness profile\'s agentName, where present, is true or false', () => {
+  assert.deepEqual(checkProfile({ ...profile, agentName: false }), []);
+  assert.deepEqual(checkProfile({ ...profile, agentName: 'no' }), ['test: agentName is not true or false']);
+});
+
 test('a memory file kept in prose is named by an absolute path', () => {
   const prose = structuredClone(profile);
   prose.capabilities.memory = { status: 'prose', list: 'the memory file (`/tmp/m-<the project>.md`, a checklist)', 'in-progress': 'doing', completed: 'done' };
