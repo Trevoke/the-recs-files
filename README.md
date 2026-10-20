@@ -116,11 +116,13 @@ report of its own run is not evidence.
 ### Evals
 
 `evals/` runs each case under `evals/cases/` with promptfoo, on each model in
-`evals/promptfooconfig.yaml`, with the skills installed and without. Every
-model runs in the same harness, pi (`evals/providers/pi.js`), reached through
-OpenRouter. Each run starts from a fresh git repository of the case's fixture,
-under the system's temporary directory so that no AGENTS.md above it is
-loaded, with a pi configuration directory of its own. The checks in
+`evals/promptfooconfig.yaml`, with the skills installed and without. Each
+model runs in pi (`evals/providers/pi.js`), reached through OpenRouter, and
+Claude Sonnet runs in Claude Code (`evals/providers/claude.js`) as well. Each
+run starts from a fresh git repository of the case's fixture, under the
+system's temporary directory so that no AGENTS.md above it is loaded, with a
+harness configuration directory of its own and the package rendered for its
+harness. The checks in
 `evals/checks/` read the files and commits the agent left behind. Each check
 cites the record it tests.
 
