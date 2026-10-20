@@ -27,6 +27,7 @@ for (const harness of harnesses) {
     const said = execFileSync(process.execPath, [path.join(root, 'packaging', 'check.mjs'), harness, out], { encoding: 'utf8' });
     assert.match(said, new RegExp(`^${harness}: package checks pass`));
   });
+  // ADR-12 §Consequences: Install the recs files at project scope by default
   test(`the ${harness} package README installs at project scope in its first block, and at user scope only in a second`, (t) => {
     const out = render(harness, temp(t, `readme-${harness}-`), 'v1.2.3');
     const profile = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
@@ -44,6 +45,30 @@ for (const harness of harnesses) {
     }
   });
 }
+
+const claudeRendering = {
+  '{{trf: delegate general-purpose brief}}': 'Task tool (general-purpose)',
+  '{{trf: delegate recs-code-reviewer brief}}': 'Task tool (recs-code-reviewer)',
+  '{{trf: delegate recs-code-reviewer sentence}}': 'Task tool with recs-code-reviewer type',
+  '{{trf: memory}}': 'the task list (TaskCreate, TaskUpdate)',
+  '{{trf: memory in-progress}}': 'in_progress with TaskUpdate',
+  '{{trf: memory completed}}': 'completed with TaskUpdate',
+};
+
+// ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+test('the Claude Code package carries each skill file as written, with each capability marker in its Claude Code wording', (t) => {
+  const out = render('claude', temp(t, 'render-claude-pin-'), 'v1.2.3');
+  const files = fs.readdirSync(path.join(root, 'skills'), { recursive: true })
+    .filter((f) => fs.statSync(path.join(root, 'skills', f)).isFile() && f !== 'skill-flow.dot');
+  for (const file of files) {
+    const expected = fs.readFileSync(path.join(root, 'skills', file), 'utf8').replace(/\{\{trf: [^}]*\}\}/g, (marker) => {
+      const load = /^\{\{trf: load (\S+)\}\}$/.exec(marker);
+      assert.ok(load || marker in claudeRendering, `${file}: ${marker} has a Claude Code wording in this test`);
+      return load ? load[1] : claudeRendering[marker];
+    });
+    assert.equal(fs.readFileSync(path.join(out, 'skills', file), 'utf8'), expected, `${file} is the skill text with each marker in its Claude Code wording`);
+  }
+});
 
 for (const harness of harnesses) {
   test(`the ${harness} package README lists its harness profile's requirements under Requirements, or has no Requirements section`, (t) => {

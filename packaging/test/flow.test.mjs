@@ -37,6 +37,7 @@ const goodSkills = {
 };
 const flowOf = (...lines) => `digraph skill_flow {\n${lines.map((l) => `  ${l}\n`).join('')}}\n`;
 
+// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
 test('reads nodes and edges with their attributes', () => {
   const { nodes, edges, problems } = parseFlow(good);
   assert.deepEqual([...nodes].sort(), ['recs-a', 'recs-a/helper-prompt.md', 'recs-b']);
@@ -44,10 +45,12 @@ test('reads nodes and edges with their attributes', () => {
   assert.deepEqual(problems, []);
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('a skill flow that matches the skills and the records passes', (t) => {
   assert.deepEqual(checkFlow(project(t, good, goodSkills)), []);
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('refuses a skill flow out of step with the skills or the records', (t) => {
   const bad = `digraph skill_flow {
   "recs-a";
@@ -66,10 +69,12 @@ test('refuses a skill flow out of step with the skills or the records', (t) => {
   ]);
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('refuses a missing skill flow', (t) => {
   assert.deepEqual(checkFlow(project(t, undefined, goodSkills)), ['skills/skill-flow.dot is missing']);
 });
 
+// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
 test('refuses a statement it cannot read, before anything else', (t) => {
   const split = `digraph skill_flow {
   "recs-a";
@@ -86,6 +91,7 @@ test('refuses a statement it cannot read, before anything else', (t) => {
   ]);
 });
 
+// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
 test('a node is a skill or a prompt template, and every skill is a node', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -103,6 +109,7 @@ test('a node is a skill or a prompt template, and every skill is a node', (t) =>
   ]);
 });
 
+// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
 test('an edge cites a user workflow step or extension, or ADR-9, as it stands on disk', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -122,6 +129,7 @@ test('an edge cites a user workflow step or extension, or ADR-9, as it stands on
   ]);
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('a load or delegate edge needs its capability marker', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -135,6 +143,7 @@ test('a load or delegate edge needs its capability marker', (t) => {
   ]);
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('a delegate edge needs a marker of its own', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -147,6 +156,7 @@ test('a delegate edge needs a marker of its own', (t) => {
   ]);
 });
 
+// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
 test('a delegate marker in a SKILL.md stands for its edges, and needs one', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -163,6 +173,7 @@ test('a delegate marker in a SKILL.md stands for its edges, and needs one', (t) 
   ]);
 });
 
+// ADR-2 §Consequences: The recs files live apart from any project that uses them
 test('a shipped skill flow carries no citations', () => {
   assert.equal(
     shippedFlow('  "a" -> "b" [kind="load", condition="x", cite="UW-1 §2: Do a thing"];\n  "a" -> "c" [cite="ADR-9 §Decision: Build it so", kind="delegate"];\n  "a" -> "d" [cite="UW-1 §1: Do a thing"];\n'),
