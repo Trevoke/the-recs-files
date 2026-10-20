@@ -49,8 +49,9 @@ ecosystem example list beside npm, cargo and pytest.
 
 ## Installing
 
-Each harness has a package of its own, published from this repository on each
-release. The recs files install at project scope by default:
+Each harness has a package of its own, built from this repository on each
+release and published to its own repository; the opencode package is not yet
+published. The recs files install at project scope by default:
 
 | Harness | Project scope (the default) | User scope |
 |---|---|---|
@@ -70,6 +71,9 @@ The Claude Code, Antigravity and opencode packages carry the
 The opencode package is built and validated but not yet published, and is
 written for opencode 2 (`@opencode/cli`). Build it locally with
 `node packaging/build.mjs opencode <dir> <version>`, then copy from `<dir>`.
+
+A harness without a package gets one through a new harness profile in
+`packaging/profiles/`.
 
 Then open a project and ask for `recs-kickstart`.
 
