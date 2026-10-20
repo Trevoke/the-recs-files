@@ -73,7 +73,9 @@ written for opencode 2 (`@opencode/cli`). Build it locally with
 `node packaging/build.mjs opencode <dir> <version>`, then copy from `<dir>`.
 
 A harness without a package gets one through a new harness profile in
-`packaging/profiles/`.
+`packaging/profiles/`, with its name in `harnesses` in `packaging/render.mjs`,
+a leg in `packaging/validate.sh`, and a line in the matrix of
+`.github/workflows/package.yml`.
 
 Then open a project and ask for `recs-kickstart`.
 

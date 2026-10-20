@@ -67,10 +67,12 @@ case "$harness" in
       exit 0
     fi
     # docs/knowledge-base/opencode-subagents.org: Skills are read from `skill/` and `skills/` under each configuration directory
-    if [ -e /etc/opencode ]; then
-      echo "opencode: /etc/opencode exists, and opencode would read it; refusing to validate" >&2
-      exit 1
-    fi
+    for system in /etc/opencode "/Library/Application Support/opencode"; do
+      if [ -e "$system" ]; then
+        echo "opencode: $system exists, and opencode would read it; refusing to validate" >&2
+        exit 1
+      fi
+    done
     for name in $(compgen -e); do
       case "$name" in OPENCODE_*) unset "$name" ;; esac
     done

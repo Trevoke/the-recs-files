@@ -3,10 +3,10 @@
   "name": "opencode",
   "contents": "the skills and the `recs-code-reviewer` subagent",
   "install": [
-    "tmp=$(mktemp -d) && git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} \"$tmp\" && mkdir -p .opencode/skills .opencode/agents && find .opencode/skills -maxdepth 1 -name 'recs-*' -exec rm -rf {} + && rm -f .opencode/agents/recs-code-reviewer.md && cp -R \"$tmp/skills\" \"$tmp/agents\" .opencode/ && rm -rf \"$tmp\""
+    "tmp=$(mktemp -d) && { git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} \"$tmp\" && mkdir -p .opencode/skills .opencode/agents && find .opencode/skills -maxdepth 1 -name 'recs-*' -exec rm -rf {} + && rm -f .opencode/agents/recs-code-reviewer.md && cp -R \"$tmp/skills\" \"$tmp/agents\" .opencode/; }; rm -rf \"$tmp\""
   ],
   "installUser": [
-    "tmp=$(mktemp -d) && git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} \"$tmp\" && mkdir -p ~/.config/opencode/skills ~/.config/opencode/agents && find ~/.config/opencode/skills -maxdepth 1 -name 'recs-*' -exec rm -rf {} + && rm -f ~/.config/opencode/agents/recs-code-reviewer.md && cp -R \"$tmp/skills\" \"$tmp/agents\" ~/.config/opencode/ && rm -rf \"$tmp\""
+    "tmp=$(mktemp -d) && { git clone --depth 1 --branch v{version} https://github.com/Trevoke/{repo} \"$tmp\" && mkdir -p ~/.config/opencode/skills ~/.config/opencode/agents && find ~/.config/opencode/skills -maxdepth 1 -name 'recs-*' -exec rm -rf {} + && rm -f ~/.config/opencode/agents/recs-code-reviewer.md && cp -R \"$tmp/skills\" \"$tmp/agents\" ~/.config/opencode/; }; rm -rf \"$tmp\""
   ],
   "requirements": [
     "The package is written for opencode 2 (`@opencode/cli`). opencode 1 (`opencode-ai`) names its tools differently.",

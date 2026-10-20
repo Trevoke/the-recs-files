@@ -82,6 +82,7 @@ function checkSubagents() {
     for (const field of [...(harnessProfile.agentName === false ? [] : ['name']), 'description', ...fields]) {
       check(new RegExp(`^${field}:`, 'm').test(head), `${file}: no ${field}`);
     }
+    if (harnessProfile.agentName === false) check(!/^name:/m.test(head), `${file}: name, which ${harness} does not take`);
     for (const [field, value] of Object.entries(harnessProfile.agentFrontmatter ?? {})) {
       if (['string', 'number', 'boolean'].includes(typeof value) && new RegExp(`^${field}:`, 'm').test(head)) {
         check(new RegExp(`^${field}: ${value}$`, 'm').test(head), `${file}: ${field} is not ${value}`);
