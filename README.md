@@ -2,6 +2,11 @@
 
 Skills for working on a codebase whose records are the source of truth.
 
+> **Work in progress:** the `harness-rendering` branch renders each harness's
+> package from capability markers and a harness profile (ADR-10), and adds an
+> opencode package. It is not merged yet, and its evals have not yet run
+> against a model.
+
 ## The idea
 
 A project keeps **records**: short, numbered, one-thing-each statements of what
