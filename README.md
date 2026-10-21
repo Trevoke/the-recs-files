@@ -54,20 +54,33 @@ ecosystem example list beside npm, cargo and pytest.
 
 ## Installing
 
-Each harness has a package of its own, published from this repository on each
-release:
+Each harness has a package of its own, built from this repository on each
+release and published to its own repository; the opencode package is not yet
+published. The recs files install at project scope by default:
 
-| Harness | Install |
-|---|---|
-| Claude Code | `claude plugin marketplace add Trevoke/the-recs-files-claude`, then `claude plugin install recs-files@the-recs-files` |
-| Codex | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
-| pi | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
-| Antigravity | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+| Harness | Project scope (the default) | User scope |
+|---|---|---|
+| Claude Code | `claude plugin marketplace add --scope project Trevoke/the-recs-files-claude`, then `claude plugin install --scope project recs-files@the-recs-files` | `claude plugin marketplace add --scope user Trevoke/the-recs-files-claude`, then `claude plugin install --scope user recs-files@the-recs-files` |
+| Codex | `codex plugin` has no project-scope option | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
+| pi | `pi install -l git:github.com/Trevoke/the-recs-files-pi@v<version>` | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
+| Antigravity | `agy plugin install` has no project-scope option | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+| opencode | Copy the package's `skills` and `agents` into the project's `.opencode/` | Copy the package's `skills` and `agents` into `~/.config/opencode/` |
 
-The Claude Code and Antigravity packages carry the `recs-code-reviewer`
-subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
-`skills/recs-*` into a directory the harness reads skills from, such as a
-project's `.agents/skills`.
+With the Claude Code package, Claude Code must run with the environment
+variable `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of
+the recs files is undefined.
+
+The Claude Code, Antigravity and opencode packages carry the
+`recs-code-reviewer` subagent as well as the skills.
+
+The opencode package is built and validated but not yet published, and is
+written for opencode 2 (`@opencode/cli`). Build it locally with
+`node packaging/build.mjs opencode <dir> <version>`, then copy from `<dir>`.
+
+A harness without a package gets one through a new harness profile in
+`packaging/profiles/`, with its name in `harnesses` in `packaging/render.mjs`,
+a leg in `packaging/validate.sh`, and a line in the matrix of
+`.github/workflows/package.yml`.
 
 Then open a project and ask for `recs-kickstart`.
 
@@ -108,11 +121,13 @@ report of its own run is not evidence.
 ### Evals
 
 `evals/` runs each case under `evals/cases/` with promptfoo, on each model in
-`evals/promptfooconfig.yaml`, with the skills installed and without. Every
-model runs in the same harness, pi (`evals/providers/pi.js`), reached through
-OpenRouter. Each run starts from a fresh git repository of the case's fixture,
-under the system's temporary directory so that no AGENTS.md above it is
-loaded, with a pi configuration directory of its own. The checks in
+`evals/promptfooconfig.yaml`, with the skills installed and without. Each
+model runs in pi (`evals/providers/pi.js`), reached through OpenRouter, and
+Claude Sonnet runs in Claude Code (`evals/providers/claude.js`) as well. Each
+run starts from a fresh git repository of the case's fixture, under the
+system's temporary directory so that no AGENTS.md above it is loaded, with a
+harness configuration directory of its own and the package rendered for its
+harness. The checks in
 `evals/checks/` read the files and commits the agent left behind. Each check
 cites the record it tests.
 
@@ -124,10 +139,12 @@ npm run eval -- --repeat 3 --filter-providers 'with-skills'
 npm run view            # browse the results
 ```
 
-The runs need `OPENROUTER_API_KEY`, and `ANTHROPIC_API_KEY` for the
-`llm-rubric` grader, and bubblewrap (`bwrap`): each run sees only the system,
-node, pi and its own directory. Each run's transcript is kept beside its
-project, as `pi.jsonl`.
+The pi runs need `OPENROUTER_API_KEY`, the Claude Code runs need
+`CLAUDE_CODE_OAUTH_TOKEN` (from `claude setup-token`) and `claude` on `PATH`,
+and the `llm-rubric` grader needs `ANTHROPIC_API_KEY`. Every run needs
+bubblewrap (`bwrap`): each run sees only the system, its harness and its own
+directory. Each run's transcript is kept beside its project, as `pi.jsonl` or
+`claude.jsonl`.
 
 ## License
 

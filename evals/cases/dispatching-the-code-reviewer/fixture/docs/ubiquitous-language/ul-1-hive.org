@@ -1,0 +1,5 @@
+* UL-1 Hive
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A colony of bees and the boxes it lives in, standing at one place on a stand.

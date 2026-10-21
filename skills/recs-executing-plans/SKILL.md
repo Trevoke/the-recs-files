@@ -20,16 +20,16 @@ Load plan, review critically, execute tasks in batches, report for review betwee
 2. Review critically - identify any questions or concerns about the plan
 3. Check the plan against the records it cites - user workflows, architectural decisions, features, message catalog entries, whatever the project keeps (see the project's AGENTS.md and its records). Where the plan and a record disagree, the record wins - stop and raise the disagreement with your human partner rather than executing either version
 4. If concerns: Raise them with your human partner before starting
-5. If no concerns: Create TodoWrite and proceed
+5. If no concerns: Create {{trf: memory}} and proceed
 
 ### Step 2: Execute Batch
 **Default: First 3 tasks**
 
 For each task:
-1. Mark as in_progress
+1. Mark as {{trf: memory in-progress}}
 2. Follow each step exactly (plan has bite-sized steps)
 3. Run verifications as specified
-4. Mark as completed
+4. Mark as {{trf: memory completed}}
 
 ### Step 3: Report
 When batch complete:
@@ -47,7 +47,7 @@ Based on feedback:
 
 After all tasks complete and verified:
 - Announce: "I'm using the recs-finishing-a-development-branch skill to complete this work."
-- **REQUIRED SUB-SKILL:** Use recs-finishing-a-development-branch
+- **REQUIRED SUB-SKILL:** Use {{trf: load recs-finishing-a-development-branch}}
 - Follow that skill to verify tests, present options, execute choice
 
 ## Records Are Not Tasks

@@ -1,0 +1,15 @@
+* ADR-12 Install the recs files at project scope by default
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+Installing a package decides where its skills apply. Installed at user scope,
+they apply to every project the user opens, whether or not that project keeps
+records.
+** Decision
+We will install the recs files at project scope by default, with user scope
+as the alternative, in every package's install instructions and in the evals.
+** Consequences
+Each package's install instructions lead with the project-scope command and
+follow it with the user-scope one. A harness whose installer has no project
+scope says so. The evals install each rendering into the run's project.

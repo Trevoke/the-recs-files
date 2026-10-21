@@ -1,5 +1,30 @@
 # Changelog
 
+## Unreleased
+
+- Each harness's package is rendered from capability markers in the skill
+  text and a harness profile per harness (ADR-10).
+- The Claude Code package keeps its task list with the task tools
+  (`TaskCreate`, `TaskUpdate`) in place of TodoWrite, and Claude Code must run
+  with `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of the
+  recs files is undefined.
+- A plan's header names the agent rather than Claude: "**For the agent:**".
+- The recs files install at project scope by default (ADR-12).
+- Delegation stops two levels deep, counted in `TRF_DELEGATE_DEPTH` (ADR-13).
+- The order of the skills is kept in `skills/skill-flow.dot` (ADR-11).
+- pi's package carries a subagent extension; Codex and pi get the reviewer's
+  role as a role file.
+- An opencode package, for opencode 2, is built and validated but not yet
+  published.
+- Every package is checked, and installed where its harness CLI runs, before
+  any is published.
+- The evals render each run's package: pi's for the pi runs, Claude Code's for
+  the new Claude Code runs.
+- Two eval cases, `dispatching-the-code-reviewer` and
+  `keeping-the-task-list`, check that a run delegates and keeps its memory as
+  its harness profile says. Neither these nor the Claude Code runs have yet
+  been run against a model.
+
 ## 1.0.0-beta — 2026-10-16
 
 The first release. The record forms, the categories, and record management

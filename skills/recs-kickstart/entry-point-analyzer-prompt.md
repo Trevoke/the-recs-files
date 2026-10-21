@@ -3,7 +3,7 @@
 Use this template when dispatching the entry-point analyzer.
 
 ```
-Task tool (general-purpose):
+{{trf: delegate general-purpose brief}}:
   description: "Analyze entry points for [slice]"
   prompt: |
     You are analyzing the entry points of the codebase at [path], read-only.

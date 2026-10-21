@@ -3,7 +3,7 @@
 Use this template when dispatching the history analyzer.
 
 ```
-Task tool (general-purpose):
+{{trf: delegate general-purpose brief}}:
   description: "Analyze history and config for decisions"
   prompt: |
     You are looking for the architectural decisions in the codebase at

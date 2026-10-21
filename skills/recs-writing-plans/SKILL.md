@@ -49,7 +49,7 @@ A project that keeps a ubiquitous language owns its words (check AGENTS.md and t
 ```markdown
 # [Feature Name] Implementation Plan
 
-> **For Claude:** REQUIRED SUB-SKILL: Use recs-executing-plans to implement this plan task-by-task.
+> **For the agent:** REQUIRED SUB-SKILL: Use {{trf: load recs-executing-plans}} to implement this plan task-by-task.
 
 **Goal:** [One sentence describing what this builds]
 
@@ -217,7 +217,7 @@ After saving the plan, offer execution choice:
 **Which approach?"**
 
 **If Subagent-Driven chosen:**
-- **REQUIRED SUB-SKILL:** Use recs-subagent-driven-development
+- **REQUIRED SUB-SKILL:** Use {{trf: load recs-subagent-driven-development}}
 - Stay in this session
 - Fresh subagent per task + code review
 

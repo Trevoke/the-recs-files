@@ -1,0 +1,5 @@
+* UL-3 Field note
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A free-text remark the beekeeper keeps, belonging to no hive or inspection.

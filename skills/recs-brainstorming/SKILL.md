@@ -70,7 +70,7 @@ Walk each validated decision through the placement tests and route it to its cat
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
 
-Propose each record change to the record keeper - by category, with the number and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the record keeper's direction; use recs-writing-records to write the agreed ones. Never write into a record unbidden.
+Propose each record change to the record keeper - by category, with the number and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the record keeper's direction; use {{trf: load recs-writing-records}} to write the agreed ones. Never write into a record unbidden.
 
 **Documenting what remains:**
 - What routing leaves behind - purely implementation-level decisions - goes to `docs/plans/YYYY-MM-DD-<topic>-design.md`
@@ -80,8 +80,8 @@ Propose each record change to the record keeper - by category, with the number a
 
 **Implementation (if continuing):**
 - Ask: "Ready to set up for implementation?"
-- Use recs-using-git-worktrees to create isolated workspace
-- Use recs-writing-plans to create detailed implementation plan
+- Use {{trf: load recs-using-git-worktrees}} to create isolated workspace
+- Use {{trf: load recs-writing-plans}} to create detailed implementation plan
 
 ## Key Principles
 

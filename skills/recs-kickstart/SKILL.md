@@ -11,7 +11,7 @@ An existing codebase already holds what its records would say, spread across cod
 
 **Core principle:** a thin first slice, agreed one batch at a time. Not the whole codebase: the vision, the domain, the core user workflow, one or two workflows in active development, and the records those touch.
 
-**REQUIRED SUB-SKILL:** recs-writing-records writes every agreed record. **REQUIRED:** read `interviewing.md` before the first question.
+**REQUIRED SUB-SKILL:** {{trf: load recs-writing-records}} writes every agreed record. **REQUIRED:** read `interviewing.md` before the first question.
 
 ## The Flow
 
@@ -23,7 +23,7 @@ An existing codebase already holds what its records would say, spread across cod
 6. **One category at a time:** vision → core user workflow → in-development workflows → features → message catalog → architectural decisions. For each:
    - show the **titles** first — a title is a headline, so the list is the skeleton;
    - then bodies, **at most 5–8 per batch**, items needing judgement first;
-   - write an agreed batch through recs-writing-records before showing the next.
+   - write an agreed batch through {{trf: load recs-writing-records}} before showing the next.
 7. **AGENTS.md.** Draft the target's AGENTS.md from `agents-seed.md` in this skill's directory: its categories and the paths of their projections, its realization modalities, and how a worktree's tests run its own code (ask). Show every line that differs from the seed, removals included; wait. Add a provenance line naming the commit the analysis ran against.
 8. **Hand over the follow-ups.** Kickstart writes records, AGENTS.md, `.gitignore` and the knowledge base, and no code, test or comment, even where the record keeper agrees to the change. List every change the records now call for (renames, reworded messages, comments that contradict a record or point at none, missing tests) for the record keeper to direct through recs-writing-records and the development flow.
 
