@@ -10,3 +10,5 @@
      `F-7 §4: A sweep repoints or removes citations, and leaves plans as written`.
 3. The agent shall set each citation it gives the record keeper in
    backticks.
+4. The agent shall write each citation it gives the record keeper with no
+   line break inside it.
