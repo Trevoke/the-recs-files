@@ -1,0 +1,12 @@
+* F-12 The agent cites a record to the record keeper in its title's exact words
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+1. When the agent cites a record to the record keeper, the agent shall give
+   the record's number and its title as the record's heading carries it.
+2. Where a citation to the record keeper names a section, the agent shall
+   write the section after the number and before the title.
+   - The one where the agent cites the fourth requirement of F-7 as
+     `F-7 §4: A sweep repoints or removes citations, and leaves plans as written`.
+3. The agent shall set each citation it gives the record keeper in
+   backticks.
