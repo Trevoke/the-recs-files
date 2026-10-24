@@ -1,6 +1,6 @@
 * F-12 The agent cites a record to the record keeper in its title's exact words
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When the agent cites a record to the record keeper, the agent shall give
    the record's number and its title as the record's heading carries it.
