@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { initProblem, said, skillCalls } from './claude.js';
+import { caseProblem, initProblem, recsAgents, runError, said, skillCalls } from './claude.js';
 
 const use = (id, name, input, parent = null) => ({
   type: 'assistant',
@@ -22,6 +22,7 @@ const init = (over = {}) => ({
   subtype: 'init',
   permissionMode: 'bypassPermissions',
   skills: ['deep-research', 'recs-brainstorming', 'recs-writing-records'],
+  agents: ['claude', 'Explore', 'general-purpose', 'Plan', 'recs-code-reviewer', 'statusline-setup'],
   ...over,
 });
 
@@ -58,4 +59,45 @@ test('initProblem reports a run not bypassing permissions', () => {
 
 test('initProblem reports a run with no init event', () => {
   assert.match(initProblem([], []), /no init event/);
+});
+
+test('initProblem accepts a run offering every expected agent', () => {
+  assert.equal(initProblem([init()], ['recs-brainstorming'], ['recs-code-reviewer']), undefined);
+});
+
+test('initProblem reports an expected agent the run does not offer', () => {
+  assert.match(initProblem([init({ agents: ['claude'] })], ['recs-brainstorming'], ['recs-code-reviewer']), /does not offer agent recs-code-reviewer/);
+});
+
+test('initProblem reports a without-skills run that offers a recs agent', () => {
+  assert.match(initProblem([init({ skills: ['deep-research'] })], [], []), /without the skills offers agent recs-code-reviewer/);
+});
+
+test('recsAgents names the agents the with-skills arm copies', () => {
+  assert.deepEqual(recsAgents(), ['recs-code-reviewer']);
+});
+
+test('caseProblem accepts a case with a fixture', () => {
+  assert.equal(caseProblem('citing-records-to-the-record-keeper'), undefined);
+});
+
+test('caseProblem reports a missing or unknown case', () => {
+  assert.match(caseProblem(undefined), /no case named undefined/);
+  assert.match(caseProblem('no-such-case'), /no case named no-such-case/);
+});
+
+test('runError reports a timed-out run', () => {
+  assert.equal(runError({ code: null, signal: 'SIGKILL', stderr: '', timedOut: true }, undefined, 5000), 'claude timed out after 5000 ms');
+});
+
+test('runError reports a failed result event\'s text', () => {
+  assert.equal(runError({ code: 1, signal: null, stderr: '' }, { type: 'result', is_error: true, result: 'nope' }, 5000), 'nope');
+});
+
+test('runError reports a run that could not start', () => {
+  assert.match(runError({ code: null, signal: null, stderr: 'spawn bwrap ENOENT' }, undefined, 5000), /claude exited null: spawn bwrap ENOENT/);
+});
+
+test('runError reports nothing for a successful run', () => {
+  assert.equal(runError({ code: 0, signal: null, stderr: '' }, { type: 'result', is_error: false, result: 'done' }, 5000), undefined);
 });

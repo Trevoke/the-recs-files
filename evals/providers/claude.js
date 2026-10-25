@@ -40,6 +40,19 @@ export function recsSkills() {
     .sort();
 }
 
+export function recsAgents() {
+  return fs
+    .readdirSync(path.join(repoDir, 'agents'), { withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.endsWith('.md'))
+    .map((e) => path.basename(e.name, '.md'))
+    .sort();
+}
+
+export function caseProblem(caseName) {
+  if (!caseName || !fs.existsSync(path.join(casesDir, caseName, 'fixture'))) return `no case named ${caseName}`;
+  return undefined;
+}
+
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code loads CLAUDE.md and AGENTS.md from the working directory and its parents
 function prepare(caseName, withSkills) {
   const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
@@ -53,6 +66,8 @@ function prepare(caseName, withSkills) {
   }
   fs.mkdirSync(configDir, { recursive: true });
   git(project, 'init', '--quiet', '--initial-branch=main');
+  fs.mkdirSync(path.join(project, '.git', 'info'), { recursive: true });
+  fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), '/.claude/skills/\n/.claude/agents/\n');
   git(project, 'add', '-A');
   git(project, 'commit', '--quiet', '-m', 'Start the project');
   return { root, project, home, configDir };
@@ -80,19 +95,27 @@ function sandboxed({ root, project, home, configDir }, binary, env, args) {
   return { argv: ['--args', '3', '--', '/opt/claude/claude', ...args], options: options.map((o) => `${o}\0`).join('') };
 }
 
-function run({ argv, options }, timeoutMs) {
+function run(bwrap, { argv, options }, timeoutMs) {
   return new Promise((resolve) => {
-    const child = spawn(resolved('bwrap'), argv, { argv0: 'bwrap', env: {}, stdio: ['ignore', 'pipe', 'pipe', 'pipe'] });
+    const child = spawn(bwrap, argv, { argv0: 'bwrap', env: {}, stdio: ['ignore', 'pipe', 'pipe', 'pipe'] });
     child.stdio[3].on('error', () => {});
     child.stdio[3].end(options);
     let stdout = '';
     let stderr = '';
     child.stdout.on('data', (d) => (stdout += d));
     child.stderr.on('data', (d) => (stderr += d));
-    const timer = setTimeout(() => child.kill('SIGKILL'), timeoutMs);
+    let timedOut = false;
+    const timer = setTimeout(() => {
+      timedOut = true;
+      child.kill('SIGKILL');
+    }, timeoutMs);
+    child.on('error', (error) => {
+      clearTimeout(timer);
+      resolve({ code: null, signal: null, stdout, stderr: `${stderr}${error.message}`, timedOut });
+    });
     child.on('close', (code, signal) => {
       clearTimeout(timer);
-      resolve({ code, signal, stdout, stderr });
+      resolve({ code, signal, stdout, stderr, timedOut });
     });
   });
 }
@@ -135,7 +158,7 @@ export function skillCalls(all) {
     .map((c) => ({ name: c.input?.skill, is_error: !results.has(c.id) || Boolean(results.get(c.id).is_error) }));
 }
 
-export function initProblem(all, expected) {
+export function initProblem(all, expected, agents = []) {
   const init = all.find((e) => e.type === 'system' && e.subtype === 'init');
   if (!init) return 'the run reported no init event';
   if (init.permissionMode !== 'bypassPermissions') return `the run started in permission mode ${init.permissionMode}, not bypassPermissions`;
@@ -143,8 +166,22 @@ export function initProblem(all, expected) {
   const named = (skill) => offered.some((o) => o === skill || o.endsWith(`:${skill}`));
   const missing = expected.filter((skill) => !named(skill));
   if (missing.length > 0) return `the run's init event does not offer ${missing.join(', ')}`;
+  const offeredAgents = init.agents ?? [];
+  const missingAgents = agents.filter((agent) => !offeredAgents.some((o) => o === agent || o.endsWith(`:${agent}`)));
+  if (missingAgents.length > 0) return `the run's init event does not offer agent ${missingAgents.join(', ')}`;
   const stray = expected.length === 0 ? offered.filter((o) => /(^|:)recs-/.test(o)) : [];
   if (stray.length > 0) return `the run without the skills offers ${stray.join(', ')}`;
+  const strayAgents = expected.length === 0 ? offeredAgents.filter((o) => /(^|:)recs-/.test(o)) : [];
+  if (strayAgents.length > 0) return `the run without the skills offers agent ${strayAgents.join(', ')}`;
+  return undefined;
+}
+
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: A failed run ends with a `result` event carrying `is_error`, and exits 1
+export function runError(result, final, timeoutMs) {
+  if (result.timedOut) return `claude timed out after ${timeoutMs} ms`;
+  if (!final || final.is_error || result.code !== 0) {
+    return final?.result ?? `claude exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`;
+  }
   return undefined;
 }
 
@@ -165,10 +202,20 @@ export default class ClaudeCodeProvider {
     } catch (error) {
       return { error: `no claude binary on PATH: ${error.message}` };
     }
+    let bwrap;
+    try {
+      bwrap = resolved('bwrap');
+    } catch (error) {
+      return { error: `no bwrap binary on PATH: ${error.message}` };
+    }
+    const caseName = context?.vars?.case;
+    const unknown = caseProblem(caseName);
+    if (unknown) return { error: unknown };
     const token = process.env.CLAUDE_CODE_OAUTH_TOKEN;
     if (!token) return { error: 'CLAUDE_CODE_OAUTH_TOKEN is not set: run `claude setup-token` and export the token it prints' };
-    const dirs = prepare(context?.vars?.case, this.config.skills);
+    const dirs = prepare(caseName, this.config.skills);
     const expected = this.config.skills ? recsSkills() : [];
+    const expectedAgents = this.config.skills ? recsAgents() : [];
     const args = [
       '-p', '--output-format', 'stream-json', '--verbose', '--no-session-persistence',
       // docs/knowledge-base/claude-code-as-an-eval-harness.org: Inside bubblewrap, bypassing permissions is the sandbox's to confine
@@ -179,18 +226,17 @@ export default class ClaudeCodeProvider {
     // docs/knowledge-base/claude-code-as-an-eval-harness.org: `CLAUDE_CODE_OAUTH_TOKEN` authenticates a run on the subscription
     const env = { ...identity, CLAUDE_CODE_OAUTH_TOKEN: token };
     const started = Date.now();
-    const result = await run(sandboxed(dirs, binary, env, args), this.config.timeoutMs ?? 15 * 60 * 1000);
+    const timeoutMs = this.config.timeoutMs ?? 15 * 60 * 1000;
+    const result = await run(bwrap, sandboxed(dirs, binary, env, args), timeoutMs);
     const transcript = path.join(dirs.root, 'claude.jsonl');
     fs.writeFileSync(transcript, result.stdout);
     fs.writeFileSync(path.join(dirs.root, 'claude.stderr'), result.stderr);
     const all = events(result.stdout);
     const final = all.findLast((e) => e.type === 'result');
-    const problem = initProblem(all, expected);
-    const metadata = { workingDir: dirs.project, transcript, said: said(all), skillCalls: skillCalls(all), initProblem: problem, durationMs: Date.now() - started };
-    // docs/knowledge-base/claude-code-as-an-eval-harness.org: A failed run ends with a `result` event carrying `is_error`, and exits 1
-    if (!final || final.is_error || result.code !== 0) {
-      return { error: final?.result ?? `claude exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`, metadata };
-    }
+    const problem = initProblem(all, expected, expectedAgents);
+    const metadata = { workingDir: dirs.project, transcript, said: said(all), skillCalls: skillCalls(all), initProblem: problem, timedOut: result.timedOut, durationMs: Date.now() - started };
+    const failed = runError(result, final, timeoutMs);
+    if (failed) return { error: failed, metadata };
     if (problem) return { error: problem, metadata };
     return { output: final.result ?? '', cost: final.total_cost_usd ?? 0, metadata };
   }
