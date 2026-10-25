@@ -120,7 +120,7 @@ Push back when:
 - Technically incorrect for this stack
 - Legacy/compatibility reasons exist
 - Conflicts with your human partner's architectural decisions
-- Conflicts with a project record - push back citing the record by number and title ("ADR-12: One connection per client"). If the reviewer is right that the record is wrong, that goes to your human partner as a proposed record change, not into code.
+- Conflicts with a project record - push back citing the record by number and title ("`ADR-12: One connection per client`"). If the reviewer is right that the record is wrong, that goes to your human partner as a proposed record change, not into code.
 
 **How to push back:**
 - Use technical reasoning, not defensiveness

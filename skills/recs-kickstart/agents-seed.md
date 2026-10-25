@@ -228,9 +228,18 @@ thing is built, so it lives in the decision that chose to build it that way.
 Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, use the record number and the record title.
+Give the whole citation every time you name a record, not only the first time.
+Copy the title word for word from the record's heading. A section goes inside
+the citation, between the number and the title, one section to a citation. Set
+each citation in backticks, and write it on one line.
 
 Good: "`X-8: Frobnicate the widgets`"
-Bad: "`X-8`"
+Good: "`X-8 §2: Frobnicate the widgets`"
+Bad: "`X-8`", even after "`X-8: Frobnicate the widgets`" was given once
+Bad: "`X-8: Frobnicating widgets`"
+Bad: "X-8: Frobnicate the widgets"
+Bad: "`X-8` §2" and "`X-8: Frobnicate the widgets` §2"
+Bad: "`X-8 §2, §3: Frobnicate the widgets`"
 
 ## Framing a question
 
