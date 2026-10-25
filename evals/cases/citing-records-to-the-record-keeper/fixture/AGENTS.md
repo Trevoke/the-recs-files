@@ -128,7 +128,7 @@ number is never reused within its record. A successor numbers its own
 requirements from 1, and its status maps each of the old record's sections to
 the successor's sections that carry it, or to none: "Supersedes F-12: A
 borrower can renew a loan (§1 → §1; §2 → §2, §3; §3 → none)". The sweep of the
-old identifier repoints each citation of a section of F-12 by that map.
+old identifier repoints each `F-12 §n` citation by that map.
 
 ```org
 * F-12 A borrower can renew a loan
@@ -218,25 +218,9 @@ thing is built, so it lives in the decision that chose to build it that way.
 Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, use the record number and the record title.
-Give the whole citation every time you name a record, not only the first time,
-and also when the record itself is what you're talking about
-("the title of `X-8: Frobnicate the widgets`"). Copy the title word for word
-from the record's heading. A section goes inside the citation, between the
-number and the title. One section to a citation: where one sentence names two
-sections, it gives two whole citations. Set each citation in backticks, and
-write it on one line. Before you send a reply to the record keeper, read it
-through once more, and write out whole every citation you shortened.
 
 Good: "`X-8: Frobnicate the widgets`"
-Good: "`X-8 §2: Frobnicate the widgets`"
-Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §2: Frobnicate the widgets`"
-Bad: "`X-8`", even after "`X-8: Frobnicate the widgets`" was given once
-Bad: "`X-8 §2`"
-Bad: "`X-8 §1` and `X-8 §2`"
-Bad: "`X-8: Frobnicating widgets`"
-Bad: "X-8: Frobnicate the widgets"
-Bad: "`X-8` §2" and "`X-8: Frobnicate the widgets` §2"
-Bad: "`X-8 §2, §3: Frobnicate the widgets`"
+Bad: "`X-8`"
 
 ## Framing a question
 
@@ -249,7 +233,7 @@ each by number and title. Then state the situation, and only then the problem.
 ```
 We are working on `UW-X: Frobnicate the widget`.
 
-`UW-X §1b: Frobnicate the widget` says the user frobnicates after having whirled.
+`Section 1b: whirl first` says the user frobnicates after having whirled.
 
 `F-Y: Frobnication` says that we must whirl only after whooping.
 
