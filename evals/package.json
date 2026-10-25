@@ -4,6 +4,7 @@
   "type": "module",
   "scripts": {
     "eval": "PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS=3600000 promptfoo eval --no-cache",
+    "eval:claude-code": "PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS=3600000 promptfoo eval --no-cache --filter-providers claude-code",
     "view": "promptfoo view"
   },
   "devDependencies": {

@@ -320,3 +320,36 @@ bind, `--tmpfs /etc/claude-code` on a machine without it stopped with
 /etc/ssl` on one with it left `ls -A /etc/ssl` empty inside (runs,
 2026-10-19). The provider adds the tmpfs when the host has the directory, and
 where it does not, the bound `/etc` has nothing there to read.
+
+* Skills copied into a project's `.claude/skills` are offered in print mode
+With this repository's `skills/` copied into the run project's
+`.claude/skills` and `agents/` into `.claude/agents`, a `-p` run of Claude
+Code 2.1.310 (`claude --version`) through `evals/providers/claude.js`, given a
+token that is not a real one, wrote its init event and then failed with
+"Failed to authenticate. API Error: 401 OAuth access token is invalid." (run,
+2026-10-25):
+#+begin_src sh
+cd evals && CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-notarealtoken node -e "
+import('./providers/claude.js').then(async ({ default: P }) => {
+  for (const skills of [true, false]) {
+    const r = await new P({ config: { model: 'claude-sonnet-5-5', skills, timeoutMs: 120000 } })
+      .callApi('hi', { vars: { case: 'citing-records-to-the-record-keeper' } });
+    console.log(skills, r.metadata.initProblem ?? 'init ok', '|', r.error);
+  }
+})"
+#+end_src
+The init event's `skills` and `agents`, with the copies:
+#+begin_example
+skills ["recs-brainstorming","recs-executing-plans","recs-finishing-a-development-branch",
+        "recs-kickstart","recs-receiving-code-review","recs-requesting-code-review",
+        "recs-subagent-driven-development","recs-systematic-debugging",
+        "recs-test-driven-development","recs-using-git-worktrees",
+        "recs-verification-before-completion","recs-writing-plans","recs-writing-records",
+        "deep-research","dataviz","update-config","verify","debug","code-review","simplify",
+        "batch","fewer-permission-prompts","doctor","loop","claude-api","workflow-authoring",
+        "run","run-skill-generator","plugin-authoring"]
+agents ["claude","Explore","general-purpose","Plan","recs-code-reviewer","statusline-setup"]
+#+end_example
+Without the copies, the same `skills` less the thirteen `recs-*`, and the same
+`agents` less `recs-code-reviewer`. A project skill is offered under its bare
+name, with no plugin prefix.
