@@ -232,16 +232,23 @@ you need to talk to the record keeper about it, cite the records.
 A citation is a record's number, one section of it where a section is meant,
 and its title as the record's heading carries it, in that order, in backticks,
 on one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`.
-To the record keeper, that is the record's name. The record keeper picks each
-citation out of your reply by this form, so the name is written whole at every
-mention, whatever the sentence does with the record: names the record itself,
-names a section of it, names it a second time, says what a comment in code
-cites, or lists the sections a successor carries. A number alone, `X-8` or
-`X-8 §2`, is not a name the record keeper can pick out. Two sections are two
-citations.
+To the record keeper, that is the record's name, and nothing shorter is: the
+record keeper picks each citation out of your reply by this form, and `X-8` or
+`X-8 §2` on its own reaches them as no record at all. So the name is written
+whole every time the record comes up, not only the first time, and in every
+sentence that handles it: one that names the record itself, one that names a
+section of it, one that says what a comment in code cites, one that maps a
+record's sections to its successor's, and one that quotes a requirement whose
+text carries a citation. Two sections are two citations, and a map of sections
+is written in sentences, one whole citation to a section.
 
-Good: "a successor to `X-8: Frobnicate the widgets` carries `X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` over; the comment citing `X-8 §2: Frobnicate the widgets` is repointed"
-Bad: "a successor to `X-8` carries `X-8 §1` and `X-8 §3` over; the comment citing `X-8 §2` is repointed"
+Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
+Good: "`src/widgets.py` cites `X-8 §2: Frobnicate the widgets` and `X-8 §1: Frobnicate the widgets`"
+Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
+Good: "`X-8 §2: Frobnicate the widgets` reads: 'If the widget is reserved, then the system shall refuse with `MSG-4: A reserved widget cannot be frobnicated`'"
+Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
+Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
+Bad: "`X-8 §1` → §1, `X-8 §2` → §2, §3"
 
 ## Framing a question
 
