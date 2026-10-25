@@ -128,7 +128,7 @@ number is never reused within its record. A successor numbers its own
 requirements from 1, and its status maps each of the old record's sections to
 the successor's sections that carry it, or to none: "Supersedes F-12: A
 borrower can renew a loan (§1 → §1; §2 → §2, §3; §3 → none)". The sweep of the
-old identifier repoints each `F-12 §n` citation by that map.
+old identifier repoints each citation of a section of the old record by that map.
 
 ```org
 * F-12 A borrower can renew a loan
@@ -217,10 +217,21 @@ thing is built, so it lives in the decision that chose to build it that way.
 
 Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
-you need to talk to the record keeper about it, use the record number and the record title.
+you need to talk to the record keeper about it, cite the records.
 
-Good: "`X-8: Frobnicate the widgets`"
-Bad: "`X-8`"
+A citation is a record's number, one section of it where a section is meant,
+and its title as the record's heading carries it, in that order, in backticks,
+on one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`.
+To the record keeper, that is the record's name. The record keeper picks each
+citation out of your reply by this form, so the name is written whole at every
+mention, whatever the sentence does with the record: names the record itself,
+names a section of it, names it a second time, says what a comment in code
+cites, or lists the sections a successor carries. A number alone, `X-8` or
+`X-8 §2`, is not a name the record keeper can pick out. Two sections are two
+citations.
+
+Good: "a successor to `X-8: Frobnicate the widgets` carries `X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` over; the comment citing `X-8 §2: Frobnicate the widgets` is repointed"
+Bad: "a successor to `X-8` carries `X-8 §1` and `X-8 §3` over; the comment citing `X-8 §2` is repointed"
 
 ## Framing a question
 
@@ -233,7 +244,7 @@ each by number and title. Then state the situation, and only then the problem.
 ```
 We are working on `UW-X: Frobnicate the widget`.
 
-`Section 1b: whirl first` says the user frobnicates after having whirled.
+`UW-X §1b: Frobnicate the widget` says the user frobnicates after having whirled.
 
 `F-Y: Frobnication` says that we must whirl only after whooping.
 
