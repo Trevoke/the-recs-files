@@ -221,7 +221,7 @@ Reviewer: "Implement proper metrics tracking with database, date filters, CSV ex
 **Record Conflict (Good):**
 ```
 Reviewer: "Retry the call silently here"
-✅ "ADR-12: One connection per client rules out silent retries at this layer. If the decision itself is wrong, I'll raise a record change with my human partner - not implement around it."
+✅ "`ADR-12: One connection per client` rules out silent retries at this layer. If the decision itself is wrong, I'll raise a record change with my human partner - not implement around it."
 ```
 
 **Unclear Item (Good):**

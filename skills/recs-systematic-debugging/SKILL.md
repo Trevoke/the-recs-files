@@ -215,7 +215,7 @@ You MUST complete each phase before proceeding to the next.
    - Are we "sticking with it through sheer inertia"?
    - Should we refactor architecture vs. continue fixing symptoms?
 
-   **In a project with records:** the architecture under question is usually a recorded decision. Raise the question against that record - by number and title ("ADR-12: One connection per client"), with your human partner. Never edit the record as part of a fix; records change only at the record keeper's direction.
+   **In a project with records:** the architecture under question is usually a recorded decision. Raise the question against that record - by number and title ("`ADR-12: One connection per client`"), with your human partner. Never edit the record as part of a fix; records change only at the record keeper's direction.
 
    **Discuss with your human partner before attempting more fixes**
 
