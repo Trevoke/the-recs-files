@@ -77,7 +77,7 @@ child 2422027 cmdline: "bwrap --args 3 -- /usr/bin/sleep 2"; secret in cmdline: 
 #+end_example
 Inside the sandbox, `/proc/1/cmdline` read `bwrap --args 3 -- <command>`, and
 descriptor 3 was not open in the run's process (`ls -l /proc/self/fd`, run).
-`evals/providers/common.test.mjs` checks both, and that `env` inside lists
-exactly the variables given and `PWD`. The process that bwrap starts still
+On `harness-rendering`, `evals/providers/common.test.mjs` checks both, and
+that `env` inside lists exactly the variables given and `PWD`. The process that bwrap starts still
 holds the variables in its own `/proc/<pid>/environ`, readable by the same
 user.
