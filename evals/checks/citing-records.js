@@ -53,7 +53,7 @@ export function exactTitles(output, context) {
 }
 
 export function sectionBeforeTitle(output, context) {
-  return every(output, context, (c) => !c.sectionMisplaced, 'put a section outside the place between the number and the title');
+  return every(output, context, (c) => !c.sectionMisplaced && c.sections <= 1, 'put a section outside the place between the number and the title, or name more than one');
 }
 
 export function inBackticks(output, context) {
