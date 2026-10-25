@@ -61,7 +61,7 @@ test('a section after the title, or before the number, is misplaced', () => {
 test('a title with words added inside its backticks is not the title', () => {
   const c = one('`MSG-1: A reserved book cannot be renewed early`');
   assert.equal(c.titled, false);
-  assert.equal(c.backticked, false);
+  assert.equal(c.backticked, true);
   assert.equal(one('`UL-1: Loan period`').titled, false);
   assert.equal(one('`MSG-1: A reserved book cannot be renewed.`').titled, false);
 });
@@ -131,4 +131,11 @@ test('a number with no record on disk is unknown', () => {
 
 test('a fenced block is not something said', () => {
   assert.deepEqual(citations('```org\n* F-1 A borrower\n```', titles), []);
+});
+
+test('a paraphrased title in backticks is not titled, and is backticked', () => {
+  const c = one('`F-1: Borrower renewal` says so');
+  assert.equal(c.titled, false);
+  assert.equal(c.backticked, true);
+  assert.equal(one('`F-1: Borrower renewal\nsays so`').backticked, false);
 });

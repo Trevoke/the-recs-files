@@ -29,9 +29,16 @@ function escaped(word) {
   return word.replace(/[.*+?^${}()|[\]\\]/g, '\\$&').replace(/['’]/g, "['’]");
 }
 
+function closingTick(plain, at, opened) {
+  if (!opened) return -1;
+  const close = plain.indexOf('`', at);
+  const lineEnd = plain.indexOf('\n', at);
+  return close >= 0 && (lineEnd < 0 || close < lineEnd) ? close : -1;
+}
+
 function excerptOf(plain, start, at, end, titled, opened) {
   if (titled) return plain.slice(start, end + 1).replace(/\s+/g, ' ');
-  const close = opened ? plain.indexOf('`', at) : -1;
+  const close = closingTick(plain, at, opened);
   const lineEnd = plain.indexOf('\n', at);
   const stop = close >= 0 ? close + 1 : lineEnd >= 0 ? lineEnd : plain.length;
   return plain.slice(start, Math.min(stop, start + 120)).replace(/\s+/g, ' ');
@@ -58,7 +65,7 @@ export function citations(text, titles) {
       known: title !== undefined,
       titled,
       sections: section ? 1 + (section[0].match(separator) || []).length : 0,
-      backticked: opened && plain[end] === '`',
+      backticked: titled ? opened && plain[end] === '`' : closingTick(plain, at, opened) >= 0,
       broken: plain.slice(start, end).includes('\n'),
       sectionMisplaced: !section && (sectionBefore.test(before) || (sectionAfter.test(after) && !nextCitation.test(after))),
       excerpt: excerptOf(plain, start, at, end, titled, opened),

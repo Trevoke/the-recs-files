@@ -19,9 +19,13 @@ function titles(context) {
   return map;
 }
 
+function found(output, context) {
+  const said = context.providerResponse?.metadata?.said || output || '';
+  return citations(said, titles(context));
+}
+
 function cited(output, context) {
-  const said = context.providerResponse?.metadata?.said ?? output ?? '';
-  return citations(said, titles(context)).filter((c) => c.known);
+  return found(output, context).filter((c) => c.known);
 }
 
 function every(output, context, holds, what) {
@@ -32,13 +36,16 @@ function every(output, context, holds, what) {
     failing.length === 0,
     failing.length === 0
       ? `all ${all.length} citations hold`
-      : `${failing.length} of ${all.length} citations ${what}: ${failing.map((c) => c.excerpt).join(' | ')}`,
+      : `${failing.length} of ${all.length} citations ${what}: ${failing.map((c) => c.excerpt).join('; ')}`,
   );
 }
 
 export function citesRecords(output, context) {
-  const ids = [...new Set(cited(output, context).map((c) => c.id))];
-  return result(ids.length >= 2, `cited ${ids.join(', ') || 'no record on disk'}`);
+  const all = found(output, context);
+  const ids = [...new Set(all.filter((c) => c.known).map((c) => c.id))];
+  const unknown = [...new Set(all.filter((c) => !c.known).map((c) => c.id))];
+  const ignored = unknown.length ? `; ignored ${unknown.join(', ')}` : '';
+  return result(ids.length >= 2, `cited ${ids.join(', ') || 'no record on disk'}${ignored}`);
 }
 
 export function exactTitles(output, context) {
@@ -46,7 +53,7 @@ export function exactTitles(output, context) {
 }
 
 export function sectionBeforeTitle(output, context) {
-  return every(output, context, (c) => !c.sectionMisplaced, 'name a section away from between the number and the title');
+  return every(output, context, (c) => !c.sectionMisplaced, 'put a section outside the place between the number and the title');
 }
 
 export function inBackticks(output, context) {
