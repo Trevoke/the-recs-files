@@ -120,7 +120,7 @@ Push back when:
 - Technically incorrect for this stack
 - Legacy/compatibility reasons exist
 - Conflicts with your human partner's architectural decisions
-- Conflicts with a project record - push back citing the record by number and title ("ADR-12: One connection per client"). If the reviewer is right that the record is wrong, that goes to your human partner as a proposed record change, not into code.
+- Conflicts with a project record - push back citing the record by number and title (`ADR-12: One connection per client`). If the reviewer is right that the record is wrong, that goes to your human partner as a proposed record change, not into code.
 
 **How to push back:**
 - Use technical reasoning, not defensiveness
@@ -221,7 +221,7 @@ Reviewer: "Implement proper metrics tracking with database, date filters, CSV ex
 **Record Conflict (Good):**
 ```
 Reviewer: "Retry the call silently here"
-✅ "ADR-12: One connection per client rules out silent retries at this layer. If the decision itself is wrong, I'll raise a record change with my human partner - not implement around it."
+✅ "`ADR-12: One connection per client` rules out silent retries at this layer. If the decision itself is wrong, I'll raise a record change with my human partner - not implement around it."
 ```
 
 **Unclear Item (Good):**
