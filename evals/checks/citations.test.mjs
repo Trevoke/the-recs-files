@@ -5,7 +5,10 @@ import { citations } from './citations.js';
 const titles = new Map([
   ['F-1', 'A borrower renews a loan for one more loan period unless the book is reserved'],
   ['MSG-1', 'A reserved book cannot be renewed'],
+  ['UL-1', 'Loan'],
+  ['UW-1', 'A borrower’s loan is renewed'],
 ]);
+const whole = 'A borrower renews a loan for one more loan period unless the book is reserved';
 const one = (text) => {
   const found = citations(text, titles);
   assert.equal(found.length, 1, `one citation in ${JSON.stringify(text)}`);
@@ -54,10 +57,56 @@ test('a section after the title, or before the number, is misplaced', () => {
   assert.equal(one('§2 of F-1 refuses it').sectionMisplaced, true);
 });
 
-test('a title with words added is titled, and not closed by its backtick', () => {
+test('a title with words added inside its backticks is not the title', () => {
   const c = one('`MSG-1: A reserved book cannot be renewed early`');
-  assert.equal(c.titled, true);
+  assert.equal(c.titled, false);
   assert.equal(c.backticked, false);
+  assert.equal(one('`UL-1: Loan period`').titled, false);
+  assert.equal(one('`MSG-1: A reserved book cannot be renewed.`').titled, false);
+});
+
+test('a section before a backticked citation, or after it past a comma, is misplaced', () => {
+  assert.equal(one(`§2 of \`F-1: ${whole}\``).sectionMisplaced, true);
+  assert.equal(one(`\`F-1: ${whole}\`, §2`).sectionMisplaced, true);
+});
+
+test('several sections between the number and the title hold, and are counted', () => {
+  for (const text of [`\`F-1 §2, §3: ${whole}\``, `\`F-1 §2–§3: ${whole}\``]) {
+    const c = one(text);
+    assert.deepEqual(
+      { titled: c.titled, backticked: c.backticked, sectionMisplaced: c.sectionMisplaced, sections: c.sections },
+      { titled: true, backticked: true, sectionMisplaced: false, sections: 2 },
+      text,
+    );
+  }
+  assert.equal(one(`\`F-1 §2: ${whole}\``).sections, 1);
+  assert.equal(one(`\`F-1: ${whole}\``).sections, 0);
+});
+
+test('a line break before the section or the colon is titled and broken', () => {
+  for (const text of [`\`F-1\n§2: ${whole}\``, `\`F-1\n: ${whole}\``]) {
+    const c = one(text);
+    assert.equal(c.titled, true, text);
+    assert.equal(c.broken, true, text);
+  }
+});
+
+test('an inline triple-backtick span does not open a fence', () => {
+  assert.equal(citations('```F-1``` text\nand F-1 again', titles).length, 2);
+});
+
+test('an untitled excerpt runs to the closing backtick, or to the end of the line', () => {
+  assert.equal(one('`F-1: Borrowers renew loans` and more').excerpt, 'F-1: Borrowers renew loans`');
+  assert.equal(one('F-1: Borrowers renew loans\nnext').excerpt, 'F-1: Borrowers renew loans');
+});
+
+test('a straight apostrophe matches a curly one in the title', () => {
+  assert.equal(one("`UW-1: A borrower's loan is renewed`").titled, true);
+  assert.equal(one('`UW-1: A borrower’s loan is renewed`').titled, true);
+});
+
+test('words that only look like identifiers are not citations', () => {
+  assert.deepEqual(citations('UTF-8, ISO-8601 and F-2-ish', titles), []);
 });
 
 test('a number with no record on disk is unknown', () => {
