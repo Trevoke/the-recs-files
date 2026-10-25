@@ -208,3 +208,29 @@ tests:
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:kickstart
+
+  - description: The agent cites records to the record keeper
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompt.md
+    assert:
+      # F-12 §1: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: cites records
+        value: file://checks/citing-records.js:citesRecords
+      # F-12 §1: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: exact titles
+        value: file://checks/citing-records.js:exactTitles
+      # F-12 §2: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: section before title
+        value: file://checks/citing-records.js:sectionBeforeTitle
+      # F-12 §3: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: in backticks
+        value: file://checks/citing-records.js:inBackticks
+      # F-12 §4: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: one line
+        value: file://checks/citing-records.js:oneLine
