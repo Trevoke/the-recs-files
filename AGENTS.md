@@ -97,8 +97,8 @@ heading carry the same title, and a clarification that gives a record a new
 title changes all three.
 
 A record change is committed on its own, and a proposal in a commit before the
-one that accepts or rejects it (`ADR-1: A record change is one commit of its
-own`).
+one that accepts or rejects it
+(`ADR-1: A record change is one commit of its own`).
 
 ## A feature record's form
 

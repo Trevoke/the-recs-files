@@ -39,7 +39,7 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
 
 - **Define by defining.** State what something is; never define by contrast with what it isn't. "A quote offers, it does not oblige" helps no one. "A quote is the price offered for a set of line items, valid until its expiry date, before anything is reserved" is a definition.
 - **Be brief.** A record is a sentence or a short paragraph, not an essay.
-- **Address by number and title.** "ADR-12: One retry queue per provider", never a bare "ADR-12".
+- **Address by number and title.** "`ADR-12: One retry queue per provider`", never a bare "`ADR-12`".
 - **Match the category's form.** Read two neighbouring records before drafting; yours should be indistinguishable in shape.
 
 ## The Flow
@@ -102,7 +102,7 @@ Steps 1–3 are what the flow runs before it shows a draft; 4–8 are the rest.
 2. Count the hits. That number is the checklist, and the sweep is not finished until every one of them has a verdict.
 3. For a redefinition, write the rule that tells a false sentence from a true one *before* reading any of them — one sentence, in the project's words: *where a record says something is declared "at approval" it means where that thing is written, which is now the order form; where "at approval" names the moment, it stands.* Then give each hit its verdict against the rule: the wording that replaces it, or *stands*, with the reason. "Almost all of them are still true" is a verdict on nothing.
 4. Change every occurrence in one pass: standing records, code, comments, tests, docs. Withdrawn records and plans are left as written: a plan is the work as planned against the records then standing, its words and its citations included.
-5. For a superseded or retired record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint each to its successor, or remove it where there is none. A citation of a section (`F-7 §2`) repoints by the successor's section map; a section the map sends to none is a citation removed, and one it sends to several repoints to those the citing site rests on, read against each — where that is unclear, it goes back to the record keeper. A plan keeps the citations it was written under: it is the work as planned against the records then standing.
+5. For a superseded or retired record: grep for its identifier. Comments cite records, so citations are everywhere; find them all and repoint each to its successor, or remove it where there is none. A citation of a section of a record repoints by the successor's section map; a section the map sends to none is a citation removed, and one it sends to several repoints to those the citing site rests on, read against each — where that is unclear, it goes back to the record keeper. A plan keeps the citations it was written under: it is the work as planned against the records then standing.
 6. Re-grep the stem and the old identifier, and re-count. Every remaining hit is one you judged *stands*, or sits in a withdrawn record — anything else is unfinished work.
 7. Nothing is committed while a sentence you know to be false is still standing. A hit that falls outside what was agreed goes back to the record keeper *before* the commit: asking costs one message, and committing around it costs a second commit and leaves the records wrong in between.
 8. One commit whose message names the change — Tim Pope rules: imperative subject around 50 characters, blank line, body saying why. Conventional-commit types are welcome.
@@ -111,7 +111,7 @@ Steps 1–3 are what the flow runs before it shows a draft; 4–8 are the rest.
 Rename "cutoff" to "deadline" throughout
 
 The two words named one concept and drifted apart in the
-order-scheduling code. UL-9 owns "deadline"; "cutoff" is retired.
+order-scheduling code. `UL-9: Deadline` owns "deadline"; "cutoff" is retired.
 ```
 
 ## A Record's Sentence Stays in the Record
@@ -157,6 +157,6 @@ def refund(order): ...
 | "The plan cites the old record too, so I repointed it" | A plan is the work as planned against the records then standing. Its words and citations stay as written. |
 | "It's only a wording fix, so I'll edit it in place" | Small is not the test; intent is. Assess it, show the assessment, and let the record keeper decide. |
 | "Nothing cites this record any more, so I'll delete it" | A retired record stays, marked, and its number stays taken. Deleting it loses why it once held. |
-| "ADR-12" (bare) | Number and title, always — the title is what makes the reference readable. |
+| "ADR-12" (bare) | Number and title, always, in backticks — the title is what makes the reference readable. |
 
 **All of these mean: stop, and do it the record way.**
