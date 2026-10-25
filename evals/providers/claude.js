@@ -66,8 +66,9 @@ function prepare(caseName, withSkills) {
   }
   fs.mkdirSync(configDir, { recursive: true });
   git(project, 'init', '--quiet', '--initial-branch=main');
-  // docs/knowledge-base/pi-as-an-eval-harness.org: `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `git init` creates `.git/info` only when its template directory has one
   fs.mkdirSync(path.join(project, '.git', 'info'), { recursive: true });
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
   fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), '/.claude/skills/\n/.claude/agents/\n');
   git(project, 'add', '-A');
   git(project, 'commit', '--quiet', '-m', 'Start the project');
@@ -214,7 +215,12 @@ export default class ClaudeCodeProvider {
     if (unknown) return { error: unknown };
     const token = process.env.CLAUDE_CODE_OAUTH_TOKEN;
     if (!token) return { error: 'CLAUDE_CODE_OAUTH_TOKEN is not set: run `claude setup-token` and export the token it prints' };
-    const dirs = prepare(caseName, this.config.skills);
+    let dirs;
+    try {
+      dirs = prepare(caseName, this.config.skills);
+    } catch (error) {
+      return { error: `the run could not be prepared: ${error.message}` };
+    }
     const expected = this.config.skills ? recsSkills() : [];
     const expectedAgents = this.config.skills ? recsAgents() : [];
     const args = [

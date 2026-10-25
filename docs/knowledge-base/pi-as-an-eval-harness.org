@@ -109,6 +109,7 @@ are not committed (gitignore(5)). An excluded untracked path is absent from
 `git status --porcelain` and from `git ls-files --others --exclude-standard`,
 and `git add -A` does not add it (run, 2026-10-19).
 
+* `git init` creates `.git/info` only when its template directory has one
 `git init` creates `.git/info` only when its template directory has one. With
 git 2.54.0 (`git --version`), `init.templateDir` set to a directory holding
 only `hooks/`, a new repository had no `.git/info`, where git's own templates
