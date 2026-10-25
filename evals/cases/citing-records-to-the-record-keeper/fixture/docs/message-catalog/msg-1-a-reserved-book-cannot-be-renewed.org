@@ -1,0 +1,5 @@
+* MSG-1 A reserved book cannot be renewed
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A reserved book cannot be renewed.

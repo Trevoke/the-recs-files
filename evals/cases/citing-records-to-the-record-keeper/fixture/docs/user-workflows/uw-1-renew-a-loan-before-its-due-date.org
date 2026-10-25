@@ -1,0 +1,21 @@
+* UW-1 Renew a loan before its due date
+:PROPERTIES:
+:STATUS: Accepted
+:ACTOR: Borrower
+:SCOPE: Circulation
+:LEVEL: User goal
+:END:
+** Trigger
+A borrower wants to keep a book past its due date.
+** Minimal guarantee
+A loan's due date changes only on a renewal the library allows.
+** Success guarantee
+The loan is due one loan period after the renewal date.
+** Main success scenario
+*** 1. Borrower asks to renew a loan
+*** 2. Library finds no reservation on the book (F-1: A borrower renews a loan for one more loan period unless the book is reserved)
+*** 3. Library sets the new due date
+*** 4. Borrower sees the new due date
+** Extensions
+*** 2a. The book is reserved
+**** 2a1. Library refuses the renewal with MSG-1: A reserved book cannot be renewed; the use case ends
