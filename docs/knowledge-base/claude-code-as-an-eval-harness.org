@@ -1,0 +1,322 @@
+#+TITLE: How Claude Code behaves as an eval harness
+
+Established 2026-10-19 against Claude Code 2.1.304 on Arch Linux, inside
+bubblewrap 0.11.2, with the Claude Code rendering of the recs files
+(`node packaging/build.mjs claude <out> v0.0.0-eval`). No run reached a
+model: `CLAUDE_CODE_OAUTH_TOKEN` was not set in the session that established
+this. Source: `claude --help` and its subcommands' `--help`, runs, and strings
+read from the binary.
+
+* The `claude` binary is one executable that needs only the system's libraries
+#+begin_src sh
+command -v claude; readlink -f "$(command -v claude)"
+file "$(readlink -f "$(command -v claude)")"; ldd "$(readlink -f "$(command -v claude)")"
+#+end_src
+#+begin_example
+/home/stag/.local/bin/claude
+/home/stag/.local/share/claude/versions/2.1.304
+ELF 64-bit LSB executable, x86-64, version 1 (SYSV), dynamically linked, interpreter /lib64/ld-linux-x86-64.so.2, ...
+	librt.so.1 => /usr/lib/librt.so.1
+	libc.so.6 => /usr/lib/libc.so.6
+	/lib64/ld-linux-x86-64.so.2 => /usr/lib64/ld-linux-x86-64.so.2
+	libpthread.so.0 => /usr/lib/libpthread.so.0
+	libdl.so.2 => /usr/lib/libdl.so.2
+	libm.so.6 => /usr/lib/libm.so.6
+#+end_example
+The 289 MB file carries its JavaScript inside it (`/$bunfs/root/...` paths in
+its strings). Bound read-only at `/opt/claude/claude` beside `/usr` and
+`/etc`, it runs `plugin`, `-p` and every subcommand used here; nothing under
+the user's home is needed. The file under `versions/` changes when Claude
+Code updates itself, so its path is resolved at each run.
+
+* A print-mode run is `claude -p --output-format stream-json --verbose`
+#+begin_src sh
+claude -p --output-format stream-json --verbose --no-session-persistence \
+  --permission-mode bypassPermissions --model sonnet -- "$PROMPT"
+#+end_src
+Without `--verbose` it stops with "Error: When using --print,
+--output-format=stream-json requires --verbose" (run), and
+`--no-session-persistence` keeps the session from being saved (`--help`).
+Stdout is one JSON object to a line:
+- a `system` event with `subtype: "init"` first, carrying `cwd`, `model`,
+  `tools`, `skills`, `agents`, `plugins`, `permissionMode`, `apiKeySource`,
+  `claude_code_version` and `memory_paths` (run);
+- `system` events with `subtype: "api_retry"` (`attempt`, `error_status`,
+  `error`) while a request is retried (run);
+- `assistant` events whose `message.content` holds the model's blocks, with
+  `parent_tool_use_id` null on the main thread (run); a tool call is a block
+  `{"type": "tool_use", "id", "name", "input"}`, and its answer comes back in
+  a `user` event as `{"type": "tool_result", "tool_use_id", "is_error",
+  "content"}` (the Messages API's content blocks; not seen in a run here);
+- a final `result` event carrying `result` (the reply's text), `is_error`,
+  `total_cost_usd`, `usage`, `num_turns`, `duration_ms` and `subagent_stats`
+  (run).
+
+* `--model sonnet` resolves to `claude-sonnet-5-5`
+The init event of a run with `--model sonnet` and no credential carried
+`"model": "claude-sonnet-5-5"` (run). The alias is resolved before any request.
+
+* A skill load is a `Skill` tool use naming the skill
+The `Skill` tool's input is `{skill, args}`: "The name of a skill from the
+available-skills list" and optional arguments (the tool's schema, read from
+the binary's strings). A plugin's skills are listed under the plugin's name:
+the init event of a run with the recs files installed listed
+`recs-files:recs-writing-records` and the twelve other `recs-files:recs-*`
+skills beside Claude Code's own (run).
+
+* A subagent is a `Task` tool use naming its `subagent_type`
+The init event's `tools` lists `Task` (run). Its input is `description`,
+`prompt`, an optional `subagent_type` ("The type of specialized agent to use
+for this task") and an optional `model` (the tool's schema, read from the
+binary's strings, which also carry the name `Agent`). A plugin's agents are
+listed under the plugin's name: the init event listed
+`recs-files:recs-code-reviewer` in `agents` (run).
+
+* Claude Code 2.1.304 offers claude-sonnet-5-5 no TodoWrite in print mode
+The init event's `tools`, filtered to the task tools, for runs with no
+credential (runs, 2026-10-19):
+| Run | Task tools offered |
+|---|---|
+| `--model sonnet` | `Task`, `TaskStop` |
+| `--model claude-sonnet-4-6` | `Task`, `TaskCreate`, `TaskGet`, `TaskList`, `TaskStop`, `TaskUpdate` |
+| `--model sonnet`, `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` | `Task`, `TaskCreate`, `TaskGet`, `TaskList`, `TaskStop`, `TaskUpdate` |
+| `--model sonnet`, `CLAUDE_CODE_ENABLE_TASKS=0` | `Task`, `TaskStop` |
+| `--model sonnet`, `CLAUDE_CODE_ENABLE_TASKS=0`, `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` | `Task`, `TaskStop`, `TodoWrite` |
+The binary turns the todo tools on for a list of older models
+(`claude-sonnet-4-6`, `claude-opus-4-7` and earlier) or when
+`CLAUDE_CODE_ENABLE_TODO_TOOLS` is set, and offers `TaskCreate` and its kin
+in place of `TodoWrite` unless `CLAUDE_CODE_ENABLE_TASKS` is false (strings
+read from the binary).
+
+A second pair of runs inside bubblewrap, with no credential, `--model sonnet`
+and the provider's sandbox, reported `claude-sonnet-5-5` in the init event and
+these `tools` (run, 2026-10-19):
+#+begin_example
+unset:                              Task, Bash, CronCreate, CronDelete, CronList, DesignSync, Edit,
+                                    EnterWorktree, ExitWorktree, ListAgents, NotebookEdit, Read,
+                                    ReportFindings, ScheduleWakeup, SendMessage, Skill, TaskStop,
+                                    ToolSearch, WebFetch, WebSearch, Workflow, Write
+CLAUDE_CODE_ENABLE_TODO_TOOLS=1:    the same, with TaskCreate, TaskGet, TaskList and TaskUpdate
+                                    beside TaskStop
+#+end_example
+Both runs then ended "Not logged in · Please run /login" and exited 1.
+
+* `TaskCreate` adds a task to the task list, and `TaskUpdate` sets its status
+`TaskCreate` ("Create a task in the task list") takes `subject`,
+`description`, an optional `activeForm` and optional `metadata`; "All tasks
+are created with status `pending`", and its result reads "Task #<id> created
+successfully: <subject>". `TaskUpdate` ("Update a task in the task list")
+takes `taskId` and optional `subject`, `description`, `activeForm`, `status`,
+`addBlocks`, `addBlockedBy`, `owner` and `metadata`. Its `status` is
+`pending`, `in_progress`, `completed` or `deleted`: "Status progresses:
+`pending` → `in_progress` → `completed`", and "Setting status to `deleted`
+permanently removes the task", with the examples
+~{"taskId": "1", "status": "in_progress"}~ and
+~{"taskId": "1", "status": "completed"}~ (the tools' prompts and schemas, read
+from `strings -n 8` of the 2.1.304 binary).
+
+* `TaskList` reads the task list back, and `TaskGet` reads one task
+`TaskList` ("List all tasks in the task list") takes no input and returns each
+task's `id`, `subject`, `status`, `owner` and `blockedBy`. `TaskGet` ("Get a
+task by ID from the task list") takes `taskId` and returns the task's
+`subject`, `description`, `status`, `blocks` and `blockedBy`. `TaskUpdate`'s
+result on completing a task says "Call TaskList now to find your next
+available task" (strings read from the 2.1.304 binary).
+
+* The task tools are deferred tools
+`TaskCreate`, `TaskGet`, `TaskList` and `TaskUpdate` each carry
+`shouldDefer: true` in the 2.1.304 binary (strings read from the binary),
+beside `ToolSearch` in the init event's `tools`. That a model loads them
+through `ToolSearch` before calling them is not established by a run.
+
+* `HOME` and `CLAUDE_CONFIG_DIR` inside the run keep the user's configuration out
+With `HOME` set to `<run>/home` and `CLAUDE_CONFIG_DIR` to `<run>/home/.claude`,
+everything Claude Code wrote outside the project went under that directory:
+`.claude.json`, `plugins/` (the marketplace, the install record and the
+plugin's cached copy), `backups/`, `telemetry/`, `projects/` and `sessions/`;
+the init event put auto memory at
+`<run>/home/.claude/projects/<project>/memory/` (runs). User settings, user
+CLAUDE.md and auto memory are read from that directory, which starts empty.
+Managed settings are read from `/etc/claude-code/` (see A tmpfs over
+`/etc/claude-code` keeps the host's managed settings out). The user's own `~/.claude` and
+`~/.claude.json` are not bound and do not exist inside the sandbox. Claude
+Code walks up from the working directory for CLAUDE.md (see Claude Code loads
+CLAUDE.md and AGENTS.md from the working directory and its parents), and above
+the project the run's root holds only `home/`, the transcript and its stderr.
+`--setting-sources` narrows which settings files load, and `--bare` skips
+CLAUDE.md discovery, plugin sync and OAuth altogether (`--help`); neither is
+needed once the configuration directory is the run's own, and `--bare` would
+refuse the subscription token.
+
+* Print mode skips the workspace trust dialog
+"The workspace trust dialog is skipped when Claude is run in non-interactive
+mode (via -p, or when stdout is not a TTY ...)" (`claude --help`, `-p`). A
+`-p` run in a project whose `.claude/settings.json` enables the recs files
+loaded the plugin's skills and agent with no prompt and no flag (run).
+
+* Inside bubblewrap, bypassing permissions is the sandbox's to confine
+`--permission-mode bypassPermissions` (or `--dangerously-skip-permissions`)
+lets every tool run unattended; `--help` recommends it "only for sandboxes
+with no internet access". An eval run needs the network for the model, so the
+sandbox shares it; what confines the run is bubblewrap's view of the
+filesystem and environment
+(bubblewrap-confines-an-eval-run.org: A run sees only the system, its
+harness and its own directory). The record keeper accepted this for eval runs
+(2026-10-19). Under `--permission-prompts none`, anything that would prompt is
+denied instead (`--help`).
+
+* The plugin commands install a local marketplace at project scope with no network
+Run in bubblewrap without `--share-net`, in a git project holding the
+rendering at `.claude/the-recs-files`, 2026-10-19:
+#+begin_src sh
+claude plugin marketplace add ./.claude/the-recs-files --scope project
+claude plugin install recs-files@the-recs-files --scope project
+cat .claude/settings.json
+#+end_src
+#+begin_example
+Adding marketplace…✔ Successfully added marketplace: the-recs-files (declared in project settings)
+Installing plugin "recs-files@the-recs-files"...✔ Successfully installed plugin: recs-files@the-recs-files (scope: project)
+{
+  "extraKnownMarketplaces": {
+    "the-recs-files": {
+      "source": {
+        "source": "directory",
+        "path": "<run>/project/.claude/the-recs-files"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "recs-files@the-recs-files": true
+  }
+}
+#+end_example
+Both exit 0. The marketplace's path is written absolute. The install copies
+the plugin into `$CLAUDE_CONFIG_DIR/plugins/cache/the-recs-files/recs-files/<version>/`
+and records it, with `projectPath`, in `$CLAUDE_CONFIG_DIR/plugins/installed_plugins.json`.
+`--scope` takes `user`, `project` or `local`, `user` by default, on both
+commands (`claude plugin install --help`, `claude plugin marketplace add --help`).
+
+* A print-mode run with no credential lists the skills and agents it loads, with no model reached
+With no `CLAUDE_CODE_OAUTH_TOKEN` and no other credential, a `-p` run with
+`--output-format stream-json --verbose` writes its init event, then an
+assistant message "Not logged in · Please run /login" with
+`"error": "authentication_failed"`, then a `result` event with
+`is_error: true`, `total_cost_usd: 0`, `duration_api_ms: 0`, and exits 1
+(run, without `--share-net`). The init event lists the session's `skills`,
+`agents` and `plugins`, so it shows what a run with a credential would load.
+`claude plugin list --json` and `claude plugin details <plugin>` read the
+install too, with no model (runs):
+#+begin_example
+[{"id": "recs-files@the-recs-files", "version": "0.0.0-eval", "scope": "project", "enabled": true,
+  "installPath": "<run>/home/.claude/plugins/cache/the-recs-files/recs-files/0.0.0-eval",
+  "projectPath": "<run>/project", "projectEnabled": true, ...}]
+
+Component inventory
+  Skills (13)  recs-brainstorming, recs-executing-plans, ..., recs-writing-records
+  Agents (1)  recs-code-reviewer
+#+end_example
+
+* `CLAUDE_CODE_OAUTH_TOKEN` authenticates a run on the subscription
+`claude setup-token` "Set up a long-lived authentication token (requires
+Claude subscription)" (`claude --help`). Given
+`CLAUDE_CODE_OAUTH_TOKEN=sk-ant-oat01-notarealtoken` through `--setenv`, a
+`-p` run with the network shared retried twice on
+`"error_status": 401` and ended with "Failed to authenticate. API Error: 401
+OAuth access token is invalid.": the variable is read and sent as an OAuth
+token (run, 2026-10-19). The token's text appeared nowhere in that run's
+stdout, its stderr, or the configuration directory (`grep -c`, `grep -rl`).
+A run with a valid token was not made.
+
+* A failed run ends with a `result` event carrying `is_error`, and exits 1
+Both the missing credential and the invalid token ended with a `result` event
+whose `subtype` was `"success"` and whose `is_error` was `true`, its `result`
+holding the error's text, and `claude` exited 1 (runs). `subtype` does not
+tell a failure; `is_error` and the exit code do.
+
+* Claude Code loads built-in plugins beside the project's
+The init event listed `cc-plugin-agents-md@builtin`,
+`cc-plugin-telemetry@builtin` and `cc-plugin-plugin-authoring@builtin` in
+`plugins`, and skills such as `deep-research`, `code-review` and `simplify`
+in `skills`, in both a run with the recs files installed and one without
+(runs). They are part of Claude Code as a user has it.
+
+* `/context` in print mode lists the memory files a run loads, with no model reached
+`claude -p --output-format stream-json --verbose -- /context` runs the local
+`/context` command and answers with a table of the session's context,
+including "Memory Files" (type, path, tokens) and "Skills", with no
+credential and no network (run, 2026-10-19). The table named the default
+model as `claude-opus-5-5` for a run with no `--model`.
+
+* Claude Code loads CLAUDE.md and AGENTS.md from the working directory and its parents
+In bubblewrap with no network, a git project at `<root>/project` with
+`CLAUDE.md` in both `<root>` and `<root>/project`, `/context` listed (run,
+2026-10-19):
+#+begin_example
+| Project | <root>/CLAUDE.md | 5 |
+| Project | <root>/project/CLAUDE.md | 5 |
+#+end_example
+The parent's file loaded past the project's git root. With only
+`<root>/project/AGENTS.md`, it listed `| Project | <root>/project/AGENTS.md |
+2 |` (run).
+
+* A command's inline shell runs in print mode with no model reached
+A project command, `.claude/commands/probe.md`, whose body holds
+``!`<shell command>` `` runs that command when `-p` is given `/probe`, before
+any request; with no credential and no network the shell command ran and
+wrote its output to a file (runs, 2026-10-19). A command that exits non-zero
+is reported as `<local-command-stderr>Shell command failed for pattern ...`
+in a `user` event. This runs Claude Code's shell, as the `Bash` tool does,
+without a model.
+
+* A shell run by Claude Code can read `CLAUDE_CODE_OAUTH_TOKEN` from Claude Code's own process
+Claude Code removes `CLAUDE_CODE_OAUTH_TOKEN` from the environment it gives a
+shell: with a dummy token set, `env` in a command's inline shell listed
+`CLAUDE_CONFIG_DIR`, `HOME`, `PATH`, `CLAUDE_CODE_*` session variables and
+others, and no token (run, 2026-10-19). The list of credentials removed
+always, `CLAUDE_CODE_OAUTH_TOKEN` among them, is in the binary's strings
+beside `ANTHROPIC_API_KEY` and `ANTHROPIC_AUTH_TOKEN`. The shell shares
+Claude Code's user and pid namespace, though, and the same probe reading each
+`/proc/<pid>/environ` found the dummy token in Claude Code's (run):
+#+begin_example
+/proc/1 bwrap --unshare-all --die-with-parent --clearenv --ro-bind / 1
+/proc/2 /opt/claude/claude -p --output-format stream-json --verbose  1
+/proc/79 /usr/bin/zsh -c source <run>/home/.claude/ 0
+/proc/80 sh <run>/probe.sh  0
+#+end_example
+(`/proc/1` matched because that probe's own launcher passed the token through
+bwrap's command line and environment, which the provider no longer does:
+bubblewrap-confines-an-eval-run.org: Options read from `--args` keep the
+environment out of `/proc/<pid>/cmdline`.) A `Bash` tool call in an eval run
+can therefore read the token with `cat /proc/2/environ`; a model tool call
+was not run to show it.
+
+* `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` needs Claude Code's own sandbox and forces the default permission mode
+The binary reads `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB` (on by default under
+GitHub Actions) and, when it is on, removes more variables from what a
+subprocess gets and isolates the subprocess with bubblewrap; its error text
+says "bubblewrap is required for subprocess env scrubbing and isolation"
+(strings read from the binary). With `CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=1`
+in the eval sandbox (runs, 2026-10-19):
+- stderr said "⚠ Permission mode forced to default —
+  CLAUDE_CODE_SUBPROCESS_ENV_SCRUB is set (allowed_non_write_users
+  hardening). Declare allowedTools explicitly, or set
+  CLAUDE_CODE_SUBPROCESS_ENV_SCRUB=0 to opt out.";
+- with `--allowedTools Bash` the command's inline shell did not run:
+  "Sandbox is required but failed to initialize: Sandbox dependencies not
+  available: socat not installed."
+On this machine it stops every shell command, so the provider leaves it unset.
+Whether, given socat, its sandbox would hide Claude Code's
+`/proc/<pid>/environ` from the shell was not established.
+`CLAUDE_CODE_OAUTH_TOKEN_FILE_DESCRIPTOR` is also read: given a file holding
+a dummy token on descriptor 4, a run with no network retried its request
+where one with no credential said "Not logged in" (run); whether that keeps
+the token out of every `/proc` entry a shell can read was not established.
+
+* A tmpfs over `/etc/claude-code` keeps the host's managed settings out
+Claude Code reads managed settings from `/etc/claude-code/`. bubblewrap
+mounts a `--tmpfs` only where the directory exists: over the read-only `/etc`
+bind, `--tmpfs /etc/claude-code` on a machine without it stopped with
+"bwrap: Can't mkdir /etc/claude-code: Read-only file system", and `--tmpfs
+/etc/ssl` on one with it left `ls -A /etc/ssl` empty inside (runs,
+2026-10-19). The provider adds the tmpfs when the host has the directory, and
+where it does not, the bound `/etc` has nothing there to read.

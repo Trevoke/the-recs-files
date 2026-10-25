@@ -9,7 +9,7 @@ A full eval pass with pi and no sandbox was stopped by the record keeper when
 a run began reading the whole filesystem, a RAID array included. The run left
 no transcript, so the command is not known.
 
-* A run sees only the system, node, pi and its own directory
+* A run sees only the system, its harness and its own directory
 #+begin_src sh
 bwrap --unshare-all --share-net --die-with-parent --clearenv \
   --ro-bind /usr /usr \
@@ -37,7 +37,47 @@ AI_AGENT GIT_AUTHOR_EMAIL GIT_AUTHOR_NAME GIT_COMMITTER_EMAIL GIT_COMMITTER_NAME
 `--clearenv` keeps every other key and variable out of the run. git, node and
 HTTPS to openrouter.ai work inside it.
 
+Claude Code runs under the same options with its binary bound at
+`/opt/claude/claude` in place of node and pi. A shell command run by Claude
+Code inside it (a command's inline shell, with no model; see
+claude-code-as-an-eval-harness.org) reported, 2026-10-19:
+#+begin_example
+ls: cannot access '/mnt/raid': No such file or directory
+ls: cannot access '/home/stag': No such file or directory
+ls: cannot access '/home': No such file or directory
+/opt:
+claude
+
+/opt/claude:
+claude
+#+end_example
+
 * A path bound at its own location exposes its parent directories
 Binding node and `evals/node_modules` at their real paths made
 `/home/stag/src/projects` visible as empty directories. Binding them under
 `/opt` leaves `/home` with nothing in it.
+
+* Options read from `--args` keep the environment out of `/proc/<pid>/cmdline`
+A process's command line is readable by every user in `/proc/<pid>/cmdline`,
+so `--setenv NAME VALUE` on bwrap's command line publishes VALUE, and inside
+the sandbox `/proc/1/cmdline` shows bwrap's arguments to the run itself.
+`--args FD` makes bwrap "Parse nul-separated arguments from the given file
+descriptor" (bwrap(1)); options only, since bwrap 0.11.2 printed its usage
+when the command itself came through the descriptor (run). `--clearenv`
+unsets "all environment variables, except for PWD and any that are
+subsequently set by --setenv" (bwrap(1)), so a run started from an empty
+environment with its `--setenv` options on a descriptor sees exactly those
+variables and `PWD`. Run 2026-10-19, `evals/providers/common.js` spawning
+bwrap with `env: {}` and its options on descriptor 3, a dummy value set as
+`CLAUDE_CODE_OAUTH_TOKEN` and `OPENROUTER_API_KEY`, read while the run slept:
+#+begin_example
+bwrap pid 2422026 cmdline: "bwrap --args 3 -- /usr/bin/sleep 2"
+dummy secret in cmdline: false; in bwrap environ: false; bwrap environ bytes: 0
+child 2422027 cmdline: "bwrap --args 3 -- /usr/bin/sleep 2"; secret in cmdline: false
+#+end_example
+Inside the sandbox, `/proc/1/cmdline` read `bwrap --args 3 -- <command>`, and
+descriptor 3 was not open in the run's process (`ls -l /proc/self/fd`, run).
+`evals/providers/common.test.mjs` checks both, and that `env` inside lists
+exactly the variables given and `PWD`. The process that bwrap starts still
+holds the variables in its own `/proc/<pid>/environ`, readable by the same
+user.

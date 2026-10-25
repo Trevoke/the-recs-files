@@ -45,7 +45,7 @@ function prepare(caseName, withSkills) {
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: Nothing confines pi to its working directory
-// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, node, pi and its own directory
+// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness and its own directory
 function sandboxed({ root, project, home }, env, args) {
   return [
     '--unshare-all', '--share-net', '--die-with-parent', '--clearenv',
