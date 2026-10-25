@@ -231,15 +231,17 @@ Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, use the record number and the record title.
 Give the whole citation every time you name a record, not only the first time,
-and also when you name it as a thing
+and also when the record itself is what you're talking about
 ("the title of `X-8: Frobnicate the widgets`"). Copy the title word for word
 from the record's heading. A section goes inside the citation, between the
-number and the title, and the title still follows it. One section to a
-citation: where one sentence names two sections, it gives two whole citations.
-Set each citation in backticks, and write it on one line.
+number and the title. One section to a citation: where one sentence names two
+sections, it gives two whole citations. Set each citation in backticks, and
+write it on one line. Before you send a reply to the record keeper, read it
+through once more, and write out whole every citation you shortened.
 
 Good: "`X-8: Frobnicate the widgets`"
 Good: "`X-8 §2: Frobnicate the widgets`"
+Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §2: Frobnicate the widgets`"
 Bad: "`X-8`", even after "`X-8: Frobnicate the widgets`" was given once
 Bad: "`X-8 §2`"
 Bad: "`X-8 §1` and `X-8 §2`"
