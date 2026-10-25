@@ -138,7 +138,7 @@ number is never reused within its record. A successor numbers its own
 requirements from 1, and its status maps each of the old record's sections to
 the successor's sections that carry it, or to none: "Supersedes F-12: A
 borrower can renew a loan (§1 → §1; §2 → §2, §3; §3 → none)". The sweep of the
-old identifier repoints each `F-12 §n` citation by that map.
+old identifier repoints each citation of a section of F-12 by that map.
 
 ```org
 * F-12 A borrower can renew a loan
@@ -257,7 +257,7 @@ each by number and title. Then state the situation, and only then the problem.
 ```
 We are working on `UW-X: Frobnicate the widget`.
 
-`Section 1b: whirl first` says the user frobnicates after having whirled.
+`UW-X §1b: Frobnicate the widget` says the user frobnicates after having whirled.
 
 `F-Y: Frobnication` says that we must whirl only after whooping.
 
