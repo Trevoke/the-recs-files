@@ -66,6 +66,7 @@ function prepare(caseName, withSkills) {
   }
   fs.mkdirSync(configDir, { recursive: true });
   git(project, 'init', '--quiet', '--initial-branch=main');
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
   fs.mkdirSync(path.join(project, '.git', 'info'), { recursive: true });
   fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), '/.claude/skills/\n/.claude/agents/\n');
   git(project, 'add', '-A');
