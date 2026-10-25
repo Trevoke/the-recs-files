@@ -225,7 +225,22 @@ Claude subscription)" (`claude --help`). Given
 OAuth access token is invalid.": the variable is read and sent as an OAuth
 token (run, 2026-10-19). The token's text appeared nowhere in that run's
 stdout, its stderr, or the configuration directory (`grep -c`, `grep -rl`).
-A run with a valid token was not made.
+No run with a valid token was made that day.
+
+A run with a valid token authenticates and completes (run, 2026-10-25,
+Claude Code 2.1.310). The record keeper keeps the token in
+`MY_CLAUDE_CODE_OAUTH_TOKEN`, since Claude Code removes
+`CLAUDE_CODE_OAUTH_TOKEN` from the environment it gives a shell (A shell run
+by Claude Code can read `CLAUDE_CODE_OAUTH_TOKEN` from Claude Code's own
+process), and passes it on the command line:
+#+begin_src sh
+cd evals && CLAUDE_CODE_OAUTH_TOKEN="$MY_CLAUDE_CODE_OAUTH_TOKEN" npm run eval:claude-code -- --filter-pattern 'cites records' --repeat 3 -j 2 -o <out>.json
+#+end_src
+All six runs completed in 54 s at concurrency 2, each in about 16–19 s. Each
+run's init event carried `"apiKeySource": "none"`, `"model":
+"claude-sonnet-5-5"`, `"claude_code_version": "2.1.310"` and
+`"permissionMode": "bypassPermissions"`. `grep -c` of the token over the
+run's 14 `claude.jsonl` transcripts found it in none.
 
 * A failed run ends with a `result` event carrying `is_error`, and exits 1
 Both the missing credential and the invalid token ended with a `result` event
