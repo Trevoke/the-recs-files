@@ -1,5 +1,10 @@
 const identifier = /(?<![\w-])(?:UL|ADR|F|UW|MSG)-\d+(?![\w-])/g;
-const sectionList = /^\s+§[\w.]+(?:,[ \t]*§[\w.]+|[ \t]*[–-][ \t]*§?\d[\w.]*)*/;
+const name = '[\\w.]+(?:-[A-Za-z][\\w.]*)*';
+const sectionList = new RegExp(`^\\s+§${name}(?:,[ \\t]*§${name}|[ \\t]*[–-][ \\t]*§?(?=\\d)${name})*`);
+const separator = /,[ \t]*§|[ \t]*[–-][ \t]*§?\d/g;
+const sectionBefore = new RegExp(`§${name}[ \\t]+(?:of[ \\t]+)?\`?$`);
+const sectionAfter = /^`?[ \t]*(?:,[ \t]*)?\(?§/;
+const nextCitation = new RegExp(`^\`?,?[ \\t]*§${name}[ \\t]+of[ \\t]+\`?(?:UL|ADR|F|UW|MSG)-\\d`);
 
 function unfenced(text) {
   let fence = null;
@@ -46,16 +51,16 @@ export function citations(text, titles) {
     const match = pattern ? pattern.exec(plain.slice(at)) : null;
     const titled = Boolean(match) && (!opened || plain[at + match[0].length] === '`');
     const end = titled ? at + match[0].length : at;
-    const before = plain.slice(Math.max(0, start - 20), start);
-    const after = plain.slice(end, end + 20);
+    const before = plain.slice(Math.max(0, start - 60), start);
+    const after = plain.slice(end, end + 60);
     return {
       id,
       known: title !== undefined,
       titled,
-      sections: section ? section[0].split(/,|[–-]/).length : 0,
+      sections: section ? 1 + (section[0].match(separator) || []).length : 0,
       backticked: opened && plain[end] === '`',
       broken: plain.slice(start, end).includes('\n'),
-      sectionMisplaced: !section && (/§[\w.]+[ \t]+(?:of[ \t]+)?`?$/.test(before) || /^`?[ \t]*(?:,[ \t]*)?\(?§/.test(after)),
+      sectionMisplaced: !section && (sectionBefore.test(before) || (sectionAfter.test(after) && !nextCitation.test(after))),
       excerpt: excerptOf(plain, start, at, end, titled, opened),
     };
   });

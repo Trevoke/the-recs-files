@@ -7,6 +7,7 @@ const titles = new Map([
   ['MSG-1', 'A reserved book cannot be renewed'],
   ['UL-1', 'Loan'],
   ['UW-1', 'A borrower’s loan is renewed'],
+  ['F-2', 'A librarian waives a fine'],
 ]);
 const whole = 'A borrower renews a loan for one more loan period unless the book is reserved';
 const one = (text) => {
@@ -68,6 +69,21 @@ test('a title with words added inside its backticks is not the title', () => {
 test('a section before a backticked citation, or after it past a comma, is misplaced', () => {
   assert.equal(one(`§2 of \`F-1: ${whole}\``).sectionMisplaced, true);
   assert.equal(one(`\`F-1: ${whole}\`, §2`).sectionMisplaced, true);
+});
+
+test('a section that opens the next citation is not misplaced on the one before it', () => {
+  const [first, second] = citations(`See \`F-1: ${whole}\`, §2 of \`F-2: A librarian waives a fine\``, titles);
+  assert.equal(first.sectionMisplaced, false);
+  assert.equal(second.sectionMisplaced, true);
+});
+
+test('a section name may carry a hyphen', () => {
+  const c = one(`\`F-1 §Status-change: ${whole}\``);
+  assert.deepEqual(
+    { titled: c.titled, backticked: c.backticked, sectionMisplaced: c.sectionMisplaced, sections: c.sections },
+    { titled: true, backticked: true, sectionMisplaced: false, sections: 1 },
+  );
+  assert.equal(one(`\`F-1: ${whole}\` §Status-change`).sectionMisplaced, true);
 });
 
 test('several sections between the number and the title hold, and are counted', () => {
