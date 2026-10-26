@@ -130,8 +130,9 @@ stands in for When where the trigger is unwanted.
   workflow that reaches the feature. The order of things, and what a user may
   do next, are the user workflow's to say.
 - **A refusal cites its message, never quotes it.** "If the book is reserved,
-  then the library shall refuse the renewal with `MSG-4: A reserved book cannot
-  be renewed`." The text lives in the message catalog alone.
+  then the library shall refuse the renewal with
+  [[../message-catalog/msg-4-a-reserved-book-cannot-be-renewed.org][MSG-4: A reserved book cannot be renewed]]."
+  The text lives in the message catalog alone.
 - **Examples are optional.** An example sits under the one requirement it
   illustrates, in plain prose. It decides nothing the requirement does not, so
   adding or rewording one changes the record without superseding it. Changing,
@@ -155,11 +156,13 @@ record by that map.
    one loan period after the renewal date.
    - The one where a 14-day loan renewed on 1 October is due on 15 October.
 2. If the book is reserved, then the library shall refuse the renewal with
-   `MSG-4: A reserved book cannot be renewed`.
+   [[../message-catalog/msg-4-a-reserved-book-cannot-be-renewed.org][MSG-4: A reserved book cannot be renewed]].
 3. While a loan is overdue beyond the grace period, the library shall refuse
-   any renewal of it with `MSG-5: An overdue loan cannot be renewed`.
+   any renewal of it with
+   [[../message-catalog/msg-5-an-overdue-loan-cannot-be-renewed.org][MSG-5: An overdue loan cannot be renewed]].
 4. Where the library sets a renewal limit, the library shall refuse a renewal
-   past it with `MSG-6: This loan has reached its renewal limit`.
+   past it with
+   [[../message-catalog/msg-6-this-loan-has-reached-its-renewal-limit.org][MSG-6: This loan has reached its renewal limit]].
 ```
 
 ### Where each thing about a feature is held
