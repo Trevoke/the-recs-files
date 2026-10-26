@@ -5,6 +5,7 @@ const separator = /,[ \t]*§|[ \t]*[–-][ \t]*§?\d/g;
 const sectionBefore = new RegExp(`§${name}[ \\t]+(?:of[ \\t]+)?\`?$`);
 const sectionAfter = /^`?[ \t]*(?:,[ \t]*)?\(?§/;
 const nextCitation = new RegExp(`^\`?,?[ \\t]*§${name}[ \\t]+of[ \\t]+\`?(?:UL|ADR|F|UW|MSG)-\\d`);
+const sectionMap = new RegExp(`^\`?[ \\t]*\\(?§${name}[ \\t]*(?:→|->)`);
 
 function unfenced(text) {
   let fence = null;
@@ -67,7 +68,7 @@ export function citations(text, titles) {
       sections: section ? 1 + (section[0].match(separator) || []).length : 0,
       backticked: titled ? opened && plain[end] === '`' : closingTick(plain, at, opened) >= 0,
       broken: plain.slice(start, end).includes('\n'),
-      sectionMisplaced: !section && (sectionBefore.test(before) || (sectionAfter.test(after) && !nextCitation.test(after))),
+      sectionMisplaced: !section && (sectionBefore.test(before) || (sectionAfter.test(after) && !nextCitation.test(after) && !sectionMap.test(after))),
       excerpt: excerptOf(plain, start, at, end, titled, opened),
     };
   });
