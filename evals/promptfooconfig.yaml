@@ -88,6 +88,18 @@ tests:
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:writingRecords
+      # ADR-6 §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
 
   - description: The record keeper asks for a record
     vars:
@@ -143,6 +155,49 @@ tests:
           contradicts, and proposes wording to replace that sentence. A reply
           that does not mention the vision's sentence, or says it has already
           changed the vision, fails.
+      - type: javascript
+        metric: skill use
+        value: file://checks/skill-use.js:writingRecords
+      # ADR-6 §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
+
+  - description: The record keeper replaces two features with one
+    vars:
+      case: superseding-two-features
+      request: file://cases/superseding-two-features/prompt.md
+    assert:
+      # F-4 §1: A record is written with its line in its projection
+      # F-2 §1: A record change is agreed before it stands
+      - type: javascript
+        metric: written as proposed
+        value: file://checks/superseding-two-features.js:writtenAsProposed
+      # F-5 §2: A superseded record names its successor
+      # ADR-14 §Consequences: A record names another record by an org link to its file
+      - type: javascript
+        metric: supersedes both by link
+        value: file://checks/superseding-two-features.js:supersedesBothByLink
+      # ADR-6 §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:writingRecords
@@ -218,6 +273,18 @@ tests:
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:kickstart
+      # ADR-6 §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-14 §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
 
   - description: "The agent cites records to the record keeper (train: renewing-a-reserved-book)"
     vars:

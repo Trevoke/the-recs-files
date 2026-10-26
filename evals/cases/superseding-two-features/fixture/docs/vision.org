@@ -1,0 +1,5 @@
+#+TITLE: Vision
+
+A lending library's circulation system. It lends books to borrowers, renews
+and returns their loans, and holds a returned copy for the borrower who
+reserved it.

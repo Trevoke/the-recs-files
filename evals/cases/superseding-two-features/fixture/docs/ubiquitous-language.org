@@ -1,0 +1,6 @@
+#+TITLE: Ubiquitous language
+
+* Circulation
+- UL-1 :: [[./ubiquitous-language/ul-1-loan.org][Loan]]
+- UL-2 :: [[./ubiquitous-language/ul-2-reservation.org][Reservation]]
+- UL-3 :: [[./ubiquitous-language/ul-3-loan-period.org][Loan period]]
