@@ -89,7 +89,7 @@ export default class PiProvider {
   }
 
   id() {
-    return `pi:${this.config.model}`;
+    return `${this.config.skills ? 'with' : 'without'}-skills:pi:${this.config.model}`;
   }
 
   async callApi(prompt, context) {

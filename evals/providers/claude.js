@@ -151,7 +151,7 @@ export default class ClaudeCodeProvider {
   }
 
   id() {
-    return `claude-code:${this.config.model}`;
+    return `${this.config.skills ? 'with' : 'without'}-skills:claude-code:${this.config.model}`;
   }
 
   async callApi(prompt, context) {

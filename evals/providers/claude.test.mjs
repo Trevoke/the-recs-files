@@ -110,3 +110,9 @@ test('runError reports a run that could not start', () => {
 test('runError reports nothing for a successful run', () => {
   assert.equal(runError({ code: 0, signal: null, stderr: '' }, { type: 'result', is_error: false, result: 'done' }, 5000), undefined);
 });
+
+test('the provider id names its arm first', async () => {
+  const { default: Provider } = await import('./claude.js');
+  assert.equal(new Provider({ config: { model: 'claude-sonnet-5-5', skills: true } }).id(), 'with-skills:claude-code:claude-sonnet-5-5');
+  assert.equal(new Provider({ config: { model: 'claude-sonnet-5-5', skills: false } }).id(), 'without-skills:claude-code:claude-sonnet-5-5');
+});
