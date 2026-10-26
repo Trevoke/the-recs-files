@@ -103,10 +103,10 @@ The records this plan is built against, in reading order, each cited by number a
 
 Read before executing any task, in this order:
 
-1. UW-3: [title] — the workflow this plan implements
-2. ADR-12: [title] — the invariant the design must hold
-3. F-7: [title] — the surface being built
-4. MSG-4: [title] — the exact refusal text task 3 asserts
+1. `UW-3: [title]` — the workflow this plan implements
+2. `ADR-12: [title]` — the invariant the design must hold
+3. `F-7: [title]` — the surface being built
+4. `MSG-4: [title]` — the exact refusal text task 3 asserts
 ```
 
 ### 4. Cataloged-Text Ordering
@@ -116,7 +116,7 @@ Where a task touches user-facing text the project catalogs — error messages, r
 ```markdown
 ## Cataloged-Text Ordering
 
-Tasks [N, M] touch cataloged text ([MSG-4: title]). For each:
+Tasks [N, M] touch cataloged text (`MSG-4: [title]`). For each:
 
 1. The catalog record's wording is settled first, at the record keeper's direction.
 2. The failing test asserts the record's exact current text, character for
@@ -133,7 +133,7 @@ Every task names the records it implements, by number and title. A task that bui
 ```markdown
 ### Task N: [Component Name]
 
-**Records:** F-7: [title]; ADR-12: [title]
+**Records:** `F-7: [title]`; `ADR-12: [title]`
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -171,7 +171,7 @@ Expected: PASS
 git add tests/path/test.py src/path/file.py
 git commit -m "feat: add order validator
 
-UW-3: [title] requires every order checked on arrival.
+`UW-3: [title]` requires every order checked on arrival.
 Validator added with its first passing test."
 ```
 ```
