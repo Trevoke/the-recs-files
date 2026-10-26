@@ -1,5 +1,0 @@
-* UL-19 Successor
-:PROPERTIES:
-:STATUS: Accepted
-:END:
-A record that replaces one or more superseded records.

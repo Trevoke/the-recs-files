@@ -1,6 +1,0 @@
-* UL-1 Record management
-:PROPERTIES:
-:STATUS: Accepted
-:END:
-The bounded context of record changes and of sweeping words through a
-project.

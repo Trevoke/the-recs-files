@@ -1,0 +1,6 @@
+* UL-20261015-aycy Citation
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A reference to a record by its identifier and title, or to a heading of the
+knowledge base.

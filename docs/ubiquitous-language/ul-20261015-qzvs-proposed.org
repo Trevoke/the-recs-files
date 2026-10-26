@@ -1,0 +1,6 @@
+* UL-20261015-qzvs Proposed
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The status of a record written for the record keeper's agreement, before
+they have given it.

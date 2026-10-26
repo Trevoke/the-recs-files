@@ -1,7 +1,7 @@
 #+TITLE: Improving the skills' wording against an eval
 
 Established 2026-10-25 and 2026-10-26 on the `citing-records` branch, working
-towards `F-12: The agent cites a record to the record keeper in its title's exact words`.
+towards `F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words`.
 Every run is Claude Sonnet (`claude-sonnet-5-5`) in Claude Code print mode,
 inside bubblewrap, on a subscription token, through `evals/providers/claude.js`.
 Sources: the runs below, and the papers and tools named under each heading.
@@ -65,7 +65,7 @@ left to the proposer's instructions and to the record keeper's review.
   a complaint). Two are held out (counting renewals, releasing a held copy);
   the proposer never sees them.
 - Score :: `npm run score:citations` (`evals/scripts/score-citations.mjs`).
-  Each reply's score is the sum of its faults under the four F-12 checks
+  Each reply's score is the sum of its faults under the four F-20261024-5tt7 checks
   divided by its citations; a wording's score is the mean over replies, with
   its standard error. Lower is better.
 - Each attempt :: the proposer (a Fable subagent) gets the house rules, the
@@ -161,7 +161,7 @@ and wrote no file. The text said "Make no record change on your own" and
 "Records change only at the record keeper's direction", and defined no
 proposal, so writing a Proposed record read as the change that waits for
 agreement. `67f3c8e` states what a proposal is, in the order of
-`UW-1: Create a record` steps 3–6, and passed 11 of 12, all 12 writing the
+`UW-20261014-8c8f: Create a record` steps 3–6, and passed 11 of 12, all 12 writing the
 proposal first; the one failure missed the vision's falsified sentence, as
 `b74ffd3` also did. Which part of the citation work raised the failures was
 not isolated. Then the other four cases passed 3 of 3 each.

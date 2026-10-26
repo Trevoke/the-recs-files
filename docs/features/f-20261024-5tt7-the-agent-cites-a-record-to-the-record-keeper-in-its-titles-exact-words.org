@@ -1,0 +1,17 @@
+* F-20261024-5tt7 The agent cites a record to the record keeper in its title's exact words
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When the agent cites a record to the record keeper, the agent shall give
+   the record's identifier and its title as the record's heading carries it.
+2. Where a citation to the record keeper names a section, the agent shall
+   name one section in it, after the identifier and before the title.
+   - The one where the agent cites the fourth requirement of F-20261015-egtj as
+     `F-20261015-egtj §4: A sweep repoints or removes citations, and leaves plans as written`.
+   - The one where the agent cites the second and third requirements of F-20261015-egtj
+     as two citations, `F-20261015-egtj §2: A sweep repoints or removes citations, and leaves plans as written`
+     and `F-20261015-egtj §3: A sweep repoints or removes citations, and leaves plans as written`.
+3. The agent shall set each citation it gives the record keeper in
+   backticks.
+4. The agent shall write each citation it gives the record keeper with no
+   line break inside it.

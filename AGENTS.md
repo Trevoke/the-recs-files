@@ -159,7 +159,7 @@ marks it Accepted, moves its line out from under `* Proposed` and writes the
 replacements, in a commit of its own.
 
 A record change is committed on its own, and a proposal in a commit before the
-one that accepts or rejects it (`ADR-1: A record change is one commit of its
+one that accepts or rejects it (`ADR-20261015-70tz: A record change is one commit of its
 own`).
 
 ## A feature record's form

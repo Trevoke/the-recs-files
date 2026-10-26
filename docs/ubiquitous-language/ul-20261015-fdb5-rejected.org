@@ -1,0 +1,6 @@
+* UL-20261015-fdb5 Rejected
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The status of a proposed record the record keeper declined. Its text
+stands as written and its identifier stays taken.

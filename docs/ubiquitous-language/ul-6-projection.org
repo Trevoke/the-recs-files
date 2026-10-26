@@ -1,6 +1,0 @@
-* UL-6 Projection
-:PROPERTIES:
-:STATUS: Accepted
-:END:
-The listing of every standing or proposed record in one category, in
-identifier order, named after the category.

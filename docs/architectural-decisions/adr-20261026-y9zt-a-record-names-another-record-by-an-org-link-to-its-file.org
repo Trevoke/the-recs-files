@@ -1,0 +1,24 @@
+* ADR-20261026-y9zt A record names another record by an org link to its file
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+A record names other records: a successor the records it supersedes, a
+workflow's extension the workflow it goes to, a decision the decisions it
+rests on. Written as plain text, a name wrapped across two lines is found by
+no search for it, and several names on one property line have nothing to
+part them: a title holds commas, and a section map semicolons. An org link
+ends where its brackets close, and opens the file it names.
+** Decision
+We will name a record, wherever another record names it, by an org link to
+its file, relative to the naming record's file, the link's description its
+identifier, the section where one is meant, and its title, as a citation
+carries them:
+[[./adr-20261015-nz3v-a-changed-decision-is-a-new-record-that-supersedes-the-old.org][ADR-20261015-nz3v: A changed decision is a new record that supersedes the old]]
+** Consequences
+A successor's =:SUPERSEDES:= holds one link for each record it supersedes,
+a comma and a space between links, on one line, and a superseded record's =:STATUS:=
+names its successor by a link. A clarification that gives a record a new
+title renames its file, and every link to it changes with its citations. A
+sweep of a withdrawn record's identifier finds the links to it as it finds
+its citations. A projection keeps its own line form.

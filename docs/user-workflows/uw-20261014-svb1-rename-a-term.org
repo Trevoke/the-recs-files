@@ -1,0 +1,34 @@
+* UW-20261014-svb1 Rename a term
+:PROPERTIES:
+:STATUS: Accepted
+:ACTOR: Record keeper
+:SCOPE: The recs files
+:LEVEL: User goal
+:END:
+** Trigger
+The record keeper decides that a term is to be spelled differently, its
+meaning kept.
+** Minimal guarantee
+Nothing stands before the record keeper agrees to it.
+** Success guarantee
+The new spelling stands wherever the old one stood, except in superseded
+and retired records and in plans, which stay as written.
+** Main success scenario
+*** 1. Record keeper tells the agent the term and its new spelling
+*** 2. Agent checks the new spelling against the terms the ubiquitous language already defines
+*** 3. Agent finds every occurrence of the term, its stem and its synonyms, and counts them
+*** 4. Agent shows the record keeper the count and each sentence with its replacement
+*** 5. Record keeper agrees
+*** 6. Agent replaces every occurrence in one pass, and counts again
+** Extensions
+*** 2a. The new spelling is a term the ubiquitous language already defines
+**** 2a1. Agent names that term and proposes other candidates
+**** 2a2. Record keeper agrees to one; continue at 3
+*** 3a. Other words name the same concept as the term
+**** 3a1. Agent shows each with its occurrences; the record keeper decides which are the same concept, and those are renamed with it
+*** 4a. Record keeper rewords a replacement
+**** 4a1. Agent redrafts; back to 4
+*** 4b. Record keeper declines
+**** 4b1. Nothing is written; the use case ends
+*** 6a. The count finds an occurrence not shown at 4
+**** 6a1. Agent shows it to the record keeper; back to 5

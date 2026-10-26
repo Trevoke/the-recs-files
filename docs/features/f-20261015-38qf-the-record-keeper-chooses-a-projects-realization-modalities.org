@@ -1,0 +1,11 @@
+* F-20261015-38qf The record keeper chooses a project's realization modalities
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. If a project's AGENTS.md names no realization modality, then the agent
+   shall ask the record keeper to choose one before working on the
+   realization.
+2. When the record keeper chooses a realization modality, the agent shall
+   name it in the project's AGENTS.md.
+3. The agent shall work on a realization only in a realization modality the
+   record keeper chose.

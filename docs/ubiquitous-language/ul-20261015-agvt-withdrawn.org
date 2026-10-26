@@ -1,0 +1,5 @@
+* UL-20261015-agvt Withdrawn
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+An accepted record that no longer holds.

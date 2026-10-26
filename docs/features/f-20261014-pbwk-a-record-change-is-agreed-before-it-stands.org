@@ -1,0 +1,16 @@
+* F-20261014-pbwk A record change is agreed before it stands
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. The agent shall let no record change stand before the record keeper
+   agrees to it.
+2. The agent shall base no decision on a proposed or rejected record.
+3. When the agent shows a record change, the agent shall show its draft
+   and every falsified sentence with its replacement, together.
+4. If the record keeper rewords a draft, then the agent shall redraft it
+   and show it again.
+5. If the record keeper declines a record change, then the agent shall
+   mark any record proposed for it rejected, and write nothing else of it.
+6. If writing a record change turns up a falsified sentence that was not
+   shown, then the agent shall show it to the record keeper before going
+   on.

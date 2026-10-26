@@ -1,0 +1,18 @@
+* ADR-20261019-m123 The code realization skills are a prototype adapted from superpowers
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+Realizing a project's records in code needed a flow from brainstorming to a
+checked realization before the records said how that flow should go.
+superpowers (Jesse Vincent, MIT) had one.
+** Decision
+We will realize records in code with skills adapted from superpowers, as a
+prototype: brainstorming, writing plans, executing plans, subagent-driven
+development, test-driven development, systematic debugging, requesting and
+receiving code review, verification before completion, git worktrees, and
+finishing a development branch.
+** Consequences
+Each prototype skill serves the steps of a user workflow it serves; how it
+serves them stands in no record, and changes without a record change. A part
+of the prototype that must hold is raised as a record change.

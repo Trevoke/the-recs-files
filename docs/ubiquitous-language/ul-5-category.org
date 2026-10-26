@@ -1,6 +1,0 @@
-* UL-5 Category
-:PROPERTIES:
-:STATUS: Accepted
-:END:
-The kind a record is. It gives the record its form and the prefix of its
-identifier.
