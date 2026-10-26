@@ -101,3 +101,4 @@ score above 1 means some citations fail more than one check.
 * Attempts
 | # | Commit | Change | Train score | Verdict |
 |---+--------+--------+-------------+---------|
+| 1 | 37725cc | Bring back `b95850e`: a citation is the record's name, one Good example per shape | 0.20 ± 0.07 (from 0.75 ± 0.08) | Kept |
