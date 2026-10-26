@@ -96,7 +96,7 @@ the user. The plan does not proceed around it.
 
 ### 3. Reading List
 
-The records this plan is built against, in reading order, each cited by number and title — never a bare number.
+The records this plan is built against, in reading order, each cited by identifier and title — never a bare identifier.
 
 ```markdown
 ## Reading List
@@ -128,7 +128,7 @@ If no task touches cataloged text, the section says so in one line — its prese
 
 ## Task Structure
 
-Every task names the records it implements, by number and title. A task that builds surface names its feature.
+Every task names the records it implements, by identifier and title. A task that builds surface names its feature.
 
 ```markdown
 ### Task N: [Component Name]
@@ -199,7 +199,7 @@ For a task on cataloged text, Step 1's test asserts the catalog record's exact c
 - Claims about existing code are checked against it, never predicted
 - What comes later stays in the plan; the code it specifies never forecasts
 - Exact commands with expected output (pytest, cargo test, npm test, raco test — whatever the project uses)
-- Every task cites its records by number and title
+- Every task cites its records by identifier and title
 - The project's words, exactly; coin nothing
 - A record that disagrees with the plan stops the plan
 - Surface with no feature record stops the plan

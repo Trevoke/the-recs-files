@@ -154,7 +154,7 @@ The discipline is ecosystem-plural. The same RED in Racket, with rackunit — an
 
 **Requirements:**
 - One behavior
-- Clear name: describes system behavior ("rejects an empty email"), never implementation, and never a record number alone
+- Clear name: describes system behavior ("rejects an empty email"), never implementation, and never a record identifier alone
 - Where the test exists to hold a record's promise, the record id goes in parens at the end: "rejects an empty email (MSG-3)", "refunds the full price inside the return window (MSG-4)"
 - Real code (no mocks unless unavoidable)
 
@@ -259,7 +259,7 @@ Next failing test for next feature.
 |---------|------|-----|
 | **Minimal** | One thing. "and" in name? Split it. | `test('validates email and domain and whitespace')` |
 | **Clear** | Name describes system behavior: "rejects an empty email" | `test('test1')`, `test('checkEmailImpl')` |
-| **Cites its record** | Record id in parens at the end, where the test holds a record's promise: "rejects an empty email (MSG-3)", "refunds the full price inside the return window (MSG-4)" | A record number as the whole name: `test('MSG-3')` — the behavior vanished |
+| **Cites its record** | Record id in parens at the end, where the test holds a record's promise: "rejects an empty email (MSG-3)", "refunds the full price inside the return window (MSG-4)" | A record identifier as the whole name: `test('MSG-3')` — the behavior vanished |
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
 Section-header comments inside a test file may cite the records or workflow steps the file walks — a comment names the record, the test names the behavior.
