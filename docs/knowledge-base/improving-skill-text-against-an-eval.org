@@ -72,9 +72,12 @@ left to the proposer's instructions and to the record keeper's review.
   current wording, the failing citations from the training questions, and
   the log of attempts. It makes one change across the skills, the seed and
   both AGENTS.md copies, and commits it. The commit is scored on the training
-  questions, three runs each. It is kept if it beats the current best by more
-  than twice their combined standard error (`--against`); otherwise it is
-  reset.
+  questions, three runs each, and compared with the current best question by
+  question (`--against`): the gap is the mean over questions of the
+  difference in their means, and the margin twice its standard error. It is
+  kept if the gap exceeds the margin. Where the gap is positive and within
+  the margin, both wordings run each question three times more and are judged
+  on the pooled replies (`--pool`). Otherwise it is reverted.
 - Stop :: after three discards in a row, or ten attempts.
 - Final check :: the winner and the original wording, six runs of each held-out
   question. Then the record keeper reviews the diff.
@@ -102,3 +105,17 @@ score above 1 means some citations fail more than one check.
 | # | Commit | Change | Train score | Verdict |
 |---+--------+--------+-------------+---------|
 | 1 | 37725cc | Bring back `b95850e`: a citation is the record's name, one Good example per shape | 0.20 ± 0.07 (from 0.75 ± 0.08) | Kept |
+| 2 | 608e193 | What the agent says while it works reaches the record keeper, and cites the same way | 0.11 ± 0.03 over 24 replies (current best 0.23 ± 0.05 over 24) | Kept |
+
+* Comparing two wordings question by question
+The first rule compared the two wordings' means over all their replies,
+against twice their combined standard error. On attempt 2, with 24 replies
+each, it gave a gap of 0.1257 against a margin of 0.1259, while attempt 2
+scored better on every question (0.036 against 0.085, 0.33 against 0.61,
+0.054 against 0.19, 0 against 0.04). Pooling over questions counts the
+spread between questions as noise: auditing the code always scores far
+above the other three. Compared question by question, as
+https://www.anthropic.com/research/statistical-approach-to-model-evals
+recommends for paired items, the margin was 0.067. The record keeper chose
+this comparison on 2026-10-26, from attempt 2 on. It was chosen after it
+would change attempt 2's verdict; the held-out check guards the result.
