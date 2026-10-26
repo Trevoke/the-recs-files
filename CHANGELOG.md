@@ -24,6 +24,13 @@
   (`ADR-20261015-0v6s: Records are written in org`).
 - A new eval case, `superseding-two-features`, and checks on every case that
   writes records: org lines whole, records named by links, links resolving.
+- A new record's identifier is its category's prefix, the UTC date it was
+  drafted and four random Crockford base32 characters, `ADR-20261026-kzx5`,
+  drawn by a command in a POSIX shell or PowerShell
+  (`ADR-20261026-77gd: Identify a record by the date it was drafted and four random characters`,
+  `F-20261026-tacr: A record is written with its identifier and its line in its projection`).
+  A project's numbered records keep their numbers, and the checks read both
+  forms. This project's own records are re-identified.
 
 ### Eval results
 
@@ -32,7 +39,8 @@ Claude Code, Claude Sonnet 5.5, with the skills installed.
 | Case | Runs passing |
 |---|---|
 | citing-records-to-the-record-keeper, held-out questions | 7/12 (0/12 before), 0.12 faults per citation (0.78 before) |
-| proposing-a-record | 12/12; with the org-line examples 6/6 |
+| proposing-a-record | 12/12; with the org-line examples 6/6; with the dated identifier 3/3 (0/3 before, each drafting `ADR-4`), every run drawing it by command |
+| superseding-two-features, rejecting-a-proposed-record, with the dated identifier | 2/2 each |
 | superseding-two-features | 6/6 |
 | rejecting-a-proposed-record | 3/3 |
 | choosing-a-realization-modality | 3/3 |
