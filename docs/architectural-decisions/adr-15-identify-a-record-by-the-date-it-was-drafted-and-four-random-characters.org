@@ -1,0 +1,27 @@
+* ADR-15 Identify a record by the date it was drafted and four random characters
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+** Context
+A record's
+[[../ubiquitous-language/ul-25-identifier.org][UL-25: Identifier]]
+was the next number its category had not used, which only someone who
+sees every record of the category can know. Two branches drafting at once
+take the same number, and records carried into another project take
+numbers that project already uses. An agent asked for random characters
+repeats itself.
+** Decision
+We will give each record the identifier =<PREFIX>-<YYYYMMDD>-<xxxx>=: its
+category's prefix, the UTC date it was drafted, and four characters of
+lowercase Crockford base32, =0123456789abcdefghjkmnpqrstvwxyz=, drawn by a
+command the agent runs. A record's file is named by its lowercased
+identifier, a hyphen and its slug.
+** Consequences
+A projection in identifier order lists its records by the date they were
+drafted, and those of one day in the order of their characters. Two
+records of one category drafted on one day share an identifier once in
+1,048,576 draws, and a draw that names an existing record file is drawn
+again. This project's numbered records are re-identified, each dated by
+the commit that first added its file. A project that adopts the recs files
+keeps its numbered records until its record keeper directs otherwise, and
+the agent reads both forms.

@@ -12,3 +12,6 @@
 - ADR-10 :: [[./architectural-decisions/adr-10-render-each-harnesss-package-from-capability-markers-and-a-harness-profile.org][Render each harness's package from capability markers and a harness profile]]
 - ADR-11 :: [[./architectural-decisions/adr-11-keep-the-order-of-the-skills-in-a-skill-flow-beside-them.org][Keep the order of the skills in a skill flow beside them]]
 - ADR-14 :: [[./architectural-decisions/adr-14-a-record-names-another-record-by-an-org-link-to-its-file.org][A record names another record by an org link to its file]]
+
+* Proposed
+- ADR-15 :: [[./architectural-decisions/adr-15-identify-a-record-by-the-date-it-was-drafted-and-four-random-characters.org][Identify a record by the date it was drafted and four random characters]]
