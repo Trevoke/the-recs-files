@@ -1,6 +1,6 @@
 * ADR-15 Identify a record by the date it was drafted and four random characters
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A record's
@@ -24,4 +24,6 @@ records of one category drafted on one day share an identifier once in
 again. This project's numbered records are re-identified, each dated by
 the commit that first added its file. A project that adopts the recs files
 keeps its numbered records until its record keeper directs otherwise, and
-the agent reads both forms.
+the agent reads both forms. The identifier departs from Nygard's
+sequential numbering, and keeps his rule that a record's identity is
+never reused.

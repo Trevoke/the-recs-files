@@ -1,6 +1,6 @@
 * F-4 A record is written with its line in its projection
 :PROPERTIES:
-:STATUS: Accepted
+:STATUS: Superseded by [[./f-13-a-record-is-written-with-its-identifier-and-its-line-in-its-projection.org][F-13: A record is written with its identifier and its line in its projection]]
 :END:
 1. When the agent drafts a new record, the agent shall write it as
    proposed, in a file of its own, with its line under its projection's

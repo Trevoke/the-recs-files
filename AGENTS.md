@@ -16,7 +16,7 @@ record keeper's direction.
 
 This project keeps these projections.
 
-- **Vision** — `docs/vision.org`, a single file: no projection, no numbered records
+- **Vision** — `docs/vision.org`, a single file: no projection, no identifiers
 - **Ubiquitous language** (UL-n) — `docs/ubiquitous-language.org`
 - **Architectural decisions** (ADR-n) — `docs/architectural-decisions.org`
 - **Features** (F-n) — `docs/features.org`
@@ -85,10 +85,10 @@ X-1: The job notifies by message and keeps none
 ```
 
 A record lives in a file of its own under its category's directory —
-`docs/features/f-12-<slug>.org` — headed `* F-12 <title>`, the slug made from
+`docs/features/f-20261026-kzx5-<slug>.org` — headed `* F-20261026-kzx5 <title>`, the slug made from
 the title. The projection, `docs/features.org`, lists every standing or
-proposed record as `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in
-number order, beside the projection's preamble and any section that belongs to
+proposed record as `- F-20261026-kzx5 :: [[./features/f-20261026-kzx5-<slug>.org][<title>]]`,
+in identifier order, beside the projection's preamble and any section that belongs to
 the projection rather than to one record. A record's status, and the records a
 successor supersedes, are properties in its drawer, `:STATUS:` and
 `:SUPERSEDES:`. A proposed record's line sits under a `* Proposed` heading at the
@@ -99,7 +99,7 @@ title changes all three.
 A heading, a property, a projection line, a table row and a `#+` keyword line
 are each written on one line, however long it runs; prose may wrap. A record's
 drawer holds each property once. A record names another record by an org link
-to its file, its description the number and title, and the link sits whole on
+to its file, its description the identifier and title, and the link sits whole on
 one line.
 
 Good:
@@ -297,13 +297,13 @@ Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, cite the records.
 
-A citation is a record's number, one section of it where a section is meant, and
+A citation is a record's identifier, one section of it where a section is meant, and
 its title as the record's heading carries it, in that order, in backticks, on
 one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`. To
-the record keeper, the number and the record's title together are the record,
+the record keeper, the identifier and the record's title together are the record,
 and nothing shorter is: the record keeper picks each citation out of your reply
 by this form, and `X-8` or `X-8 §2` on its own reaches them as no record at all.
-So the number and title are written whole every time the record comes up, not
+So the identifier and title are written whole every time the record comes up, not
 only the first time, and in every sentence that handles it: one that names the
 record itself, one that names a section of it, one that says what a comment in
 code cites, one that maps a record's sections to its successor's, and one that
@@ -311,7 +311,7 @@ quotes a requirement whose text carries a citation. Two sections are two
 citations, and a map of sections is written in sentences, one whole citation to
 a section. Everything you say reaches the record keeper, what you say while you
 work included: a record you are about to open, or have just opened, is cited the
-same way, by the number and title its projection line carries.
+same way, by the identifier and title its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
@@ -326,10 +326,10 @@ Bad: "I'll open X-8, X-9 and the terms X-8 uses"
 ## Framing a question
 
 Every question to the record keeper is framed from the records, and starts from the user
-workflow the work is in. Name that workflow by number and title, and the step or
+workflow the work is in. Name that workflow by identifier and title, and the step or
 extension of it that applies. Then bring in whatever else bears — a feature, an
 architectural decision, a message catalog entry, a ubiquitous language term —
-each by number and title. Then state the situation, and only then the problem.
+each by identifier and title. Then state the situation, and only then the problem.
 
 ```
 We are working on `UW-X: Frobnicate the widget`.
@@ -364,7 +364,7 @@ candidate against words the taxonomy already owns.
 # How to work on the realization
 
 Two kinds of comment are valid in code, and no third. One points at a record,
-by number and title. The other points at a heading of `docs/knowledge-base/`,
+by identifier and title. The other points at a heading of `docs/knowledge-base/`,
 where the code performs a technical operation whose reason the code does not
 show.
 

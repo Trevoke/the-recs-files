@@ -3,7 +3,6 @@
 - F-1 :: [[./features/f-1-a-record-is-placed-in-one-category.org][A record is placed in one category]]
 - F-2 :: [[./features/f-2-a-record-change-is-agreed-before-it-stands.org][A record change is agreed before it stands]]
 - F-3 :: [[./features/f-3-falsified-sentences-are-found-with-their-replacements.org][Falsified sentences are found with their replacements]]
-- F-4 :: [[./features/f-4-a-record-is-written-with-its-line-in-its-projection.org][A record is written with its line in its projection]]
 - F-5 :: [[./features/f-5-a-superseded-record-names-its-successor.org][A superseded record names its successor]]
 - F-6 :: [[./features/f-6-a-retired-record-gives-its-reason.org][A retired record gives its reason]]
 - F-7 :: [[./features/f-7-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][A sweep repoints or removes citations, and leaves plans as written]]
@@ -12,6 +11,4 @@
 - F-10 :: [[./features/f-10-every-occurrence-of-a-term-is-counted-and-given-a-verdict.org][Every occurrence of a term is counted and given a verdict]]
 - F-11 :: [[./features/f-11-the-record-keeper-chooses-a-projects-realization-modalities.org][The record keeper chooses a project's realization modalities]]
 - F-12 :: [[./features/f-12-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words.org][The agent cites a record to the record keeper in its title's exact words]]
-
-* Proposed
 - F-13 :: [[./features/f-13-a-record-is-written-with-its-identifier-and-its-line-in-its-projection.org][A record is written with its identifier and its line in its projection]]

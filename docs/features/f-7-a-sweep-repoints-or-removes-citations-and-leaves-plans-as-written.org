@@ -14,5 +14,5 @@
    the new title into every citation of the record outside a plan.
 5. The agent shall change no word and no citation in a plan.
 6. When the agent has written a sweep, the agent shall search again for the
-   record's number, and show the record keeper any citation that remains
+   record's identifier, and show the record keeper any citation that remains
    outside a plan.

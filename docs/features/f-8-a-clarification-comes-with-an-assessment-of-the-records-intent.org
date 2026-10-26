@@ -14,5 +14,5 @@
    record keeper.
 5. If the record keeper decides the intent changes, then the agent shall
    propose superseding the record.
-6. When a clarification is agreed, the agent shall keep the record's number
-   and status.
+6. When a clarification is agreed, the agent shall keep the record's
+   identifier and status.

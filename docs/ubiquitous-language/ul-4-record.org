@@ -2,5 +2,5 @@
 :PROPERTIES:
 :STATUS: Accepted
 :END:
-A short, numbered statement of one truth about a system, with a title that
-states its substance. Every record belongs to one category.
+A short statement of one truth about a system, with an identifier and a
+title that states its substance. Every record belongs to one category.

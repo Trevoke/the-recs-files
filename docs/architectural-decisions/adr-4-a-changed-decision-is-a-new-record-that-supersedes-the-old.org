@@ -11,7 +11,7 @@ Nygard's records are never edited; a superseded one stays, and points at
 its successor.
 ** Decision
 We will make every change to what a record decides as a new record that
-supersedes the old, and never reuse a record's number. We will edit a
+supersedes the old, and never reuse a record's identifier. We will edit a
 record in place only as a clarification, when the record keeper decides
 that its intent is kept.
 ** Consequences

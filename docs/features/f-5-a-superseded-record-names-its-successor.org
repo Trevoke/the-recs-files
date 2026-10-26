@@ -3,9 +3,9 @@
 :STATUS: Accepted
 :END:
 1. When a supersede is agreed, the agent shall set the old record's status
-   to name its successor by number and title.
+   to name its successor by identifier and title.
 2. When the agent drafts a successor, the agent shall name, in its
-   :SUPERSEDES: property, every record it supersedes by number and title.
+   :SUPERSEDES: property, every record it supersedes by identifier and title.
 3. Where the superseded record numbers its sections, the agent shall map,
    in the successor, each old section to the successor's sections that
    carry it, or to none.

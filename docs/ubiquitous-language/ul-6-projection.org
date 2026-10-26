@@ -3,4 +3,4 @@
 :STATUS: Accepted
 :END:
 The listing of every standing or proposed record in one category, in
-number order, named after the category.
+identifier order, named after the category.

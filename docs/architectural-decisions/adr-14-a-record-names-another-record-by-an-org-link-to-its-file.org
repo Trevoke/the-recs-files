@@ -12,7 +12,7 @@ ends where its brackets close, and opens the file it names.
 ** Decision
 We will name a record, wherever another record names it, by an org link to
 its file, relative to the naming record's file, the link's description its
-number, the section where one is meant, and its title, as a citation
+identifier, the section where one is meant, and its title, as a citation
 carries them:
 [[./adr-4-a-changed-decision-is-a-new-record-that-supersedes-the-old.org][ADR-4: A changed decision is a new record that supersedes the old]]
 ** Consequences

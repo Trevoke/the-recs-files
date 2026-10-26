@@ -3,9 +3,9 @@
 :STATUS: Accepted
 :END:
 1. When the agent cites a record to the record keeper, the agent shall give
-   the record's number and its title as the record's heading carries it.
+   the record's identifier and its title as the record's heading carries it.
 2. Where a citation to the record keeper names a section, the agent shall
-   name one section in it, after the number and before the title.
+   name one section in it, after the identifier and before the title.
    - The one where the agent cites the fourth requirement of F-7 as
      `F-7 §4: A sweep repoints or removes citations, and leaves plans as written`.
    - The one where the agent cites the second and third requirements of F-7
