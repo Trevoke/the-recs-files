@@ -5,7 +5,8 @@
   "scripts": {
     "eval": "PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS=3600000 promptfoo eval --no-cache",
     "eval:claude-code": "PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS=3600000 promptfoo eval --no-cache --filter-providers claude-code",
-    "view": "promptfoo view"
+    "view": "promptfoo view",
+    "score:citations": "node scripts/score-citations.mjs"
   },
   "devDependencies": {
     "@earendil-works/pi-coding-agent": "0.87.1",
