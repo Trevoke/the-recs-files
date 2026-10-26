@@ -8,7 +8,7 @@ const evalsDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const checks = ['exact titles', 'section before title', 'in backticks', 'one line'];
 
 function options(argv) {
-  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null };
+  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null };
   for (let i = 0; i < argv.length; i += 2) {
     const key = argv[i].replace(/^--/, '');
     if (!(key in opts)) throw new Error(`unknown option --${key}`);
@@ -90,17 +90,50 @@ function summary(replies, opts) {
   };
 }
 
+function variance(xs) {
+  if (xs.length < 2) return 0;
+  const m = mean(xs);
+  return xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1);
+}
+
+function byScenario(replies) {
+  const scenarios = {};
+  for (const r of replies) if (r.error === undefined) (scenarios[r.scenario] ||= []).push(r.score);
+  return scenarios;
+}
+
 function verdict(candidate, incumbent) {
-  const gap = incumbent.score - candidate.score;
-  const margin = 2 * Math.sqrt(candidate.standardError ** 2 + incumbent.standardError ** 2);
-  return { gap, margin, keep: gap > margin };
+  const ours = byScenario(candidate.detail);
+  const theirs = byScenario(incumbent.detail);
+  const shared = Object.keys(ours).filter((s) => theirs[s]?.length && ours[s].length);
+  if (shared.length === 0) throw new Error('the two scores share no question');
+  let gap = 0;
+  let spread = 0;
+  for (const s of shared) {
+    gap += (mean(theirs[s]) - mean(ours[s])) / shared.length;
+    spread += (variance(theirs[s]) / theirs[s].length + variance(ours[s]) / ours[s].length) / shared.length ** 2;
+  }
+  const margin = 2 * Math.sqrt(spread);
+  return { gap, margin, keep: gap > margin, questions: shared.length };
+}
+
+function pooled(files) {
+  const scores = files.split(',').map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+  return { split: scores[0].split, detail: scores.flatMap((s) => s.detail) };
 }
 
 const opts = options(process.argv.slice(2));
-const raw = opts.from || run(opts);
-const results = JSON.parse(fs.readFileSync(raw, 'utf8')).results.results;
-const scored = summary(results.map(reply), opts);
-if (opts.against) scored.verdict = verdict(scored, JSON.parse(fs.readFileSync(opts.against, 'utf8')));
+let replies;
+if (opts.pool) {
+  const merged = pooled(opts.pool);
+  opts.split = merged.split;
+  replies = merged.detail;
+} else {
+  const raw = opts.from || run(opts);
+  replies = JSON.parse(fs.readFileSync(raw, 'utf8')).results.results.map(reply);
+}
+const scored = summary(replies, opts);
+if (opts.against) scored.verdict = verdict(scored, pooled(opts.against));
 if (opts.out) fs.writeFileSync(opts.out, JSON.stringify(scored, null, 2));
 if (opts.log) {
   const fresh = !fs.existsSync(opts.log);
