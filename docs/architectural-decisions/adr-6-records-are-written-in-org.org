@@ -18,4 +18,7 @@ under its step. Timestamps, footnotes and dynamic blocks are there in the
 same syntax when the records need them. A project that adopts the recs
 files writes its records in org too. The skills stay in markdown, which
 the skill format requires. Views that render only markdown show org less
-well.
+well. Org ends a heading, a property, a table row and a keyword line at the
+end of the line, and breaks a link's target at a line break, so each is
+written on one line however long it runs. A drawer holds a property once:
+org reads only the last of a repeated property.
