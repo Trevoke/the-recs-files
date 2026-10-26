@@ -1,0 +1,103 @@
+#+TITLE: Improving the skills' wording against an eval
+
+Established 2026-10-25 and 2026-10-26 on the `citing-records` branch, working
+towards `F-12: The agent cites a record to the record keeper in its title's exact words`.
+Every run is Claude Sonnet (`claude-sonnet-5-5`) in Claude Code print mode,
+inside bubblewrap, on a subscription token, through `evals/providers/claude.js`.
+Sources: the runs below, and the papers and tools named under each heading.
+
+* Three runs of a wording cannot tell one wording from another
+The original wording, run 20 times on the question in
+`evals/cases/citing-records-to-the-record-keeper/prompts/renewing-a-reserved-book.md`,
+left 10 to 30 citations per reply without their title: mean 15.6, standard
+deviation 4.5. No reply passed.
+
+Six rounds of hand editing, three runs each, gave:
+
+| Wording                                    | Runs passing | Citations without their title, per reply |
+|--------------------------------------------+--------------+------------------------------------------|
+| Original                                   | 0 of 6       | 10–19                                    |
+| Rules and a Good/Bad list, rounds 2–4      | 0–1 of 6     | 1–6                                      |
+| A citation is the record's name, pass 1    | 0 of 6       | 3–11                                     |
+| The same, with one example per shape       | 1 of 6       | 0–4                                      |
+
+The spread within a wording was as wide as the spread between wordings from
+round 2 on, so these rounds could not be ranked. The wordings are in the
+branch's history: rounds 2–4 end at `fa9c2d1`, the two later passes at
+`b95850e`.
+
+* Where the agent shortens a citation
+Across every wording tried, a citation lost its title in the same few
+sentences:
+- describing code: "`src/loans.py` implements `F-1 §1` and `F-1 §2` only";
+- mapping sections to a successor's: "Its status maps `F-1 §1` and `F-1 §3` to carried-over sections";
+- naming the record as a thing, late in the reply: "`F-1` gets a successor", "`F-2` and `ADR-1` stay as they are";
+- quoting a requirement whose text carries a citation, shortening the citation inside the quote.
+The agent gives the first citation of each record whole. A rule that says
+"every time" lowers the count without removing it. Examples shaped like the
+failing sentence lowered it further than prohibitions did.
+
+* What the sources say about improving text against an eval
+- A keep-if-better loop: one change at a time, kept when the score improves
+  and reset otherwise, with a log of each attempt. Karpathy's autoresearch
+  (https://github.com/karpathy/autoresearch, its `program.md`) runs one on a
+  single score with no repeats. It cites no paper.
+- The proposer does better when it sees why a run failed, not only its
+  score. GEPA (https://arxiv.org/abs/2507.19457) gives its reflecting model
+  the failing output and keeps a candidate only if it beats its parent on a
+  small batch first.
+- Selecting on the questions the wording was tuned against overfits.
+  Optimisers hold a set out and pick the final wording on it: OPRO
+  (https://arxiv.org/abs/2309.03409), Anthropic's `skill-creator`
+  (`scripts/run_loop.py`, a 60/40 split, chosen by test score).
+- A difference between two wordings counts when it exceeds the noise:
+  repeat each question, and compare the means against their standard errors
+  (https://www.anthropic.com/research/statistical-approach-to-model-evals).
+- For a rule about the shape of output, a template shapes it better than a
+  prohibition (obra/superpowers, `writing-skills`).
+No tool found keeps the edited text readable or in a house style. That is
+left to the proposer's instructions and to the record keeper's review.
+
+* The loop in use from 2026-10-26
+- Questions :: six on the library-loans fixture,
+  `evals/cases/citing-records-to-the-record-keeper/prompts/`. Four train
+  (renewing a reserved book, auditing the code, mapping a successor, framing
+  a complaint). Two are held out (counting renewals, releasing a held copy);
+  the proposer never sees them.
+- Score :: `npm run score:citations` (`evals/scripts/score-citations.mjs`).
+  Each reply's score is the sum of its faults under the four F-12 checks
+  divided by its citations; a wording's score is the mean over replies, with
+  its standard error. Lower is better.
+- Each attempt :: the proposer (a Fable subagent) gets the house rules, the
+  current wording, the failing citations from the training questions, and
+  the log of attempts. It makes one change across the skills, the seed and
+  both AGENTS.md copies, and commits it. The commit is scored on the training
+  questions, three runs each. It is kept if it beats the current best by more
+  than twice their combined standard error (`--against`); otherwise it is
+  reset.
+- Stop :: after three discards in a row, or ten attempts.
+- Final check :: the winner and the original wording, six runs of each held-out
+  question. Then the record keeper reviews the diff.
+- Only the with-skills arm runs: no skill loaded in any run of this case, so
+  the without-skills arm repeats the with-skills arm at twice the cost.
+
+* The original wording's score on the six questions
+Commit `ec7dd99`, three runs of each question, with skills:
+
+| Question                 | Split    | Faults per citation |
+|--------------------------+----------+---------------------|
+| Renewing a reserved book | train    |                0.67 |
+| Auditing the code        | train    |                1.08 |
+| Mapping a successor      | train    |                0.59 |
+| Framing a complaint      | train    |                0.64 |
+| Counting renewals        | held out |                0.41 |
+| Releasing a held copy    | held out |                0.85 |
+| All six                  |          |         0.71 ± 0.06 |
+
+Across the 18 replies: 230 citations without their title, 50 out of
+backticks, 10 with a section out of place, none broken across a line. A
+score above 1 means some citations fail more than one check.
+
+* Attempts
+| # | Commit | Change | Train score | Verdict |
+|---+--------+--------+-------------+---------|
