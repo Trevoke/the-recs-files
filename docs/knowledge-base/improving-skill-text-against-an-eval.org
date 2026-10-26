@@ -165,3 +165,13 @@ agreement. `67f3c8e` states what a proposal is, in the order of
 proposal first; the one failure missed the vision's falsified sentence, as
 `b74ffd3` also did. Which part of the citation work raised the failures was
 not isolated. Then the other four cases passed 3 of 3 each.
+
+* The final text, after the review's fixes
+`6b86562` rewords the citation paragraph around "title", adds the Proposed
+record's paragraph, and moves the new-term check before the draft is
+written. Run on HEAD, with skills: the held-out questions scored
+0.12 ± 0.05 faults per citation (counting renewals 0.15, releasing a held
+copy 0.08), 7 of 12 replies passing, all 22 faults a citation without its
+title; against the original, the gap is 0.66 and the margin 0.18. Against
+the winner's 0.06 ± 0.04 at `dbe5d3e` the difference is within the noise.
+`proposing-a-record` passed 12 of 12.

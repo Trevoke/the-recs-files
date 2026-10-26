@@ -21,8 +21,8 @@ Claude Code, Claude Sonnet 5.5, with the skills installed.
 
 | Case | Runs passing |
 |---|---|
-| citing-records-to-the-record-keeper, held-out questions | 9/12 (0/12 before), 0.06 faults per citation (0.78 before) |
-| proposing-a-record | 11/12 |
+| citing-records-to-the-record-keeper, held-out questions | 7/12 (0/12 before), 0.12 faults per citation (0.78 before) |
+| proposing-a-record | 12/12 |
 | rejecting-a-proposed-record | 3/3 |
 | choosing-a-realization-modality | 3/3 |
 | planning-without-a-realization-modality | 3/3 |
