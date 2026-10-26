@@ -107,10 +107,9 @@ tests:
       request: file://cases/proposing-a-record/prompt.md
     assert:
       # F-20261026-tacr §2: A record is written with its identifier and its line in its projection
-      # F-20261026-tacr §5: A record is written with its identifier and its line in its projection
       - type: javascript
-        metric: next unused number
-        value: file://checks/proposing-a-record.js:numberedFour
+        metric: identifier from the date and four characters
+        value: file://checks/proposing-a-record.js:identifierFromDateAndCharacters
       # F-20261026-tacr §1: A record is written with its identifier and its line in its projection
       # F-20261014-pbwk §1: A record change is agreed before it stands
       - type: javascript
