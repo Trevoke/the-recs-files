@@ -24,7 +24,7 @@ citation of it outside a plan carries its title.
 *** 2a. The edit gives the record a new title
 **** 2a1. Agent finds every citation of the record outside a plan, each with the new title in place of the old; continue at 3
 *** 4a. Record keeper decides the intent changes
-**** 4a1. Supersede a record (UW-2: Supersede a record); the use case ends
+**** 4a1. Supersede a record ([[./uw-2-supersede-a-record.org][UW-2: Supersede a record]]); the use case ends
 *** 4b. Record keeper rewords the draft
 **** 4b1. Agent redrafts; back to 3
 *** 4c. Record keeper declines

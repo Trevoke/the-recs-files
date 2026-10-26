@@ -25,7 +25,7 @@ occurrence stands.
 *** 8. Agent supersedes the term's record, writes every replacement in one pass, and counts again
 ** Extensions
 *** 1a. The meaning stays, and only the definition's wording falls short
-**** 1a1. Clarify a record (UW-4: Clarify a record); the use case ends
+**** 1a1. Clarify a record ([[./uw-4-clarify-a-record.org][UW-4: Clarify a record]]); the use case ends
 *** 6a. Record keeper rewords the successor, the rule or a verdict
 **** 6a1. Agent redrafts; back to 6
 *** 7a. Record keeper declines

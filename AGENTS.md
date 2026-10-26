@@ -144,10 +144,11 @@ stands in for When where the trigger is unwanted.
 Requirements are numbered from 1, and the number is the requirement's section:
 a citation of one requirement is `F-12 §2: A borrower can renew a loan`. A
 number is never reused within its record. A successor numbers its own
-requirements from 1, and its status maps each of the old record's sections to
-the successor's sections that carry it, or to none: "Supersedes F-12: A
-borrower can renew a loan (§1 → §1; §2 → §2, §3; §3 → none)". The sweep of the
-old identifier repoints each citation of a section of the old record by that map.
+requirements from 1, and its `:SUPERSEDES:` line maps each of the old record's
+sections to the successor's sections that carry it, or to none:
+`:SUPERSEDES: [[./f-12-a-borrower-can-renew-a-loan.org][F-12: A borrower can renew a loan]] (§1 → §1; §2 → §2, §3; §3 → none)`.
+The sweep of the old identifier repoints each citation of a section of the old
+record by that map.
 
 ```org
 * F-12 A borrower can renew a loan

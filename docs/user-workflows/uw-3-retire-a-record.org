@@ -22,7 +22,7 @@ citation of it outside a plan is removed.
 *** 5. Agent sets the record's status, removes its line from the projection and its citations, and writes the replacements
 ** Extensions
 *** 1a. Something replaces the record
-**** 1a1. Supersede a record (UW-2: Supersede a record); the use case ends
+**** 1a1. Supersede a record ([[./uw-2-supersede-a-record.org][UW-2: Supersede a record]]); the use case ends
 *** 3a. Record keeper rewords the reason or a replacement
 **** 3a1. Agent redrafts; back to 3
 *** 3b. Record keeper declines

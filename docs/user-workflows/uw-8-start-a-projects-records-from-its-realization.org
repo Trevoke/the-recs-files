@@ -17,9 +17,9 @@ projections and its realization modalities.
 ** Main success scenario
 *** 1. Record keeper asks the agent to start the project's records
 *** 2. Agent reads what the project holds: its AGENTS.md, docs, history and realization
-*** 3. Record keeper chooses the project's realization modalities (F-11: The record keeper chooses a project's realization modalities)
+*** 3. Record keeper chooses the project's realization modalities ([[../features/f-11-the-record-keeper-chooses-a-projects-realization-modalities.org][F-11: The record keeper chooses a project's realization modalities]])
 *** 4. Agent and record keeper name the domain, its bounded contexts, the core user workflow and the workflows in active development
-*** 5. Category by category, the agent shows titles, then bodies in batches, and each agreed batch is created (UW-1: Create a record)
+*** 5. Category by category, the agent shows titles, then bodies in batches, and each agreed batch is created ([[./uw-1-create-a-record.org][UW-1: Create a record]])
 *** 6. Agent drafts the project's AGENTS.md, naming its projections and realization modalities, and shows every line it adds, changes or removes
 *** 7. Record keeper agrees
 *** 8. Agent lists the changes to the realization that the records now call for

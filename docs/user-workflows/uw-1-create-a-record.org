@@ -22,7 +22,7 @@ projection, and every sentence it falsifies is replaced.
 *** 6. Agent marks the record accepted, moves its line out from under the projection's Proposed heading, and writes the replacements
 ** Extensions
 *** 2a. A standing record already decides it
-**** 2a1. Supersede a record (UW-2: Supersede a record); the use case ends
+**** 2a1. Supersede a record ([[./uw-2-supersede-a-record.org][UW-2: Supersede a record]]); the use case ends
 *** 2b. The placement tests do not settle the category
 **** 2b1. Agent shows what each test found, and the record keeper picks the category
 *** 3a. The record needs a term the ubiquitous language does not define

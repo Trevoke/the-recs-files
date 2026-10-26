@@ -22,7 +22,7 @@ the old record outside a plan points at the successor.
 ** Extensions
 *** 1a. Record keeper asks for an in-place edit instead
 **** 1a1. Agent assesses whether the record's intent is kept, and how it changes if not
-**** 1a2. Record keeper decides the intent is kept: Clarify a record (UW-4: Clarify a record); the use case ends
+**** 1a2. Record keeper decides the intent is kept: Clarify a record ([[./uw-4-clarify-a-record.org][UW-4: Clarify a record]]); the use case ends
 **** 1a3. Record keeper decides the intent changes; continue at 2
 *** 2a. The change falsifies only part of what the record decides
 **** 2a1. Agent drafts two successors, the half that holds carried over in its own words, and assigns each citation to the successor whose half it meant

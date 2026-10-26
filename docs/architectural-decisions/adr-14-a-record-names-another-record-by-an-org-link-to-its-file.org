@@ -1,6 +1,6 @@
 * ADR-14 A record names another record by an org link to its file
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 A record names other records: a successor the records it supersedes, a
