@@ -30,7 +30,7 @@ const context = {
   skills: ['recs-a', 'recs-b'],
 };
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('finds capability markers and their arguments', () => {
   assert.deepEqual(markers('x {{trf: load recs-b}} y {{trf:memory}}'), [
     { raw: '{{trf: load recs-b}}', keyword: 'load', args: ['recs-b'] },
@@ -38,7 +38,7 @@ test('finds capability markers and their arguments', () => {
   ]);
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('renders delegate, memory and load from the harness profile', () => {
   const { text, problems } = renderText(
     [
@@ -63,7 +63,7 @@ test('renders delegate, memory and load from the harness profile', () => {
   ].join('\n'));
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('refuses what it cannot render', () => {
   const { problems } = renderText(
     [
@@ -86,7 +86,7 @@ test('refuses what it cannot render', () => {
   assert.match(problems[5], /ask is not rendered by a capability marker/);
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('refuses a marker its harness profile or context cannot carry', () => {
   assert.match(renderText('{{trf: load}}', profile, context).problems[0], /load takes one skill/);
   const noLoad = structuredClone(profile);
@@ -101,7 +101,7 @@ test('refuses a marker its harness profile or context cannot carry', () => {
   assert.match(renderText('{{trf: delegate recs-code-reviewer brief}}', profile, noRoleFile).problems[0], /recs-code-reviewer needs a role file and none was given/);
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('a harness profile names every harness capability, with a status and its entries', () => {
   assert.deepEqual(checkProfile(profile), []);
   const gappy = structuredClone(profile);
@@ -123,7 +123,7 @@ test('a harness profile names every harness capability, with a status and its en
   assert.equal(capabilities.length, 8);
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('a harness profile\'s requirements and installUser, where present, are non-empty lists of strings', () => {
   assert.deepEqual(checkProfile({ ...profile, requirements: ['Set X.'], installUser: ['install x'] }), []);
   assert.deepEqual(checkProfile({ ...profile, requirements: [], installUser: 'install x' }), [
@@ -136,13 +136,13 @@ test('a harness profile\'s requirements and installUser, where present, are non-
   ]);
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('a harness profile\'s agentName, where present, is true or false', () => {
   assert.deepEqual(checkProfile({ ...profile, agentName: false }), []);
   assert.deepEqual(checkProfile({ ...profile, agentName: 'no' }), ['test: agentName is not true or false']);
 });
 
-// ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
 test('a memory file kept in prose is named by an absolute path', () => {
   const prose = structuredClone(profile);
   prose.capabilities.memory = { status: 'prose', list: 'the memory file (`/tmp/m-<the project>.md`, a checklist)', 'in-progress': 'doing', completed: 'done' };

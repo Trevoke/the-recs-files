@@ -1,0 +1,177 @@
+#+TITLE: Improving the skills' wording against an eval
+
+Established 2026-10-25 and 2026-10-26 on the `citing-records` branch, working
+towards `F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words`.
+Every run is Claude Sonnet (`claude-sonnet-5-5`) in Claude Code print mode,
+inside bubblewrap, on a subscription token, through `evals/providers/claude.js`.
+Sources: the runs below, and the papers and tools named under each heading.
+
+* Three runs of a wording cannot tell one wording from another
+The original wording, run 20 times on the question in
+`evals/cases/citing-records-to-the-record-keeper/prompts/renewing-a-reserved-book.md`,
+left 10 to 30 citations per reply without their title: mean 15.6, standard
+deviation 4.5. No reply passed.
+
+Six rounds of hand editing, three runs each, gave:
+
+| Wording                                    | Runs passing | Citations without their title, per reply |
+|--------------------------------------------+--------------+------------------------------------------|
+| Original                                   | 0 of 6       | 10–19                                    |
+| Rules and a Good/Bad list, rounds 2–4      | 0–1 of 6     | 1–6                                      |
+| A citation is the record's name, pass 1    | 0 of 6       | 3–11                                     |
+| The same, with one example per shape       | 1 of 6       | 0–4                                      |
+
+The spread within a wording was as wide as the spread between wordings from
+round 2 on, so these rounds could not be ranked. The wordings are in the
+branch's history: rounds 2–4 end at `fa9c2d1`, the two later passes at
+`b95850e`.
+
+* Where the agent shortens a citation
+Across every wording tried, a citation lost its title in the same few
+sentences:
+- describing code: "`src/loans.py` implements `F-1 §1` and `F-1 §2` only";
+- mapping sections to a successor's: "Its status maps `F-1 §1` and `F-1 §3` to carried-over sections";
+- naming the record as a thing, late in the reply: "`F-1` gets a successor", "`F-2` and `ADR-1` stay as they are";
+- quoting a requirement whose text carries a citation, shortening the citation inside the quote.
+The agent gives the first citation of each record whole. A rule that says
+"every time" lowers the count without removing it. Examples shaped like the
+failing sentence lowered it further than prohibitions did.
+
+* What the sources say about improving text against an eval
+- A keep-if-better loop: one change at a time, kept when the score improves
+  and reset otherwise, with a log of each attempt. Karpathy's autoresearch
+  (https://github.com/karpathy/autoresearch, its `program.md`) runs one on a
+  single score with no repeats. It cites no paper.
+- The proposer does better when it sees why a run failed, not only its
+  score. GEPA (https://arxiv.org/abs/2507.19457) gives its reflecting model
+  the failing output and keeps a candidate only if it beats its parent on a
+  small batch first.
+- Selecting on the questions the wording was tuned against overfits.
+  Optimisers hold a set out and pick the final wording on it: OPRO
+  (https://arxiv.org/abs/2309.03409), Anthropic's `skill-creator`
+  (`scripts/run_loop.py`, a 60/40 split, chosen by test score).
+- A difference between two wordings counts when it exceeds the noise:
+  repeat each question, and compare the means against their standard errors
+  (https://www.anthropic.com/research/statistical-approach-to-model-evals).
+- For a rule about the shape of output, a template shapes it better than a
+  prohibition (obra/superpowers, `writing-skills`).
+No tool found keeps the edited text readable or in a house style. That is
+left to the proposer's instructions and to the record keeper's review.
+
+* The loop in use from 2026-10-26
+- Questions :: six on the library-loans fixture,
+  `evals/cases/citing-records-to-the-record-keeper/prompts/`. Four train
+  (renewing a reserved book, auditing the code, mapping a successor, framing
+  a complaint). Two are held out (counting renewals, releasing a held copy);
+  the proposer never sees them.
+- Score :: `npm run score:citations` (`evals/scripts/score-citations.mjs`).
+  Each reply's score is the sum of its faults under the four F-20261024-5tt7 checks
+  divided by its citations; a wording's score is the mean over replies, with
+  its standard error. Lower is better.
+- Each attempt :: the proposer (a Fable subagent) gets the house rules, the
+  current wording, the failing citations from the training questions, and
+  the log of attempts. It makes one change across the skills, the seed and
+  both AGENTS.md copies, and commits it. The commit is scored on the training
+  questions, three runs each, and compared with the current best question by
+  question (`--against`): the gap is the mean over questions of the
+  difference in their means, and the margin twice its standard error. It is
+  kept if the gap exceeds the margin. Where the gap is positive and within
+  the margin, both wordings run each question three times more and are judged
+  on the pooled replies (`--pool`). Otherwise it is reverted.
+- Stop :: after three discards in a row, or ten attempts.
+- Final check :: the winner and the original wording, six runs of each held-out
+  question. Then the record keeper reviews the diff.
+- Only the with-skills arm runs: no skill loaded in any run of this case, so
+  the without-skills arm repeats the with-skills arm at twice the cost.
+
+* The original wording's score on the six questions
+Commit `ec7dd99`, three runs of each question, with skills:
+
+| Question                 | Split    | Faults per citation |
+|--------------------------+----------+---------------------|
+| Renewing a reserved book | train    |                0.67 |
+| Auditing the code        | train    |                1.08 |
+| Mapping a successor      | train    |                0.59 |
+| Framing a complaint      | train    |                0.64 |
+| Counting renewals        | held out |                0.41 |
+| Releasing a held copy    | held out |                0.85 |
+| All six                  |          |         0.71 ± 0.06 |
+
+Across the 18 replies: 230 citations without their title, 50 out of
+backticks, 10 with a section out of place, none broken across a line. A
+score above 1 means some citations fail more than one check.
+
+* Attempts
+| # | Commit | Change | Train score | Verdict |
+|---+--------+--------+-------------+---------|
+| 1 | 37725cc | Bring back `b95850e`: a citation is the record's name, one Good example per shape | 0.20 ± 0.07 (from 0.75 ± 0.08) | Kept |
+| 2 | 608e193 | What the agent says while it works reaches the record keeper, and cites the same way | 0.11 ± 0.03 over 24 replies (current best 0.23 ± 0.05 over 24) | Kept |
+| 3 | c3c6a8c | Where a sentence would name several records or sections, a list, one whole citation to a line | 0.15 ± 0.04 (gap −0.04; renewing a reserved book rose from 0.04 to 0.25) | Reverted |
+| 4 | 4096b8a | A heading, or a list item's bold lead, that stands for a record or a section is the whole citation | 0.087 ± 0.033 over 24 (current best 0.125 ± 0.026 over 36; auditing the code 0.14 against 0.34, mapping a successor 0.16 against 0.07) | Reverted |
+| 5 | 65424d2 | Two changes: attempt 4's heading and bold-lead sentence, and the name is never an adjective or a possessive | 0.14 ± 0.03 (gap −0.015; mapping a successor 0.22, renewing a reserved book 0.10) | Reverted; the third discard in a row ends the loop |
+
+* Comparing two wordings question by question
+The first rule compared the two wordings' means over all their replies,
+against twice their combined standard error. On attempt 2, with 24 replies
+each, it gave a gap of 0.1257 against a margin of 0.1259, while attempt 2
+scored better on every question (0.036 against 0.085, 0.33 against 0.61,
+0.054 against 0.19, 0 against 0.04). Pooling over questions counts the
+spread between questions as noise: auditing the code always scores far
+above the other three. Compared question by question, as
+https://www.anthropic.com/research/statistical-approach-to-model-evals
+recommends for paired items, the margin was 0.067. The record keeper chose
+this comparison on 2026-10-26, from attempt 2 on. It was chosen after it
+would change attempt 2's verdict; the held-out check guards the result.
+
+* What the proposer can read
+The held-out questions are in the repository, so the proposer can read
+them; what it is never given is their replies or their failures. Before
+attempt 3 the proposer read the scorer's raw results under
+`/tmp/score-citations-*`, and one of them held the original wording's
+replies to the held-out questions. That file was moved out of `/tmp` before
+attempt 3 was scored. From then on the held-out questions are run only at
+the final check.
+
+* The winning wording holds on the held-out questions
+The loop ended on attempt 2 (`608e193`). The winner's text at `dbe5d3e` and
+the original wording at `ec7dd99` each ran the two held-out questions six
+times, with skills:
+
+| Question              | Original    | Winner      |
+|-----------------------+-------------+-------------|
+| Counting renewals     | 0.67 ± 0.07 | 0.09 ± 0.06 |
+| Releasing a held copy | 0.89 ± 0.13 | 0.03 ± 0.03 |
+| Both                  | 0.78 ± 0.08 | 0.06 ± 0.04 |
+| Replies passing       | 0 of 12     | 9 of 12     |
+
+Question by question the gap is 0.72 against a margin of 0.16. The
+original's 12 replies left 126 citations without their title, 18 out of
+backticks and 8 with a section out of place; the winner's left 10 without
+their title and none otherwise. The winner did as well on the held-out
+questions as on the training ones (0.125 over 36 replies), so the loop did
+not overfit the training questions.
+
+* A wording change is checked against the other cases, not only its own
+After the citation wording (`cd8f79e`), the other five cases ran three times
+each with skills. Four passed every run; `proposing-a-record` passed 1 of 3.
+Run 24 times on each wording, it passed 16 on `cd8f79e` and 22 on `b74ffd3`,
+the wording before the citation work (one-sided Fisher exact p = 0.036).
+Every failure drafted the record in the reply, said nothing was written yet,
+and wrote no file. The text said "Make no record change on your own" and
+"Records change only at the record keeper's direction", and defined no
+proposal, so writing a Proposed record read as the change that waits for
+agreement. `67f3c8e` states what a proposal is, in the order of
+`UW-20261014-8c8f: Create a record` steps 3–6, and passed 11 of 12, all 12 writing the
+proposal first; the one failure missed the vision's falsified sentence, as
+`b74ffd3` also did. Which part of the citation work raised the failures was
+not isolated. Then the other four cases passed 3 of 3 each.
+
+* The final text, after the review's fixes
+`6b86562` rewords the citation paragraph around "title", adds the Proposed
+record's paragraph, and moves the new-term check before the draft is
+written. Run on HEAD, with skills: the held-out questions scored
+0.12 ± 0.05 faults per citation (counting renewals 0.15, releasing a held
+copy 0.08), 7 of 12 replies passing, all 22 faults a citation without its
+title; against the original, the gap is 0.66 and the margin 0.18. Against
+the winner's 0.06 ± 0.04 at `dbe5d3e` the difference is within the noise.
+`proposing-a-record` passed 12 of 12.

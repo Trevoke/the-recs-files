@@ -1,0 +1,5 @@
+* UL-20261015-b7wy Standing record
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+An accepted record that is not withdrawn.

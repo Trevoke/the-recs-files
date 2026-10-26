@@ -1,0 +1,10 @@
+* F-20261015-wxwj A retired record gives its reason
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When a retirement is agreed, the agent shall set the record's status to
+   Retired, with the reason in one sentence.
+2. When a retirement is agreed, the agent shall change nothing in the
+   retired record but its status.
+3. If something replaces the record, then the agent shall propose
+   superseding it instead of retiring it.

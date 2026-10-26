@@ -1,0 +1,18 @@
+* F-20261015-jgec A clarification comes with an assessment of the record's intent
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When the record keeper asks for an in-place edit of a record, the agent
+   shall assess whether the record's intent is kept, and how it changes if
+   not.
+2. When the agent assesses an in-place edit, the agent shall name each
+   citation that would read wrong after it.
+3. When the agent shows a clarification, the agent shall show the
+   assessment with the rule: if the intent doesn't change, then it might
+   be the same record.
+4. The agent shall leave the decision whether the intent is kept to the
+   record keeper.
+5. If the record keeper decides the intent changes, then the agent shall
+   propose superseding the record.
+6. When a clarification is agreed, the agent shall keep the record's
+   identifier and status.

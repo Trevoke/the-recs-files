@@ -27,7 +27,7 @@ export function parseFlow(text) {
   return { nodes, edges, problems };
 }
 
-// ADR-2 §Consequences: The recs files live apart from any project that uses them
+// ADR-20261015-v56a §Consequences: The recs files live apart from any project that uses them
 export function shippedFlow(text) {
   return text.replace(/\s*\[\s*cite="[^"]*"\s*\]/g, '').replace(/,\s*cite="[^"]*"/g, '').replace(/cite="[^"]*",\s*/g, '');
 }
@@ -38,7 +38,7 @@ function escape(s) {
 
 function checkCitation(root, citation) {
   const cite = citation.trim();
-  const m = /^(UW|ADR)-(\d+) §([^:]+): (.+)$/.exec(cite);
+  const m = /^(UW|ADR)-(\d{8}-[0-9a-hjkmnp-tv-z]{4}|\d+) §([^:]+): (.+)$/.exec(cite);
   if (!m) return `${cite}: not a citation of a record's section`;
   const [, prefix, n, section, title] = m;
   const dir = path.join(root, 'docs', categories[prefix]);
@@ -65,8 +65,8 @@ function isNode(skillsDir, skills, n) {
   return Boolean(m) && skills.includes(m[1]) && m[2] !== 'SKILL.md' && fs.statSync(path.join(skillsDir, n), { throwIfNoEntry: false })?.isFile() === true;
 }
 
-// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Decision: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 export function checkFlow(root) {
   const skillsDir = path.join(root, 'skills');
   const flowFile = path.join(skillsDir, 'skill-flow.dot');
@@ -87,9 +87,9 @@ export function checkFlow(root) {
     if (!kinds.includes(e.kind)) problems.push(`${name} has kind ${e.kind}, not load, handoff or delegate`);
     if (!e.cite) problems.push(`${name} cites nothing`);
     for (const c of (e.cite ?? '').split(';').map((x) => x.trim()).filter(Boolean)) {
-      const record = /^([A-Z]+-\d+) §/.exec(c);
-      if (record && !record[1].startsWith('UW-') && record[1] !== 'ADR-9') {
-        problems.push(`${name}: ${c} is neither a user workflow step or extension nor ADR-9`);
+      const record = /^([A-Z]+-(?:\d{8}-[0-9a-hjkmnp-tv-z]{4}|\d+)) §/.exec(c);
+      if (record && !record[1].startsWith('UW-') && record[1] !== 'ADR-20261019-m123') {
+        problems.push(`${name}: ${c} is neither a user workflow step or extension nor ADR-20261019-m123`);
         continue;
       }
       const p = checkCitation(root, c);

@@ -15,7 +15,8 @@ function project(t, flow, skillFiles) {
   put('docs/user-workflows/uw-1-do-a-thing.org', '* UW-1 Do a thing\n:PROPERTIES:\n:STATUS: Accepted\n:END:\n** Main success scenario\n*** 1. Agent reads\n*** 2. Agent writes\n** Extensions\n*** 2a. It fails\n');
   put('docs/user-workflows/uw-2-maybe-do-a-thing.org', '* UW-2 Maybe do a thing\n:PROPERTIES:\n:STATUS: Proposed\n:END:\n** Main success scenario\n*** 1. Agent reads\n');
   put('docs/architectural-decisions/adr-1-build-it-another-way.org', '* ADR-1 Build it another way\n:PROPERTIES:\n:STATUS: Accepted\n:END:\n** Decision\ny\n');
-  put('docs/architectural-decisions/adr-9-build-it-so.org', '* ADR-9 Build it so\n:PROPERTIES:\n:STATUS: Accepted\n:END:\n** Context\nx\n** Decision\ny\n');
+  put('docs/architectural-decisions/adr-20261019-m123-build-it-so.org', '* ADR-20261019-m123 Build it so\n:PROPERTIES:\n:STATUS: Accepted\n:END:\n** Context\nx\n** Decision\ny\n');
+  put('docs/user-workflows/uw-20261026-kzx5-do-a-dated-thing.org', '* UW-20261026-kzx5 Do a dated thing\n:PROPERTIES:\n:STATUS: Accepted\n:END:\n** Main success scenario\n*** 1. Agent reads\n');
   if (flow !== undefined) put('skills/skill-flow.dot', flow);
   for (const [file, text] of Object.entries(skillFiles)) put(`skills/${file}`, text);
   return root;
@@ -26,7 +27,7 @@ const good = `digraph skill_flow {
   "recs-a";
   "recs-b";
 
-  "recs-a" -> "recs-b" [kind="load", condition="same session", cite="UW-1 §2: Do a thing; ADR-9 §Decision: Build it so"];
+  "recs-a" -> "recs-b" [kind="load", condition="same session", cite="UW-1 §2: Do a thing; ADR-20261019-m123 §Decision: Build it so"];
   "recs-a" -> "recs-a/helper-prompt.md" [kind="delegate", cite="UW-1 §2a: Do a thing"];
 }
 `;
@@ -37,20 +38,20 @@ const goodSkills = {
 };
 const flowOf = (...lines) => `digraph skill_flow {\n${lines.map((l) => `  ${l}\n`).join('')}}\n`;
 
-// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Decision: Keep the order of the skills in a skill flow beside them
 test('reads nodes and edges with their attributes', () => {
   const { nodes, edges, problems } = parseFlow(good);
   assert.deepEqual([...nodes].sort(), ['recs-a', 'recs-a/helper-prompt.md', 'recs-b']);
-  assert.deepEqual(edges[0], { from: 'recs-a', to: 'recs-b', kind: 'load', condition: 'same session', cite: 'UW-1 §2: Do a thing; ADR-9 §Decision: Build it so' });
+  assert.deepEqual(edges[0], { from: 'recs-a', to: 'recs-b', kind: 'load', condition: 'same session', cite: 'UW-1 §2: Do a thing; ADR-20261019-m123 §Decision: Build it so' });
   assert.deepEqual(problems, []);
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('a skill flow that matches the skills and the records passes', (t) => {
   assert.deepEqual(checkFlow(project(t, good, goodSkills)), []);
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('refuses a skill flow out of step with the skills or the records', (t) => {
   const bad = `digraph skill_flow {
   "recs-a";
@@ -69,12 +70,12 @@ test('refuses a skill flow out of step with the skills or the records', (t) => {
   ]);
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('refuses a missing skill flow', (t) => {
   assert.deepEqual(checkFlow(project(t, undefined, goodSkills)), ['skills/skill-flow.dot is missing']);
 });
 
-// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Decision: Keep the order of the skills in a skill flow beside them
 test('refuses a statement it cannot read, before anything else', (t) => {
   const split = `digraph skill_flow {
   "recs-a";
@@ -91,7 +92,7 @@ test('refuses a statement it cannot read, before anything else', (t) => {
   ]);
 });
 
-// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Decision: Keep the order of the skills in a skill flow beside them
 test('a node is a skill or a prompt template, and every skill is a node', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -109,8 +110,8 @@ test('a node is a skill or a prompt template, and every skill is a node', (t) =>
   ]);
 });
 
-// ADR-11 §Decision: Keep the order of the skills in a skill flow beside them
-test('an edge cites a user workflow step or extension, or ADR-9, as it stands on disk', (t) => {
+// ADR-20261019-bwyc §Decision: Keep the order of the skills in a skill flow beside them
+test('an edge cites a user workflow step or extension, or ADR-20261019-m123, as it stands on disk', (t) => {
   const flow = flowOf(
     '"recs-a";',
     '"recs-b";',
@@ -118,18 +119,18 @@ test('an edge cites a user workflow step or extension, or ADR-9, as it stands on
     '"recs-b" -> "recs-a" [kind="handoff"];',
     '"recs-a" -> "recs-b" [kind="handoff", cite="UW-1 step 2"];',
     '"recs-b" -> "recs-a" [kind="handoff", cite="UW-3 §1: Do another thing"];',
-    '"recs-a" -> "recs-b" [kind="handoff", cite="ADR-9 §Decision: Build it some way"];',
+    '"recs-a" -> "recs-b" [kind="handoff", cite="ADR-20261019-m123 §Decision: Build it some way"];',
   );
   assert.deepEqual(checkFlow(project(t, flow, { 'recs-a/SKILL.md': 'Plain.', 'recs-b/SKILL.md': 'Plain.' })), [
-    'skill-flow.dot: recs-a -> recs-b: ADR-1 §Decision: Build it another way is neither a user workflow step or extension nor ADR-9',
+    'skill-flow.dot: recs-a -> recs-b: ADR-1 §Decision: Build it another way is neither a user workflow step or extension nor ADR-20261019-m123',
     'skill-flow.dot: recs-b -> recs-a cites nothing',
     "skill-flow.dot: recs-a -> recs-b: UW-1 step 2: not a citation of a record's section",
     'skill-flow.dot: recs-b -> recs-a: UW-3 §1: Do another thing: UW-3 is not on disk',
-    'skill-flow.dot: recs-a -> recs-b: ADR-9 §Decision: Build it some way: ADR-9 is not titled Build it some way',
+    'skill-flow.dot: recs-a -> recs-b: ADR-20261019-m123 §Decision: Build it some way: ADR-20261019-m123 is not titled Build it some way',
   ]);
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('a load or delegate edge needs its capability marker', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -143,7 +144,7 @@ test('a load or delegate edge needs its capability marker', (t) => {
   ]);
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('a delegate edge needs a marker of its own', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -156,7 +157,7 @@ test('a delegate edge needs a marker of its own', (t) => {
   ]);
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('a delegate marker in a SKILL.md stands for its edges, and needs one', (t) => {
   const flow = flowOf(
     '"recs-a";',
@@ -173,10 +174,16 @@ test('a delegate marker in a SKILL.md stands for its edges, and needs one', (t) 
   ]);
 });
 
-// ADR-2 §Consequences: The recs files live apart from any project that uses them
+// ADR-20261015-v56a §Consequences: The recs files live apart from any project that uses them
 test('a shipped skill flow carries no citations', () => {
   assert.equal(
-    shippedFlow('  "a" -> "b" [kind="load", condition="x", cite="UW-1 §2: Do a thing"];\n  "a" -> "c" [cite="ADR-9 §Decision: Build it so", kind="delegate"];\n  "a" -> "d" [cite="UW-1 §1: Do a thing"];\n'),
+    shippedFlow('  "a" -> "b" [kind="load", condition="x", cite="UW-1 §2: Do a thing"];\n  "a" -> "c" [cite="ADR-20261019-m123 §Decision: Build it so", kind="delegate"];\n  "a" -> "d" [cite="UW-1 §1: Do a thing"];\n'),
     '  "a" -> "b" [kind="load", condition="x"];\n  "a" -> "c" [kind="delegate"];\n  "a" -> "d";\n',
   );
+});
+
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
+test('an edge may cite a user workflow by a dated identifier, as it stands on disk', (t) => {
+  const flow = flowOf('"recs-a";', '"recs-b";', '"recs-a" -> "recs-b" [kind="handoff", cite="UW-20261026-kzx5 §1: Do a dated thing"];');
+  assert.deepEqual(checkFlow(project(t, flow, { 'recs-a/SKILL.md': 'Plain.', 'recs-b/SKILL.md': 'Plain.' })), []);
 });

@@ -96,17 +96,17 @@ the user. The plan does not proceed around it.
 
 ### 3. Reading List
 
-The records this plan is built against, in reading order, each cited by number and title — never a bare number.
+The records this plan is built against, in reading order, each cited by identifier and title — never a bare identifier.
 
 ```markdown
 ## Reading List
 
 Read before executing any task, in this order:
 
-1. UW-3: [title] — the workflow this plan implements
-2. ADR-12: [title] — the invariant the design must hold
-3. F-7: [title] — the surface being built
-4. MSG-4: [title] — the exact refusal text task 3 asserts
+1. `UW-3: [title]` — the workflow this plan implements
+2. `ADR-12: [title]` — the invariant the design must hold
+3. `F-7: [title]` — the surface being built
+4. `MSG-4: [title]` — the exact refusal text task 3 asserts
 ```
 
 ### 4. Cataloged-Text Ordering
@@ -116,7 +116,7 @@ Where a task touches user-facing text the project catalogs — error messages, r
 ```markdown
 ## Cataloged-Text Ordering
 
-Tasks [N, M] touch cataloged text ([MSG-4: title]). For each:
+Tasks [N, M] touch cataloged text (`MSG-4: [title]`). For each:
 
 1. The catalog record's wording is settled first, at the record keeper's direction.
 2. The failing test asserts the record's exact current text, character for
@@ -128,12 +128,12 @@ If no task touches cataloged text, the section says so in one line — its prese
 
 ## Task Structure
 
-Every task names the records it implements, by number and title. A task that builds surface names its feature.
+Every task names the records it implements, by identifier and title. A task that builds surface names its feature.
 
 ```markdown
 ### Task N: [Component Name]
 
-**Records:** F-7: [title]; ADR-12: [title]
+**Records:** `F-7: [title]`; `ADR-12: [title]`
 
 **Files:**
 - Create: `exact/path/to/file.py`
@@ -169,10 +169,12 @@ Expected: PASS
 
 ```bash
 git add tests/path/test.py src/path/file.py
-git commit -m "feat: add order validator
+git commit -F - <<'EOF'
+feat: add order validator
 
-UW-3: [title] requires every order checked on arrival.
-Validator added with its first passing test."
+`UW-3: [title]` requires every order checked on arrival.
+Validator added with its first passing test.
+EOF
 ```
 ```
 
@@ -197,7 +199,7 @@ For a task on cataloged text, Step 1's test asserts the catalog record's exact c
 - Claims about existing code are checked against it, never predicted
 - What comes later stays in the plan; the code it specifies never forecasts
 - Exact commands with expected output (pytest, cargo test, npm test, raco test — whatever the project uses)
-- Every task cites its records by number and title
+- Every task cites its records by identifier and title
 - The project's words, exactly; coin nothing
 - A record that disagrees with the plan stops the plan
 - Surface with no feature record stops the plan

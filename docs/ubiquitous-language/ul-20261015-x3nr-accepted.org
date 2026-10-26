@@ -1,0 +1,5 @@
+* UL-20261015-x3nr Accepted
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The status of a record the record keeper has agreed to.

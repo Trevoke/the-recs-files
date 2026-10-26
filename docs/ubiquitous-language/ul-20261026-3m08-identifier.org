@@ -1,0 +1,7 @@
+* UL-20261026-3m08 Identifier
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The name of one record: its category's prefix, then what tells it from
+every other record of that category. A record's file, heading, projection
+line and every citation of it carry it.

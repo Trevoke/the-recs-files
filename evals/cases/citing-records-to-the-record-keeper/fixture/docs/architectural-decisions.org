@@ -1,0 +1,3 @@
+#+TITLE: Architectural decisions
+
+- ADR-1 :: [[./architectural-decisions/adr-1-keep-loans-as-an-append-only-ledger-of-loan-events.org][Keep loans as an append-only ledger of loan events]]

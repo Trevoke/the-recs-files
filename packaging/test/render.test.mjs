@@ -27,7 +27,7 @@ for (const harness of harnesses) {
     const said = execFileSync(process.execPath, [path.join(root, 'packaging', 'check.mjs'), harness, out], { encoding: 'utf8' });
     assert.match(said, new RegExp(`^${harness}: package checks pass`));
   });
-  // ADR-12 §Consequences: Install the recs files at project scope by default
+  // ADR-20261019-0fex §Consequences: Install the recs files at project scope by default
   test(`the ${harness} package README installs at project scope in its first block, and at user scope only in a second`, (t) => {
     const out = render(harness, temp(t, `readme-${harness}-`), 'v1.2.3');
     const profile = JSON.parse(fs.readFileSync(path.join(root, 'packaging', 'profiles', `${harness}.json`), 'utf8'));
@@ -55,7 +55,7 @@ const claudeRendering = {
   '{{trf: memory completed}}': 'completed with TaskUpdate',
 };
 
-// ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
 test('the Claude Code package carries each skill file as written, with each capability marker in its Claude Code wording', (t) => {
   const out = render('claude', temp(t, 'render-claude-pin-'), 'v1.2.3');
   const files = fs.readdirSync(path.join(root, 'skills'), { recursive: true })
@@ -124,12 +124,12 @@ test('refuses an output inside the source, and deletes nothing', (t) => {
   assert.ok(fs.existsSync(path.join(from, 'packaging', 'profiles')), 'the source survives the refused render');
 });
 
-// ADR-11 §Consequences: Keep the order of the skills in a skill flow beside them
+// ADR-20261019-bwyc §Consequences: Keep the order of the skills in a skill flow beside them
 test('the skill flow matches the skills and the records', () => {
   assert.deepEqual(checkFlow(root), []);
 });
 
-// ADR-2 §Consequences: The recs files live apart from any project that uses them
+// ADR-20261015-v56a §Consequences: The recs files live apart from any project that uses them
 test('a rendered skill flow carries no citations', (t) => {
   const out = render('pi', temp(t, 'render-flow-'), 'v1.2.3');
   const flow = fs.readFileSync(path.join(out, 'skills', 'skill-flow.dot'), 'utf8');

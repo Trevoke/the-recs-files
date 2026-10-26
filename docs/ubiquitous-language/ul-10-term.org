@@ -1,6 +1,0 @@
-* UL-10 Term
-:PROPERTIES:
-:STATUS: Accepted
-:END:
-A word, or a few words, that the ubiquitous language defines within one
-bounded context.

@@ -1,0 +1,63 @@
+#+TITLE: Org reads a heading, a property and a link whole on one line
+
+Established 2026-10-26 with GNU Emacs 30.2 and its bundled org-mode, by
+the runs below, each in =emacs -Q --batch=.
+
+* A wrapped heading cuts its title and loses its drawer
+#+begin_src org
+,* ADR-12 Supersede the retry policy with one retry queue
+  per provider
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+#+end_src
+=(org-get-heading t t t t)= returns ="ADR-12 Supersede the retry policy with one retry queue"=,
+and =(org-entry-get nil "STATUS")= returns =nil=: the second line is body
+text, so the drawer no longer sits directly under the heading.
+
+* A wrapped property makes the whole drawer unreadable
+#+begin_src org
+:PROPERTIES:
+:STATUS: Proposed
+:SUPERSEDES: ADR-4: A changed decision is a new record that supersedes
+  the old
+:END:
+#+end_src
+=org-entry-get= returns =nil= for =STATUS= as well as =SUPERSEDES=, and
+=org-lint= reports "Incorrect contents for PROPERTIES drawer".
+
+* A repeated property keeps only its last value, silently
+#+begin_src org
+:PROPERTIES:
+:SUPERSEDES: ADR-4: First
+:SUPERSEDES: ADR-5: Second
+:END:
+#+end_src
+=(org-entry-get nil "SUPERSEDES")= returns ="ADR-5: Second"=; =org-lint=
+reports nothing. =:SUPERSEDES+:= instead joins the values with a space:
+="ADR-4: First ADR-5: Second"=.
+
+* A line break in a link's target becomes a space in the path
+#+begin_src org
+- ADR-14 :: [[./architectural-decisions/adr-14-a-very-long-
+  slug.org][Title]]
+#+end_src
+The parsed path is ="./architectural-decisions/adr-14-a-very-long- slug.org"=.
+A break in the description is kept: the description of
+=[[./x.org][Supersede the retry\n  policy]]= carries the newline and indent.
+
+* Org's multi-valued properties split at whitespace, titles included
+#+begin_src org
+:SUPERSEDES: [[./f-1.org][F-1: A borrower renews a loan]], [[./f-2.org][F-2: A copy is held]]
+#+end_src
+=(org-entry-get-multivalued-property nil "SUPERSEDES")= returns
+=("[[./f-1.org][F-1:" "A" "borrower" "renews" "a" "loan]]," ...)=, with a
+comma or a space between the links alike; ="F-1 F-2"= returns
+=("F-1" "F-2")=. Parsing the value as org links returns each link whole:
+#+begin_src elisp
+(with-temp-buffer
+  (insert (org-entry-get nil "SUPERSEDES")) (org-mode)
+  (org-element-map (org-element-parse-buffer) 'link
+    (lambda (l) (org-element-property :path l))))
+#+end_src
+returns =("./f-1.org" "./f-2.org")=.

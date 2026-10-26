@@ -1,0 +1,6 @@
+* UL-20261015-0twc Record
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A short statement of one truth about a system, with an identifier and a
+title that states its substance. Every record belongs to one category.

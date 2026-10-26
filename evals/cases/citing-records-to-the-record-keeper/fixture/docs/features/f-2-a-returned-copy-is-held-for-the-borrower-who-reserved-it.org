@@ -1,0 +1,8 @@
+* F-2 A returned copy is held for the borrower who reserved it
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When a copy of a reserved book is returned, the library shall hold it for
+   the borrower whose reservation is oldest.
+2. When a held copy has waited three days, the library shall release it to
+   the next reservation.

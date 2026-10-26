@@ -1,0 +1,5 @@
+* UL-20261015-wsw6 Falsified sentence
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A sentence that a record change makes untrue.

@@ -1,10 +1,10 @@
 #+TITLE: User workflows
 
-- UW-1 :: [[./user-workflows/uw-1-create-a-record.org][Create a record]]
-- UW-2 :: [[./user-workflows/uw-2-supersede-a-record.org][Supersede a record]]
-- UW-3 :: [[./user-workflows/uw-3-retire-a-record.org][Retire a record]]
-- UW-4 :: [[./user-workflows/uw-4-clarify-a-record.org][Clarify a record]]
-- UW-5 :: [[./user-workflows/uw-5-rename-a-term.org][Rename a term]]
-- UW-6 :: [[./user-workflows/uw-6-redefine-a-term.org][Redefine a term]]
-- UW-7 :: [[./user-workflows/uw-7-realize-a-change-to-the-system.org][Realize a change to the system]]
-- UW-8 :: [[./user-workflows/uw-8-start-a-projects-records-from-its-realization.org][Start a project's records from its realization]]
+- UW-20261014-8c8f :: [[./user-workflows/uw-20261014-8c8f-create-a-record.org][Create a record]]
+- UW-20261014-c2yr :: [[./user-workflows/uw-20261014-c2yr-redefine-a-term.org][Redefine a term]]
+- UW-20261014-q1yj :: [[./user-workflows/uw-20261014-q1yj-clarify-a-record.org][Clarify a record]]
+- UW-20261014-svb1 :: [[./user-workflows/uw-20261014-svb1-rename-a-term.org][Rename a term]]
+- UW-20261014-wewg :: [[./user-workflows/uw-20261014-wewg-supersede-a-record.org][Supersede a record]]
+- UW-20261014-zb7e :: [[./user-workflows/uw-20261014-zb7e-retire-a-record.org][Retire a record]]
+- UW-20261015-nkb5 :: [[./user-workflows/uw-20261015-nkb5-realize-a-change-to-the-system.org][Realize a change to the system]]
+- UW-20261015-nqdn :: [[./user-workflows/uw-20261015-nqdn-start-a-projects-records-from-its-realization.org][Start a project's records from its realization]]

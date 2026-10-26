@@ -1,11 +1,16 @@
 import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import path from 'node:path';
-import { events, exclude, identity, prepare as prepareProject, renderedPackage, run, sandbox } from './common.js';
+import { events, evalsDir, exclude, identity, prepare as prepareProject, renderedPackage, run, sandbox } from './common.js';
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: The `claude` binary is one executable that needs only the system's libraries
 function claudeBinary() {
   return fs.realpathSync(execFileSync('sh', ['-c', 'command -v claude'], { encoding: 'utf8' }).trim());
+}
+
+export function caseProblem(caseName) {
+  if (!caseName || !fs.existsSync(path.join(evalsDir, 'cases', caseName, 'fixture'))) return `no case named ${caseName}`;
+  return undefined;
 }
 
 function prepare(caseName) {
@@ -40,7 +45,7 @@ async function install(dirs, binary, env) {
   const pkg = path.join(project, '.claude', marketplace);
   fs.cpSync(rendered, pkg, { recursive: true });
   exclude(project, ['/.claude/settings.json', `/.claude/${marketplace}/`]);
-  // ADR-12 §Consequences: Install the recs files at project scope by default
+  // ADR-20261019-0fex §Consequences: Install the recs files at project scope by default
   // docs/knowledge-base/claude-code-as-an-eval-harness.org: The plugin commands install a local marketplace at project scope with no network
   for (const args of [
     ['plugin', 'marketplace', 'add', `./${path.relative(project, pkg)}`, '--scope', 'project'],
@@ -99,6 +104,15 @@ function toolResults(all) {
   );
 }
 
+export function said(all) {
+  return all
+    .filter((e) => e.type === 'assistant' && e.parent_tool_use_id == null)
+    .flatMap((e) => e.message?.content ?? [])
+    .filter((c) => c.type === 'text')
+    .map((c) => c.text)
+    .join('\n\n');
+}
+
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A skill load is a `Skill` tool use naming the skill
 export function skillCalls(all) {
   const results = toolResults(all);
@@ -112,6 +126,21 @@ export function initProblem(all, plugin) {
   if (!init) return 'the run reported no init event';
   if (init.permissionMode !== 'bypassPermissions') return `the run started in permission mode ${init.permissionMode}, not bypassPermissions`;
   if (plugin && !(init.skills ?? []).some((s) => s.startsWith(`${plugin}:`))) return `the run's init event lists no ${plugin}: skill`;
+  if (!plugin) {
+    const stray = (init.skills ?? []).filter((o) => /(^|:)recs-/.test(o));
+    if (stray.length > 0) return `the run without the skills offers ${stray.join(', ')}`;
+    const strayAgents = (init.agents ?? []).filter((o) => /(^|:)recs-/.test(o));
+    if (strayAgents.length > 0) return `the run without the skills offers agent ${strayAgents.join(', ')}`;
+  }
+  return undefined;
+}
+
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: A failed run ends with a `result` event carrying `is_error`, and exits 1
+export function runError(result, final, timeoutMs) {
+  if (result.timedOut) return `claude timed out after ${timeoutMs} ms`;
+  if (!final || final.is_error || result.code !== 0) {
+    return final?.result ?? `claude exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`;
+  }
   return undefined;
 }
 
@@ -127,6 +156,8 @@ export default class ClaudeCodeProvider {
 
   async callApi(prompt, context) {
     const caseName = context?.vars?.case;
+    const unknown = caseProblem(caseName);
+    if (unknown) return { error: unknown, metadata: { harness: 'claude-code', skillCalls: [] } };
     let binary;
     try {
       binary = claudeBinary();
@@ -161,20 +192,16 @@ export default class ClaudeCodeProvider {
       '--', prompt,
     ];
     const started = Date.now();
-    const result = await run(sandboxed(dirs, binary, env, args), this.config.timeoutMs ?? 15 * 60 * 1000);
+    const timeoutMs = this.config.timeoutMs ?? 15 * 60 * 1000;
+    const result = await run(sandboxed(dirs, binary, env, args), timeoutMs);
     fs.writeFileSync(path.join(root, 'claude.jsonl'), result.stdout);
     fs.writeFileSync(path.join(root, 'claude.stderr'), result.stderr);
     const all = events(result.stdout);
     const final = all.findLast((e) => e.type === 'result');
     const problem = initProblem(all, pkg ? manifest(pkg, 'plugin.json').name : undefined);
-    const metadata = { harness: 'claude-code', workingDir: project, transcript: path.join(root, 'claude.jsonl'), ...(pkg ? { packageDir: pkg, packageSkills } : {}), skillCalls: skillCalls(all), durationMs: Date.now() - started };
-    // docs/knowledge-base/claude-code-as-an-eval-harness.org: A failed run ends with a `result` event carrying `is_error`, and exits 1
-    if (!final || final.is_error || result.code !== 0) {
-      return {
-        error: final?.result ?? `claude exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`,
-        metadata,
-      };
-    }
+    const metadata = { harness: 'claude-code', workingDir: project, transcript: path.join(root, 'claude.jsonl'), ...(pkg ? { packageDir: pkg, packageSkills } : {}), said: said(all), skillCalls: skillCalls(all), initProblem: problem, timedOut: Boolean(result.timedOut), durationMs: Date.now() - started };
+    const failed = runError(result, final, timeoutMs);
+    if (failed) return { error: failed, metadata };
     if (problem) return { error: problem, metadata };
     return {
       output: final.result ?? '',

@@ -61,67 +61,78 @@ tests:
       case: rejecting-a-proposed-record
       request: file://cases/rejecting-a-proposed-record/prompt.md
     assert:
-      # F-4 §7: A record is written with its line in its projection
+      # F-20261026-tacr §8: A record is written with its identifier and its line in its projection
       - type: javascript
         metric: rejected line removed
         value: file://checks/rejecting-a-proposed-record.js:lineRemoved
-      # F-2 §5: A record change is agreed before it stands
+      # F-20261014-pbwk §5: A record change is agreed before it stands
       - type: javascript
         metric: marked rejected
         value: file://checks/rejecting-a-proposed-record.js:markedRejected
-      # UL-16: Rejected
+      # UL-20261015-fdb5: Rejected
       - type: javascript
         metric: text stands
         value: file://checks/rejecting-a-proposed-record.js:textStands
-      # F-2 §5: A record change is agreed before it stands
+      # F-20261014-pbwk §5: A record change is agreed before it stands
       - type: javascript
         metric: nothing else written
         value: file://checks/rejecting-a-proposed-record.js:nothingElseWritten
-      # F-4 §7: A record is written with its line in its projection
+      # F-20261026-tacr §8: A record is written with its identifier and its line in its projection
       - type: javascript
         metric: other lines kept
         value: file://checks/rejecting-a-proposed-record.js:otherLinesKept
-      # ADR-1: A record change is one commit of its own
+      # ADR-20261015-70tz: A record change is one commit of its own
       - type: javascript
         metric: committed alone
         value: file://checks/rejecting-a-proposed-record.js:committedAlone
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:writingRecords
+      # ADR-20261015-0v6s §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
 
   - description: The record keeper asks for a record
     vars:
       case: proposing-a-record
       request: file://cases/proposing-a-record/prompt.md
     assert:
-      # F-4 §2: A record is written with its line in its projection
-      # F-4 §4: A record is written with its line in its projection
+      # F-20261026-tacr §2: A record is written with its identifier and its line in its projection
       - type: javascript
-        metric: next unused number
-        value: file://checks/proposing-a-record.js:numberedFour
-      # F-4 §1: A record is written with its line in its projection
-      # F-2 §1: A record change is agreed before it stands
+        metric: identifier from the date and four characters
+        value: file://checks/proposing-a-record.js:identifierFromDateAndCharacters
+      # F-20261026-tacr §1: A record is written with its identifier and its line in its projection
+      # F-20261014-pbwk §1: A record change is agreed before it stands
       - type: javascript
         metric: written as proposed
         value: file://checks/proposing-a-record.js:writtenAsProposed
-      # F-4 §1: A record is written with its line in its projection
+      # F-20261026-tacr §1: A record is written with its identifier and its line in its projection
       - type: javascript
         metric: listed under proposed
         value: file://checks/proposing-a-record.js:listedUnderProposed
-      # F-4 §3: A record is written with its line in its projection
+      # F-20261026-tacr §4: A record is written with its identifier and its line in its projection
       - type: javascript
         metric: same title
         value: file://checks/proposing-a-record.js:sameTitle
-      # F-2 §1: A record change is agreed before it stands
+      # F-20261014-pbwk §1: A record change is agreed before it stands
       - type: javascript
         metric: nothing else written
         value: file://checks/proposing-a-record.js:nothingElseWritten
-      # ADR-1: A record change is one commit of its own
+      # ADR-20261015-70tz: A record change is one commit of its own
       - type: javascript
         metric: committed alone
         value: file://checks/proposing-a-record.js:committedAlone
-      # UW-1 4: Create a record
-      # F-2 §3: A record change is agreed before it stands
+      # UW-20261014-8c8f 4: Create a record
+      # F-20261014-pbwk §3: A record change is agreed before it stands
       - type: llm-rubric
         metric: shows the draft for agreement
         provider: anthropic:messages:claude-sonnet-5-5
@@ -131,9 +142,9 @@ tests:
           change it. A reply that reports the decision as recorded and
           standing, with nothing left for the record keeper to agree to,
           fails.
-      # UW-1 4: Create a record
-      # F-3 §1: Falsified sentences are found with their replacements
-      # F-3 §4: Falsified sentences are found with their replacements
+      # UW-20261014-8c8f 4: Create a record
+      # F-20261014-cjkm §1: Falsified sentences are found with their replacements
+      # F-20261014-cjkm §4: Falsified sentences are found with their replacements
       - type: llm-rubric
         metric: shows the falsified sentence
         provider: anthropic:messages:claude-sonnet-5-5
@@ -146,13 +157,60 @@ tests:
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:writingRecords
+      # ADR-20261015-0v6s §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
+
+  - description: The record keeper replaces two features with one
+    vars:
+      case: superseding-two-features
+      request: file://cases/superseding-two-features/prompt.md
+    assert:
+      # F-20261026-tacr §1: A record is written with its identifier and its line in its projection
+      # F-20261014-pbwk §1: A record change is agreed before it stands
+      - type: javascript
+        metric: written as proposed
+        value: file://checks/superseding-two-features.js:writtenAsProposed
+      # F-20261014-bhn8 §2: A superseded record names its successor
+      # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
+      - type: javascript
+        metric: supersedes both by link
+        value: file://checks/superseding-two-features.js:supersedesBothByLink
+      # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
+      - type: javascript
+        metric: links parted by a comma
+        value: file://checks/superseding-two-features.js:linksParted
+      # ADR-20261015-0v6s §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
+      - type: javascript
+        metric: skill use
+        value: file://checks/skill-use.js:writingRecords
 
   - description: A change is asked for where AGENTS.md names no realization modality
     vars:
       case: choosing-a-realization-modality
       request: file://cases/choosing-a-realization-modality/prompt.md
     assert:
-      # F-11 §1: The record keeper chooses a project's realization modalities
+      # F-20261015-38qf §1: The record keeper chooses a project's realization modalities
       - type: llm-rubric
         metric: asks for a modality
         provider: anthropic:messages:claude-sonnet-5-5
@@ -161,16 +219,16 @@ tests:
           realization takes, such as code or something else, before any work
           on it. Asking only how the feature should behave, or assuming code
           without asking, fails.
-      # F-11 §1: The record keeper chooses a project's realization modalities
-      # F-11 §3: The record keeper chooses a project's realization modalities
+      # F-20261015-38qf §1: The record keeper chooses a project's realization modalities
+      # F-20261015-38qf §3: The record keeper chooses a project's realization modalities
       - type: javascript
         metric: realization untouched
         value: file://checks/choosing-a-realization-modality.js:realizationUntouched
-      # F-11 §2: The record keeper chooses a project's realization modalities
+      # F-20261015-38qf §2: The record keeper chooses a project's realization modalities
       - type: javascript
         metric: no modality named
         value: file://checks/choosing-a-realization-modality.js:noModalityNamed
-      # F-2 §1: A record change is agreed before it stands
+      # F-20261014-pbwk §1: A record change is agreed before it stands
       - type: javascript
         metric: no record stands
         value: file://checks/choosing-a-realization-modality.js:noRecordStands
@@ -180,7 +238,7 @@ tests:
       case: planning-without-a-realization-modality
       request: file://cases/planning-without-a-realization-modality/prompt.md
     assert:
-      # F-11 §1: The record keeper chooses a project's realization modalities
+      # F-20261015-38qf §1: The record keeper chooses a project's realization modalities
       - type: llm-rubric
         metric: asks for a modality
         provider: anthropic:messages:claude-sonnet-5-5
@@ -189,8 +247,8 @@ tests:
           realization takes, such as code or something else, before any work
           on it. Asking only how the feature should behave, or assuming code
           without asking, fails.
-      # UW-7 2a: Realize a change to the system
-      # F-11 §1: The record keeper chooses a project's realization modalities
+      # UW-20261015-nkb5 2a: Realize a change to the system
+      # F-20261015-38qf §1: The record keeper chooses a project's realization modalities
       - type: javascript
         metric: no plan written
         value: file://checks/choosing-a-realization-modality.js:nothingWritten
@@ -200,8 +258,8 @@ tests:
       case: starting-records-from-a-realization
       request: file://cases/starting-records-from-a-realization/prompt.md
     assert:
-      # UW-8 3: Start a project's records from its realization
-      # F-11 §1: The record keeper chooses a project's realization modalities
+      # UW-20261015-nqdn 3: Start a project's records from its realization
+      # F-20261015-38qf §1: The record keeper chooses a project's realization modalities
       - type: llm-rubric
         metric: asks for a modality
         provider: anthropic:messages:claude-sonnet-5-5
@@ -211,13 +269,25 @@ tests:
           before any question about the domain, its users or its workflows.
           Assuming code because the project holds code, or asking about the
           domain first, fails.
-      # UW-8: Start a project's records from its realization
+      # UW-20261015-nqdn: Start a project's records from its realization
       - type: javascript
         metric: nothing written
         value: file://checks/choosing-a-realization-modality.js:nothingWritten
       - type: javascript
         metric: skill use
         value: file://checks/skill-use.js:kickstart
+      # ADR-20261015-0v6s §Consequences: Records are written in org
+      - type: javascript
+        metric: org lines whole
+        value: file://checks/org-lines.js:linesWhole
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: records named by links
+        value: file://checks/org-lines.js:namesByLink
+      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      - type: javascript
+        metric: links resolve
+        value: file://checks/org-lines.js:linksResolve
 
   - description: Memory is kept in the harness's own way
     providers:
@@ -230,11 +300,11 @@ tests:
       case: keeping-the-task-list
       request: file://cases/keeping-the-task-list/prompt.md
     assert:
-      # ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+      # ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
       - type: javascript
         metric: memory file kept
         value: file://checks/harness-capabilities.js:memoryFileKept
-      # ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+      # ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
       - type: javascript
         metric: only planned files written
         value: file://checks/harness-capabilities.js:onlyPlannedFilesWritten
@@ -250,7 +320,57 @@ tests:
       case: dispatching-the-code-reviewer
       request: file://cases/dispatching-the-code-reviewer/prompt.md
     assert:
-      # ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+      # ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
       - type: javascript
         metric: reviewer delegated
         value: file://checks/harness-capabilities.js:reviewerDelegated
+
+  - description: "The agent cites records to the record keeper (train: renewing-a-reserved-book)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/renewing-a-reserved-book.md
+    assert: &citing-records-checks
+      - type: javascript
+        metric: cites records
+        value: file://checks/citing-records.js:citesRecords
+      # F-20261024-5tt7 §1: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: exact titles
+        value: file://checks/citing-records.js:exactTitles
+      # F-20261024-5tt7 §2: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: section before title
+        value: file://checks/citing-records.js:sectionBeforeTitle
+      # F-20261024-5tt7 §3: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: in backticks
+        value: file://checks/citing-records.js:inBackticks
+      # F-20261024-5tt7 §4: The agent cites a record to the record keeper in its title's exact words
+      - type: javascript
+        metric: one line
+        value: file://checks/citing-records.js:oneLine
+  - description: "The agent cites records to the record keeper (train: auditing-the-code)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/auditing-the-code.md
+    assert: *citing-records-checks
+  - description: "The agent cites records to the record keeper (train: mapping-a-successor)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/mapping-a-successor.md
+    assert: *citing-records-checks
+  - description: "The agent cites records to the record keeper (train: framing-a-complaint)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/framing-a-complaint.md
+    assert: *citing-records-checks
+  - description: "The agent cites records to the record keeper (held-out: counting-renewals)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/counting-renewals.md
+    assert: *citing-records-checks
+  - description: "The agent cites records to the record keeper (held-out: releasing-a-held-copy)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/releasing-a-held-copy.md
+    assert: *citing-records-checks

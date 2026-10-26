@@ -95,7 +95,7 @@ git show {HEAD_SHA}:<path>   # any file as it stands at the head
 **For each issue:**
 - File:line reference
 - What's wrong
-- Why it matters — citing the record it drifts from, by number and title, where one applies
+- Why it matters — citing the record it drifts from, by identifier and title, where one applies
 - How to fix (if not obvious)
 
 ### Recommendations

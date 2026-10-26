@@ -1,0 +1,6 @@
+* UL-20261015-kw4q Record management
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The bounded context of record changes and of sweeping words through a
+project.

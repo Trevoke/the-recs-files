@@ -1,0 +1,4 @@
+#+TITLE: Message catalog
+
+- MSG-1 :: [[./message-catalog/msg-1-a-reserved-book-cannot-be-renewed.org][A reserved book cannot be renewed]]
+- MSG-2 :: [[./message-catalog/msg-2-this-loan-has-reached-its-renewal-limit.org][This loan has reached its renewal limit]]

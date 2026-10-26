@@ -1,0 +1,16 @@
+* F-20261015-gj2j Every occurrence of a term is counted and given a verdict
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When a term is renamed or redefined, the agent shall count every
+   occurrence of the term, its stem and its synonyms.
+2. If other words name the same concept as a renamed term, then the agent
+   shall show each with its occurrences, and leave to the record keeper
+   which are the same concept.
+3. When a term is redefined, the agent shall write the rule that tells a
+   false sentence from a true one.
+4. When a term is redefined, the agent shall give each occurrence a
+   verdict: its replacement, or that it stands and why.
+5. When the agent has written a rename or a redefinition, the agent shall
+   count again, and show the record keeper any occurrence not shown
+   before.

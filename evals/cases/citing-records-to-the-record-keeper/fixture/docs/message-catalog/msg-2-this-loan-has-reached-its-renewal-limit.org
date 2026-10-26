@@ -1,0 +1,5 @@
+* MSG-2 This loan has reached its renewal limit
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+This loan has reached its renewal limit.

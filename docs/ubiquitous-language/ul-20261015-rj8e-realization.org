@@ -1,0 +1,6 @@
+* UL-20261015-rj8e Realization
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The code, skill text, or other work that makes a system do what its
+records say.

@@ -1,0 +1,6 @@
+* UL-1 Loan
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A copy of a book lent to one borrower, from the day it is lent until the day
+it is returned.

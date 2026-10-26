@@ -1,0 +1,17 @@
+* ADR-20261019-t4qq Stop delegation two levels deep
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+A subagent that can dispatch subagents can nest without end, each level
+spending more than the one above it.
+** Decision
+We will let the agent and its subagents dispatch subagents, and withhold the
+delegate harness capability
+([[./adr-20261019-71m6-render-each-harnesss-package-from-capability-markers-and-a-harness-profile.org][ADR-20261019-71m6: Render each harness's package from capability markers and a harness profile]])
+from a subagent's subagents. Where
+the subagent tool is the recs files' own, each subagent it spawns carries its
+depth in =TRF_DELEGATE_DEPTH=, and the tool is not offered at depth 2.
+** Consequences
+A subagent's subagent does its work itself. A harness whose subagent tool is
+its own keeps its own limit; this decision binds the recs files' tool.

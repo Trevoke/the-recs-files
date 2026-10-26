@@ -23,14 +23,14 @@ function toolsOffered(t, depth) {
   return Number(execFileSync(process.execPath, ['--experimental-strip-types', '--no-warnings', '--input-type=module', '-e', script], { env, encoding: 'utf8' }).trim());
 }
 
-// ADR-13 §Decision: Stop delegation two levels deep
+// ADR-20261019-t4qq §Decision: Stop delegation two levels deep
 test('the pi subagent extension offers the subagent tool at depths 0 and 1, and with no depth set', (t) => {
   assert.equal(toolsOffered(t, undefined), 1, 'the tool is offered with no TRF_DELEGATE_DEPTH');
   assert.equal(toolsOffered(t, '0'), 1, 'the tool is offered at depth 0');
   assert.equal(toolsOffered(t, '1'), 1, 'the tool is offered at depth 1');
 });
 
-// ADR-13 §Decision: Stop delegation two levels deep
+// ADR-20261019-t4qq §Decision: Stop delegation two levels deep
 test('the pi subagent extension does not offer the subagent tool at depth 2', (t) => {
   assert.equal(toolsOffered(t, '2'), 0, 'no tool is offered at depth 2');
 });

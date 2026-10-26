@@ -1,0 +1,18 @@
+* F-20261014-d03n A record is written with its line in its projection
+:PROPERTIES:
+:STATUS: Superseded by [[./f-20261026-tacr-a-record-is-written-with-its-identifier-and-its-line-in-its-projection.org][F-20261026-tacr: A record is written with its identifier and its line in its projection]]
+:END:
+1. When the agent drafts a new record, the agent shall write it as
+   proposed, in a file of its own, with its line under its projection's
+   Proposed heading.
+2. The agent shall give a new record the next number its category has not
+   used.
+3. The agent shall give a record's file, its heading and its line in the
+   projection the same title.
+4. The agent shall never reuse a record's number.
+5. When a proposed record is accepted, the agent shall move its line out
+   from under its projection's Proposed heading.
+6. When a record change is agreed, the agent shall mark the record
+   accepted and write every falsified sentence's replacement in one pass.
+7. When a record is rejected or withdrawn, the agent shall remove its line
+   from its projection.

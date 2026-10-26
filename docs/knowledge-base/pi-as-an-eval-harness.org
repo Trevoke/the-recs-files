@@ -289,3 +289,28 @@ match). An agent told to run `env` in a sandboxed run listed
 `OPENROUTER_API_KEY` among its variables
 (bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness
 and its own directory).
+
+* `git init` creates `.git/info` only when its template directory has one
+`git init` creates `.git/info` only when its template directory has one. With
+git 2.54.0 (`git --version`), `init.templateDir` set to a directory holding
+only `hooks/`, a new repository had no `.git/info`, where git's own templates
+hold `info/` (runs, 2026-10-25):
+#+begin_src sh
+git init -q x && ls -A x/.git
+git config --show-origin --get init.templateDir
+ls -A ~/.git_template
+ls -A /usr/share/git-core/templates
+#+end_src
+#+begin_example
+config
+HEAD
+hooks
+objects
+refs
+file:/home/stag/.gitconfig	~/.git_template
+hooks
+description
+hooks
+info
+#+end_example
+Writing `.git/info/exclude` therefore creates `.git/info` first.

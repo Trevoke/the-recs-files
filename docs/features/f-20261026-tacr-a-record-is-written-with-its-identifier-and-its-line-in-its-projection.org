@@ -1,0 +1,25 @@
+* F-20261026-tacr A record is written with its identifier and its line in its projection
+:PROPERTIES:
+:STATUS: Accepted
+:SUPERSEDES: [[./f-20261014-d03n-a-record-is-written-with-its-line-in-its-projection.org][F-20261014-d03n: A record is written with its line in its projection]] (§1 → §1; §2 → §2; §3 → §4; §4 → §5; §5 → §6; §6 → §7; §7 → §8)
+:END:
+1. When the agent drafts a new record, the agent shall write it as
+   proposed, in a file of its own, with its line under its projection's
+   Proposed heading.
+2. When the agent drafts a new record, the agent shall give it the
+   [[../ubiquitous-language/ul-20261026-3m08-identifier.org][UL-20261026-3m08: Identifier]]
+   made of its category's prefix, the UTC date of the draft, and four
+   characters drawn at random from lowercase Crockford base32.
+   - The one where an architectural decision drafted on 26 October 2026
+     is ADR-20261026-kzx5.
+3. If a drawn identifier names a record file in its category's
+   directory, then the agent shall draw again.
+4. The agent shall give a record's file, its heading and its line in the
+   projection the same title.
+5. The agent shall never reuse a record's identifier.
+6. When a proposed record is accepted, the agent shall move its line out
+   from under its projection's Proposed heading.
+7. When a record change is agreed, the agent shall mark the record
+   accepted and write every falsified sentence's replacement in one pass.
+8. When a record is rejected or withdrawn, the agent shall remove its line
+   from its projection.

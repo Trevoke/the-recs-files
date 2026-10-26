@@ -23,7 +23,7 @@ async function install(dirs, env) {
   // docs/knowledge-base/pi-as-an-eval-harness.org: A project package loads only under project trust
   // docs/knowledge-base/pi-as-an-eval-harness.org: `<agent-dir>/trust.json` keeps a project trust decision; `--approve` lasts one run
   fs.writeFileSync(path.join(agentDir, 'trust.json'), `${JSON.stringify({ [project]: true }, null, 2)}\n`);
-  // ADR-12 §Consequences: Install the recs files at project scope by default
+  // ADR-20261019-0fex §Consequences: Install the recs files at project scope by default
   // docs/knowledge-base/pi-as-an-eval-harness.org: `pi install -l <path>` records the path in `.pi/settings.json` and copies nothing
   const result = await run(sandboxed(dirs, env, ['install', '-l', `./${path.relative(project, pkg)}`]), 60 * 1000);
   if (result.code !== 0) throw new Error(`pi install exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`);

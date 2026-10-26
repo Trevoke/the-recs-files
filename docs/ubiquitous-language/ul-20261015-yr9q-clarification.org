@@ -1,0 +1,6 @@
+* UL-20261015-yr9q Clarification
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+An in-place edit to a record's wording that keeps its intent, as the record
+keeper decides.

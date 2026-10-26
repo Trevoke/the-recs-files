@@ -17,7 +17,7 @@ record keeper's direction.
 This project keeps these projections. Adapt the list to the project; the
 `recs-writing-records` skill carries the starting set.
 
-- **Vision** — `docs/vision.org`, a single file: no projection, no numbered records
+- **Vision** — `docs/vision.org`, a single file: no projection, no identifiers
 - **Ubiquitous language** (UL-n) — `docs/ubiquitous-language.org`
 - **Architectural decisions** (ADR-n) — `docs/architectural-decisions.org`
 - **Features** (F-n) — `docs/features.org`
@@ -86,16 +86,78 @@ X-1: The job notifies by message and keeps none
 ```
 
 A record lives in a file of its own under its category's directory —
-`docs/features/f-12-<slug>.org` — headed `* F-12 <title>`, the slug made from
+`docs/features/f-20261026-kzx5-<slug>.org` — headed `* F-20261026-kzx5 <title>`, the slug made from
 the title. The projection, `docs/features.org`, lists every standing or
-proposed record as `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in
-number order, beside the projection's preamble and any section that belongs to
+proposed record as `- F-20261026-kzx5 :: [[./features/f-20261026-kzx5-<slug>.org][<title>]]`,
+in identifier order, beside the projection's preamble and any section that belongs to
 the projection rather than to one record. A record's status, and the records a
 successor supersedes, are properties in its drawer, `:STATUS:` and
 `:SUPERSEDES:`. A proposed record's line sits under a `* Proposed` heading at the
 end of the projection. A record's file, its line in the projection, and its
 heading carry the same title, and a clarification that gives a record a new
 title changes all three.
+
+A heading, a property, a projection line, a table row and a `#+` keyword line
+are each written on one line, however long it runs; prose may wrap. A record's
+drawer holds each property once. A record names another record by an org link
+to its file, its description the identifier and title, and the link sits whole on
+one line.
+
+Good:
+```org
+* ADR-12 Retry each provider's failed jobs from one queue of its own
+:PROPERTIES:
+:STATUS: Proposed
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]], [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
+:END:
+** Context
+The shared queue lets one provider's outage hold up every other provider's
+retries, as
+[[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]]
+found.
+```
+```org
+- ADR-12 :: [[./architectural-decisions/adr-12-retry-each-providers-failed-jobs-from-one-queue-of-its-own.org][Retry each provider's failed jobs from one queue of its own]]
+```
+
+Bad: the heading wrapped. Org reads "from one queue of its own" as body text,
+and the drawer as no longer the record's, so its status is lost:
+```org
+* ADR-12 Retry each provider's failed jobs
+  from one queue of its own
+:PROPERTIES:
+```
+
+Bad: a property wrapped. Org rejects the whole drawer, status included:
+```org
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry
+  every failed job from one shared queue]]
+```
+
+Bad: a property repeated. Org keeps only the last, and ADR-4 is lost:
+```org
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]]
+:SUPERSEDES: [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
+```
+
+Bad: a record named in plain text, and wrapped. No search for the title finds it:
+```org
+The shared queue lets one provider's outage hold up the rest, as ADR-4: Retry
+every failed job from one shared queue found.
+```
+
+Bad: a projection line wrapped. The title no longer matches the heading:
+```org
+- ADR-12 :: [[./architectural-decisions/adr-12-retry-each-providers-failed-jobs-from-one-queue-of-its-own.org][Retry each
+  provider's failed jobs from one queue of its own]]
+```
+
+A new record is written to its file with `:STATUS: Proposed` and its line under
+`* Proposed`, committed alone, and then shown to the record keeper with every
+sentence it falsifies and the wording that replaces each: they agree to a file
+that exists. Nothing stands before they agree. Accepting it, once they have,
+marks it Accepted, moves its line out from under `* Proposed` and writes the
+replacements, in a commit of its own.
 
 ## A feature record's form
 
@@ -123,8 +185,9 @@ stands in for When where the trigger is unwanted.
   workflow that reaches the feature. The order of things, and what a user may
   do next, are the user workflow's to say.
 - **A refusal cites its message, never quotes it.** "If the book is reserved,
-  then the library shall refuse the renewal with `MSG-4: A reserved book cannot
-  be renewed`." The text lives in the message catalog alone.
+  then the library shall refuse the renewal with
+  [[../message-catalog/msg-4-a-reserved-book-cannot-be-renewed.org][MSG-4: A reserved book cannot be renewed]]."
+  The text lives in the message catalog alone.
 - **Examples are optional.** An example sits under the one requirement it
   illustrates, in plain prose. It decides nothing the requirement does not, so
   adding or rewording one changes the record without superseding it. Changing,
@@ -135,10 +198,11 @@ stands in for When where the trigger is unwanted.
 Requirements are numbered from 1, and the number is the requirement's section:
 a citation of one requirement is `F-12 §2: A borrower can renew a loan`. A
 number is never reused within its record. A successor numbers its own
-requirements from 1, and its status maps each of the old record's sections to
-the successor's sections that carry it, or to none: "Supersedes F-12: A
-borrower can renew a loan (§1 → §1; §2 → §2, §3; §3 → none)". The sweep of the
-old identifier repoints each `F-12 §n` citation by that map.
+requirements from 1, and its `:SUPERSEDES:` line maps each of the old record's
+sections to the successor's sections that carry it, or to none:
+`:SUPERSEDES: [[./f-12-a-borrower-can-renew-a-loan.org][F-12: A borrower can renew a loan]] (§1 → §1; §2 → §2, §3; §3 → none)`.
+The sweep of the old identifier repoints each citation of a section of the old
+record by that map.
 
 ```org
 * F-12 A borrower can renew a loan
@@ -147,11 +211,13 @@ old identifier repoints each `F-12 §n` citation by that map.
    one loan period after the renewal date.
    - The one where a 14-day loan renewed on 1 October is due on 15 October.
 2. If the book is reserved, then the library shall refuse the renewal with
-   `MSG-4: A reserved book cannot be renewed`.
+   [[../message-catalog/msg-4-a-reserved-book-cannot-be-renewed.org][MSG-4: A reserved book cannot be renewed]].
 3. While a loan is overdue beyond the grace period, the library shall refuse
-   any renewal of it with `MSG-5: An overdue loan cannot be renewed`.
+   any renewal of it with
+   [[../message-catalog/msg-5-an-overdue-loan-cannot-be-renewed.org][MSG-5: An overdue loan cannot be renewed]].
 4. Where the library sets a renewal limit, the library shall refuse a renewal
-   past it with `MSG-6: This loan has reached its renewal limit`.
+   past it with
+   [[../message-catalog/msg-6-this-loan-has-reached-its-renewal-limit.org][MSG-6: This loan has reached its renewal limit]].
 ```
 
 ### Where each thing about a feature is held
@@ -227,23 +293,46 @@ thing is built, so it lives in the decision that chose to build it that way.
 
 Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
-you need to talk to the record keeper about it, use the record number and the record title.
+you need to talk to the record keeper about it, cite the records.
 
-Good: "`X-8: Frobnicate the widgets`"
-Bad: "`X-8`"
+A citation is a record's identifier, one section of it where a section is meant, and
+its title as the record's heading carries it, in that order, in backticks, on
+one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`. To
+the record keeper, the identifier and the record's title together are the record,
+and nothing shorter is: the record keeper picks each citation out of your reply
+by this form, and `X-8` or `X-8 §2` on its own reaches them as no record at all.
+So the identifier and title are written whole every time the record comes up, not
+only the first time, and in every sentence that handles it: one that names the
+record itself, one that names a section of it, one that says what a comment in
+code cites, one that maps a record's sections to its successor's, and one that
+quotes a requirement whose text carries a citation. Two sections are two
+citations, and a map of sections is written in sentences, one whole citation to
+a section. Everything you say reaches the record keeper, what you say while you
+work included: a record you are about to open, or have just opened, is cited the
+same way, by the identifier and title its projection line carries.
+
+Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
+Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
+Good: "`src/widgets.py` cites `X-8 §2: Frobnicate the widgets` and `X-8 §1: Frobnicate the widgets`"
+Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
+Good: "`X-8 §2: Frobnicate the widgets` reads: 'If the widget is reserved, then the system shall refuse with `MSG-4: A reserved widget cannot be frobnicated`'"
+Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
+Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
+Bad: "`X-8 §1` → §1, `X-8 §2` → §2, §3"
+Bad: "I'll open X-8, X-9 and the terms X-8 uses"
 
 ## Framing a question
 
 Every question to the record keeper is framed from the records, and starts from the user
-workflow the work is in. Name that workflow by number and title, and the step or
+workflow the work is in. Name that workflow by identifier and title, and the step or
 extension of it that applies. Then bring in whatever else bears — a feature, an
 architectural decision, a message catalog entry, a ubiquitous language term —
-each by number and title. Then state the situation, and only then the problem.
+each by identifier and title. Then state the situation, and only then the problem.
 
 ```
 We are working on `UW-X: Frobnicate the widget`.
 
-`Section 1b: whirl first` says the user frobnicates after having whirled.
+`UW-X §1b: Frobnicate the widget` says the user frobnicates after having whirled.
 
 `F-Y: Frobnication` says that we must whirl only after whooping.
 
@@ -273,7 +362,7 @@ candidate against words the taxonomy already owns.
 # How to work on the realization
 
 Two kinds of comment are valid in code, and no third. One points at a record,
-by number and title. The other points at a heading of `docs/knowledge-base/`,
+by identifier and title. The other points at a heading of `docs/knowledge-base/`,
 where the code performs a technical operation whose reason the code does not
 show.
 

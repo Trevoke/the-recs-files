@@ -1,6 +1,0 @@
-* UL-20 Retired
-:PROPERTIES:
-:STATUS: Accepted
-:END:
-The status of a withdrawn record that nothing replaces. Its text stands as
-written.

@@ -14,8 +14,8 @@ records, whether a developer or a product owner. Records change only at the
 record keeper's direction. The agent is what the skills instruct.
 
 * The domain
-A project's records: short, numbered statements of what its system does and
-why. The records are the truth for the system; the record keeper is the
+A project's records: short statements, each with an identifier, of what its
+system does and why. The records are the truth for the system; the record keeper is the
 truth for the records.
 
 * Bounded contexts

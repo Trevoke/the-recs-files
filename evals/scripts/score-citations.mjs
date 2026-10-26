@@ -1,0 +1,144 @@
+import { spawnSync } from 'node:child_process';
+import fs from 'node:fs';
+import os from 'node:os';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
+
+const evalsDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const checks = ['exact titles', 'section before title', 'in backticks', 'one line'];
+
+function options(argv) {
+  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null };
+  for (let i = 0; i < argv.length; i += 2) {
+    const key = argv[i].replace(/^--/, '');
+    if (!(key in opts)) throw new Error(`unknown option --${key}`);
+    opts[key] = ['repeat', 'jobs'].includes(key) ? Number(argv[i + 1]) : argv[i + 1];
+  }
+  if (!['train', 'held-out', 'all'].includes(opts.split)) throw new Error(`--split is train, held-out or all, not ${opts.split}`);
+  return opts;
+}
+
+function run(opts) {
+  const raw = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'score-citations-')), 'results.json');
+  const split = opts.split === 'all' ? '(?:train|held-out)' : opts.split;
+  const args = [
+    'promptfoo', 'eval', '--no-cache',
+    '--filter-providers', 'claude-code-sonnet with-skills',
+    '--filter-pattern', `cites records to the record keeper \\(${split}:`,
+    '--repeat', String(opts.repeat), '-j', String(opts.jobs), '-o', raw,
+  ];
+  const child = spawnSync('npx', args, {
+    cwd: evalsDir,
+    env: { ...process.env, PROMPTFOO_SCHEDULER_QUEUE_TIMEOUT_MS: '3600000' },
+    stdio: ['ignore', 'ignore', 'inherit'],
+  });
+  if (![0, 100].includes(child.status)) throw new Error(`promptfoo exited ${child.status}`);
+  return raw;
+}
+
+function counts(reason) {
+  const failing = /^(\d+) of (\d+) citations [^:]*: (.*)$/s.exec(reason);
+  if (failing) return { faults: Number(failing[1]), total: Number(failing[2]), excerpts: failing[3].split('; ') };
+  const holding = /^all (\d+) citations hold$/.exec(reason);
+  if (holding) return { faults: 0, total: Number(holding[1]), excerpts: [] };
+  return null;
+}
+
+function reply(result) {
+  const scenario = /\((?:train|held-out): ([^)]+)\)/.exec(result.testCase?.description || result.description || '')?.[1] || 'unknown';
+  const components = result.gradingResult?.componentResults || [];
+  const byCheck = Object.fromEntries(components.map((c) => [c.assertion?.metric, c]));
+  const titles = byCheck['exact titles'] && counts(byCheck['exact titles'].reason || '');
+  if (!titles) return { scenario, error: result.error || 'no citation of a record on disk' };
+  const faults = {};
+  const excerpts = {};
+  for (const check of checks) {
+    const found = byCheck[check] && counts(byCheck[check].reason || '');
+    faults[check] = found ? found.faults : 0;
+    if (found?.excerpts.length) excerpts[check] = found.excerpts;
+  }
+  const sum = Object.values(faults).reduce((a, b) => a + b, 0);
+  return { scenario, total: titles.total, faults, score: sum / titles.total, pass: result.success === true, excerpts };
+}
+
+function mean(xs) {
+  return xs.reduce((a, b) => a + b, 0) / xs.length;
+}
+
+function standardError(xs) {
+  if (xs.length < 2) return 0;
+  const m = mean(xs);
+  return Math.sqrt(xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1) / xs.length);
+}
+
+function summary(replies, opts) {
+  const scored = replies.filter((r) => r.error === undefined);
+  const scores = scored.map((r) => r.score);
+  const scenarios = {};
+  for (const r of scored) (scenarios[r.scenario] ||= []).push(r.score);
+  return {
+    commit: spawnSync('git', ['rev-parse', '--short', 'HEAD'], { cwd: evalsDir, encoding: 'utf8' }).stdout.trim(),
+    split: opts.split,
+    replies: replies.length,
+    errors: replies.filter((r) => r.error !== undefined).map((r) => `${r.scenario}: ${r.error}`),
+    score: scores.length ? mean(scores) : null,
+    standardError: standardError(scores),
+    passing: scored.filter((r) => r.pass).length,
+    scenarios: Object.fromEntries(Object.entries(scenarios).map(([k, v]) => [k, { score: mean(v), standardError: standardError(v), replies: v.length }])),
+    faults: Object.fromEntries(checks.map((c) => [c, scored.reduce((a, r) => a + r.faults[c], 0)])),
+    detail: replies,
+  };
+}
+
+function variance(xs) {
+  if (xs.length < 2) return 0;
+  const m = mean(xs);
+  return xs.reduce((a, x) => a + (x - m) ** 2, 0) / (xs.length - 1);
+}
+
+function byScenario(replies) {
+  const scenarios = {};
+  for (const r of replies) if (r.error === undefined) (scenarios[r.scenario] ||= []).push(r.score);
+  return scenarios;
+}
+
+function verdict(candidate, incumbent) {
+  const ours = byScenario(candidate.detail);
+  const theirs = byScenario(incumbent.detail);
+  const shared = Object.keys(ours).filter((s) => theirs[s]?.length && ours[s].length);
+  if (shared.length === 0) throw new Error('the two scores share no question');
+  let gap = 0;
+  let spread = 0;
+  for (const s of shared) {
+    gap += (mean(theirs[s]) - mean(ours[s])) / shared.length;
+    spread += (variance(theirs[s]) / theirs[s].length + variance(ours[s]) / ours[s].length) / shared.length ** 2;
+  }
+  const margin = 2 * Math.sqrt(spread);
+  return { gap, margin, keep: gap > margin, questions: shared.length };
+}
+
+function pooled(files) {
+  const scores = files.split(',').map((f) => JSON.parse(fs.readFileSync(f, 'utf8')));
+  return { split: scores[0].split, detail: scores.flatMap((s) => s.detail) };
+}
+
+const opts = options(process.argv.slice(2));
+let replies;
+if (opts.pool) {
+  const merged = pooled(opts.pool);
+  opts.split = merged.split;
+  replies = merged.detail;
+} else {
+  const raw = opts.from || run(opts);
+  replies = JSON.parse(fs.readFileSync(raw, 'utf8')).results.results.map(reply);
+}
+const scored = summary(replies, opts);
+if (opts.against) scored.verdict = verdict(scored, pooled(opts.against));
+if (opts.out) fs.writeFileSync(opts.out, JSON.stringify(scored, null, 2));
+if (opts.log) {
+  const fresh = !fs.existsSync(opts.log);
+  const row = [new Date().toISOString(), scored.commit, scored.split, scored.replies, scored.score?.toFixed(4), scored.standardError.toFixed(4), scored.passing, scored.verdict ? (scored.verdict.keep ? 'keep' : 'discard') : ''];
+  fs.appendFileSync(opts.log, (fresh ? 'time\tcommit\tsplit\treplies\tscore\tstandard error\tpassing\tverdict\n' : '') + row.join('\t') + '\n');
+}
+const { detail, ...shown } = scored;
+console.log(JSON.stringify(shown, null, 2));

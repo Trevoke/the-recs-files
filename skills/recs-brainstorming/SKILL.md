@@ -15,7 +15,7 @@ Start by reading the project's records, then ask questions one at a time to refi
 
 **Reading the records first:**
 - Before any dialogue, read the project's records - the project's AGENTS.md says where they live. Commonly: user workflows, architectural decisions, features, a ubiquitous language, and a message catalog.
-- Speak in record numbers and titles throughout the dialogue ("that touches UW-4: Import contacts from a spreadsheet") - never a bare number, and never a paraphrase where a record already says it.
+- Speak in record identifiers and titles throughout the dialogue ("that touches `UW-4: Import contacts from a spreadsheet`") - never a bare identifier, and never a paraphrase where a record already says it.
 - Read which realization modalities AGENTS.md names: the forms the project's realization takes, such as code or skill text. Where it names none, ask the record keeper to choose one before anything else, and once they have, name it in AGENTS.md. Work only in a modality the record keeper chose; files already in the project are not a choice.
 - Check out the current project state too (files, docs, recent commits).
 
@@ -70,7 +70,7 @@ Walk each validated decision through the placement tests and route it to its cat
 | What a word means, in a sentence or two, no behaviour | The ubiquitous language |
 | Exact refusal or error text | The message catalog |
 
-Propose each record change to the record keeper - by category, with the number and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the record keeper's direction; use {{trf: load recs-writing-records}} to write the agreed ones. Never write into a record unbidden.
+Propose each record change to the record keeper - by category, with the identifier and title of any record it supersedes - and wait. A change that supersedes a record or moves a word's meaning is proposed together with the sentences elsewhere it makes false; recs-writing-records finds those before anything is shown, so agreement covers the consequences and not only the record. Records change only at the record keeper's direction; use {{trf: load recs-writing-records}} to write the agreed ones. Never write into a record unbidden.
 
 **Documenting what remains:**
 - What routing leaves behind - purely implementation-level decisions - goes to `docs/plans/YYYY-MM-DD-<topic>-design.md`
@@ -85,7 +85,7 @@ Propose each record change to the record keeper - by category, with the number a
 
 ## Key Principles
 
-- **Records first** - Read the records before the dialogue, and speak in record numbers and titles
+- **Records first** - Read the records before the dialogue, and speak in record identifiers and titles
 - **One question at a time** - Don't overwhelm with multiple questions
 - **Multiple choice preferred** - Easier to answer than open-ended when possible
 - **YAGNI ruthlessly** - Remove unnecessary features from all designs

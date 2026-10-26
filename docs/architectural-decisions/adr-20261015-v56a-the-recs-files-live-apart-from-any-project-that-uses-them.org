@@ -1,0 +1,18 @@
+* ADR-20261015-v56a The recs files live apart from any project that uses them
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+The skills were written for one project, Stone, and describe a way of
+working any project can use. Inside Stone they carried Stone's vocabulary.
+Each project that adopts them has its own records, its own words and its
+own paths.
+** Decision
+We will keep the recs files in a repository of their own, and keep each
+project's facts in that project's AGENTS.md, seeded from the one
+recs-kickstart carries.
+** Consequences
+A project adopts the skills without inheriting another project's
+vocabulary. The skills cite no project's records, this repository's
+included, so every example in them is invented. A rule one project needs
+and the skills lack goes in that project's AGENTS.md.

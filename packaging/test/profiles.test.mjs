@@ -10,7 +10,7 @@ import { memoryPath } from '../../evals/checks/harness-capabilities.js';
 const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'profiles');
 
 for (const harness of harnesses) {
-  // ADR-10 §Decision: Render each harness's package from capability markers and a harness profile
+  // ADR-20261019-71m6 §Decision: Render each harness's package from capability markers and a harness profile
   test(`the ${harness} harness profile is complete`, () => {
     const profile = JSON.parse(fs.readFileSync(path.join(dir, `${harness}.json`), 'utf8'));
     assert.equal(profile.harness, harness);
@@ -22,7 +22,7 @@ for (const harness of harnesses) {
   });
 }
 
-// ADR-10 §Consequences: Render each harness's package from capability markers and a harness profile
+// ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
 test('the eval memory file check matches the pi harness profile\'s memory file', () => {
   const profile = JSON.parse(fs.readFileSync(path.join(dir, 'pi.json'), 'utf8'));
   assert.ok(memoryPath.test(memoryFile(profile).replace(/<[^>]*>/g, 'project')), 'the pi memory file, for a project, matches the check');

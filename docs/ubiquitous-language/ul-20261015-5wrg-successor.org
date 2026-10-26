@@ -1,0 +1,5 @@
+* UL-20261015-5wrg Successor
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A record that replaces one or more superseded records.

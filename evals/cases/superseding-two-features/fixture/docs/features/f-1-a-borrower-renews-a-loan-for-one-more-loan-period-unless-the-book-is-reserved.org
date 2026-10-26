@@ -1,0 +1,12 @@
+* F-1 A borrower renews a loan for one more loan period unless the book is reserved
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+1. When a borrower renews a loan, the library shall set the loan's due date
+   one loan period after the renewal date.
+   - The one where a 14-day loan renewed on 1 October is due on 15 October.
+2. If the book is reserved, then the library shall refuse the renewal with
+   [[../message-catalog/msg-1-a-reserved-book-cannot-be-renewed.org][MSG-1: A reserved book cannot be renewed]].
+3. Where the library sets a renewal limit, the library shall refuse a
+   renewal past it with
+   [[../message-catalog/msg-2-this-loan-has-reached-its-renewal-limit.org][MSG-2: This loan has reached its renewal limit]].

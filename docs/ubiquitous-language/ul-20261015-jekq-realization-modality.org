@@ -1,0 +1,5 @@
+* UL-20261015-jekq Realization modality
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The form a project's realization takes: code, skill text, or other work.
