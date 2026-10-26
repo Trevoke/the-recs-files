@@ -1,11 +1,11 @@
 import fs from 'node:fs';
 import path from 'node:path';
+import { identifier, prefix } from './identifier.js';
 import { changedFiles, read, result, workingDir } from './workspace.js';
 
-const prefix = '(?:ADR|F|UW|UL|MSG)';
-const recordFile = /^docs\/[^/]+\/(?:adr|f|uw|ul|msg)-\d+-[^/]*\.org$/;
-const projectionEntry = new RegExp(`^- ${prefix}-\\d+ ::`);
-const wholeProjectionEntry = new RegExp(`^- ${prefix}-\\d+ :: \\[\\[[^\\]\\n]+\\]\\[[^\\]\\n]+\\]\\]$`);
+const recordFile = new RegExp(`^docs/[^/]+/(?:adr|f|uw|ul|msg)-${identifier}-[^/]*\\.org$`);
+const projectionEntry = new RegExp(`^- ${prefix}-${identifier} ::`);
+const wholeProjectionEntry = new RegExp(`^- ${prefix}-${identifier} :: \\[\\[[^\\]\\n]+\\]\\[[^\\]\\n]+\\]\\]$`);
 const drawerLine = /^:[A-Za-z0-9_-]+\+?:(?: .*)?$/;
 
 function changedOrg(context) {
@@ -59,7 +59,7 @@ export function plainNames(file, text) {
   text.split('\n').forEach((line, i) => {
     if (i === 0) return;
     const bare = line.replace(/\[\[[^\]]*\]\[[^\]]*\]\]/g, '');
-    for (const m of bare.matchAll(new RegExp(`\\b${prefix}-\\d+\\b`, 'g'))) names.push(`${file}:${i + 1} ${m[0]}`);
+    for (const m of bare.matchAll(new RegExp(`(?<![\\w-])${prefix}-${identifier}(?![\\w-])`, 'g'))) names.push(`${file}:${i + 1} ${m[0]}`);
   });
   return names;
 }

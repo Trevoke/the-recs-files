@@ -64,3 +64,14 @@ test('links on a :SUPERSEDES: line are parted by a comma and a space, after any 
   assert.deepEqual(separators(`:SUPERSEDES: ${a}, ${b}`), [', ']);
   assert.deepEqual(separators(`:SUPERSEDES: ${a} ${b}`), [' ']);
 });
+
+test('a broken projection line with a dated identifier is a fault', () => {
+  const projection = '#+TITLE: Architectural decisions\n\n- ADR-20261015-70tz :: [[./architectural-decisions/adr-20261015-70tz-merge.org][Merge\n  the queues]]\n';
+  assert.match(lineFaults('docs/architectural-decisions.org', projection).join(), /projection line broken/);
+});
+
+test('a plain dated record name is found whole', () => {
+  const dated = 'docs/architectural-decisions/adr-20261015-70tz-merge.org';
+  const text = '* ADR-20261015-70tz Merge\n:PROPERTIES:\n:STATUS: Proposed\n:END:\nRests on `ADR-20261015-nz3v: A changed decision is a new record that supersedes the old`.\n';
+  assert.deepEqual(plainNames(dated, text), [`${dated}:5 ADR-20261015-nz3v`]);
+});
