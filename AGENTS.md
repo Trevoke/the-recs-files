@@ -231,21 +231,21 @@ Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, cite the records.
 
-A citation is a record's number, one section of it where a section is meant,
-and its title as the record's heading carries it, in that order, in backticks,
-on one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`.
-To the record keeper, that is the record's name, and nothing shorter is: the
-record keeper picks each citation out of your reply by this form, and `X-8` or
-`X-8 §2` on its own reaches them as no record at all. So the name is written
-whole every time the record comes up, not only the first time, and in every
-sentence that handles it: one that names the record itself, one that names a
-section of it, one that says what a comment in code cites, one that maps a
-record's sections to its successor's, and one that quotes a requirement whose
-text carries a citation. Two sections are two citations, and a map of sections
-is written in sentences, one whole citation to a section. Everything you say
-reaches the record keeper, what you say while you work included: a record you
-are about to open, or have just opened, is named the same way, by the name its
-projection line carries.
+A citation is a record's number, one section of it where a section is meant, and
+its title as the record's heading carries it, in that order, in backticks, on
+one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`. To
+the record keeper, the number and the record's title together are the record,
+and nothing shorter is: the record keeper picks each citation out of your reply
+by this form, and `X-8` or `X-8 §2` on its own reaches them as no record at all.
+So the number and title are written whole every time the record comes up, not
+only the first time, and in every sentence that handles it: one that names the
+record itself, one that names a section of it, one that says what a comment in
+code cites, one that maps a record's sections to its successor's, and one that
+quotes a requirement whose text carries a citation. Two sections are two
+citations, and a map of sections is written in sentences, one whole citation to
+a section. Everything you say reaches the record keeper, what you say while you
+work included: a record you are about to open, or have just opened, is cited the
+same way, by the number and title its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
