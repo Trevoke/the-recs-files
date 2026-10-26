@@ -129,6 +129,18 @@ The runs need `OPENROUTER_API_KEY`, and `ANTHROPIC_API_KEY` for the
 node, pi and its own directory. Each run's transcript is kept beside its
 project, as `pi.jsonl`.
 
+The `claude-code-sonnet` arms run the `claude` CLI in the same sandbox, with
+`skills/` copied into the run's `.claude/skills`, on your Claude subscription:
+run `claude setup-token`, export what it prints as `CLAUDE_CODE_OAUTH_TOKEN`,
+and run `npm run eval:claude-code`. A model in the run can read that token, so
+keep its transcripts on your machine.
+
+`npm run score:citations` scores the `citing-records-to-the-record-keeper`
+questions in Claude Code: faults per citation under the four checks, per
+question and overall, and with `--against` whether a wording beats another
+question by question. How it is used to improve the skills' wording is in
+`docs/knowledge-base/improving-skill-text-against-an-eval.org`.
+
 ## License
 
 MIT; see `LICENSE`. The development flow skills are derived from

@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased
+
+- The agent cites a record to the record keeper in its title's exact words,
+  with any section between the number and the title, in backticks, and on one
+  line (`F-12: The agent cites a record to the record keeper in its title's exact words`).
+  The seed says so with one example per kind of sentence where citations were
+  shortened, and the skills' example citations are whole and in backticks.
+- The seed and `recs-writing-records` say that a new record is written to disk
+  as Proposed and committed before it is shown for agreement, as
+  `UW-1: Create a record` orders it.
+- The evals run in Claude Code on a Claude subscription, beside pi.
+- A new eval case, `citing-records-to-the-record-keeper`: six questions on one
+  fixture, four to tune the wording against and two held out, scored by
+  `npm run score:citations`.
+
+### Eval results
+
+Claude Code, Claude Sonnet 5.5, with the skills installed.
+
+| Case | Runs passing |
+|---|---|
+| citing-records-to-the-record-keeper, held-out questions | 9/12 (0/12 before), 0.06 faults per citation (0.78 before) |
+| proposing-a-record | 11/12 |
+| rejecting-a-proposed-record | 3/3 |
+| choosing-a-realization-modality | 3/3 |
+| planning-without-a-realization-modality | 3/3 |
+| starting-records-from-a-realization | 3/3 |
+
 ## 1.0.0-beta — 2026-10-16
 
 The first release. The record forms, the categories, and record management
