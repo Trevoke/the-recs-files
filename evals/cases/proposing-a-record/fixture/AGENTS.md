@@ -80,6 +80,61 @@ end of the projection. A record's file, its line in the projection, and its
 heading carry the same title, and a clarification that gives a record a new
 title changes all three.
 
+A heading, a property, a projection line, a table row and a `#+` keyword line
+are each written on one line, however long it runs; prose may wrap. A record's
+drawer holds each property once. A record names another record by an org link
+to its file, its description the number and title, and the link sits whole on
+one line.
+
+Good:
+```org
+* ADR-12 Retry each provider's failed jobs from one queue of its own
+:PROPERTIES:
+:STATUS: Proposed
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]], [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
+:END:
+** Context
+The shared queue lets one provider's outage hold up every other provider's
+retries, as
+[[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]]
+found.
+```
+```org
+- ADR-12 :: [[./architectural-decisions/adr-12-retry-each-providers-failed-jobs-from-one-queue-of-its-own.org][Retry each provider's failed jobs from one queue of its own]]
+```
+
+Bad: the heading wrapped. Org reads "from one queue of its own" as body text,
+and the drawer as no longer the record's, so its status is lost:
+```org
+* ADR-12 Retry each provider's failed jobs
+  from one queue of its own
+:PROPERTIES:
+```
+
+Bad: a property wrapped. Org rejects the whole drawer, status included:
+```org
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry
+  every failed job from one shared queue]]
+```
+
+Bad: a property repeated. Org keeps only the last, and ADR-4 is lost:
+```org
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]]
+:SUPERSEDES: [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
+```
+
+Bad: a record named in plain text, and wrapped. No search for the title finds it:
+```org
+The shared queue lets one provider's outage hold up the rest, as ADR-4: Retry
+every failed job from one shared queue found.
+```
+
+Bad: a projection line wrapped. The title no longer matches the heading:
+```org
+- ADR-12 :: [[./architectural-decisions/adr-12-retry-each-providers-failed-jobs-from-one-queue-of-its-own.org][Retry each
+  provider's failed jobs from one queue of its own]]
+```
+
 A new record is written to its file with `:STATUS: Proposed` and its line under
 `* Proposed`, committed alone, and then shown to the record keeper with every
 sentence it falsifies and the wording that replaces each: they agree to a file

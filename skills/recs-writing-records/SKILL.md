@@ -39,7 +39,8 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
 
 - **Define by defining.** State what something is; never define by contrast with what it isn't. "A quote offers, it does not oblige" helps no one. "A quote is the price offered for a set of line items, valid until its expiry date, before anything is reserved" is a definition.
 - **Be brief.** A record is a sentence or a short paragraph, not an essay.
-- **Address by number and title.** `ADR-12: One retry queue per provider`, in backticks, never a bare `ADR-12`.
+- **Address by number and title.** `ADR-12: One retry queue per provider`, in backticks, never a bare `ADR-12`. Inside a record, name another record in the form the project's AGENTS.md gives.
+- **Keep each line org reads whole.** A heading, a property, a projection line, a table row and a keyword line each stay on one line, however long; only prose wraps. A drawer holds each property once. The project's AGENTS.md shows each, good and bad.
 - **Match the category's form.** Read two neighbouring records before drafting; yours should be indistinguishable in shape.
 
 ## The Flow
