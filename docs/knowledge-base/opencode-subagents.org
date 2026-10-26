@@ -1,0 +1,141 @@
+#+TITLE: How opencode finds skills and agents, and spawns a subagent
+
+Established 2026-10-19 against opencode 2.0.29 (the Arch package, the CLI at
+/usr/bin/opencode) and its source, with opencode 1.19.3's source for the older
+line. No model was reached. Sources: anomalyco/opencode at tag v2.0.29, commit
+042d0832f5f3a73eaa039a58a7d565776f6d4290, and at tag v1.19.3, commit
+e3c4eb242585dcd77be1a867391b7c25fd47ce52, read with `gh api` and
+raw.githubusercontent.com; https://opencode.ai/docs/skills/,
+https://opencode.ai/docs/agents/, https://opencode.ai/docs/tools/,
+https://opencode.ai/docs/plugins/; `opencode --help`; runs inside bubblewrap
+with a throwaway HOME and XDG directories.
+
+* opencode 2 and opencode 1 are two release lines with different tool names
+`@opencode/cli` is at 2.0.32 on npm's `latest` tag; `opencode-ai` is at
+1.19.3 on its `latest` tag, released 2026-10-16 (`npm view`, 2026-10-19). The
+v2.0.29 README installs with `npm i -g @opencode/cli@latest`. opencode
+2.0.29's binary tells a session resumed from opencode 1 (`strings
+/usr/bin/opencode`):
+#+begin_example
+The `task` tool is now `subagent` and must be called by that name.
+The `subagent` tool takes `agent` instead of `subagent_type` and `sessionID` instead of `task_id`.
+The `skill` tool now takes `id` instead of `name`.
+The following tools are no longer available and must not be called: `todowrite`.
+#+end_example
+The same table renames `bash` to `shell` and `apply_patch` to `patch`.
+
+* opencode 2 spawns a subagent with the `subagent` tool, naming it in `agent`
+`packages/core/src/tool/plugin/subagent.ts`: `name = "subagent"`; input
+`agent` ("The type of specialized agent to use for this task"),
+`description` ("A short 3-5 word label for the task"), `prompt`, and optional
+`model`, `sessionID` and `background`. An unknown name fails with "Unknown
+agent: <name>"; a primary agent fails with "Agent <name> cannot run as a
+subagent".
+
+In opencode 1.19.3 the tool is `task`, with `description`, `prompt`,
+`subagent_type` and optional `task_id` and `command`
+(`packages/opencode/src/tool/task.ts`).
+
+* The general-purpose subagent is `general`
+`packages/core/src/plugin/agent.ts` defines `general`, mode `subagent`,
+"General-purpose agent for researching complex questions and executing
+multi-step tasks", with `question` and `subagent` denied; `explore` is a
+read-only subagent; `build` is the default primary agent. A run listed
+`build`, `general`, `explore`, `plan` and the hidden `compaction`, `title` and
+`summary` (`GET /api/agent`, below). The docs name the same subagent
+"General (subagent, named `general`)".
+
+* opencode 2 stops subagents one level deep by default
+`subagent.ts` counts the calling session's parents and refuses at
+`experimental.subagent_depth`, "Maximum subagent nesting depth. Defaults to
+1." (`packages/schema/src/config/experimental.ts`), with "Subagent depth limit
+reached (<limit>). Increase "experimental.subagent_depth" to allow nested
+subagents."
+
+* A project's agent is a markdown file under `.opencode/agents/`, named by its file
+`packages/core/src/config/plugin/agent.ts` reads `{agent,agents}/**/*.md` and
+`{mode,modes}/*.md` under each configuration directory, and names the agent by
+the path with `agents/` and `.md` removed. Its native frontmatter keys are
+`model`, `request`, `system`, `description`, `mode` (`subagent`, `primary` or
+`all`), `hidden`, `color`, `steps`, `disabled` and `permissions`
+(`packages/schema/src/config/agent.ts`); a file with any other key, `name`
+among them, is read as an opencode 1 agent (`tools`, `permission`, `prompt`
+and the rest) and migrated. A model omitted from a subagent is its caller's
+(docs/agents). The docs give `~/.config/opencode/agents/` for the user's
+agents.
+
+A run with `.opencode/agents/recs-code-reviewer.md` holding `name`,
+`description` and `mode: subagent` listed it as
+`recs-code-reviewer subagent`; with the file under
+`$HOME/.config/opencode/agents/` instead, it was listed the same way. With
+`description` and `mode: subagent` alone, no `name`, `packaging/validate.sh`
+found `recs-code-reviewer` in `GET /api/agent` with mode `subagent` (run,
+2026-10-19, opencode 2.0.29).
+
+* Skills are read from `skill/` and `skills/` under each configuration directory
+`packages/core/src/config/plugin/skill.ts` adds `<dir>/skill` and
+`<dir>/skills` for each configuration directory, and a configuration's
+`skills` list adds directories or URLs. In each it reads `{*.md,**/SKILL.md}`,
+so a markdown file directly under `skills/` is a skill named by its file
+(`skill-file.ts`). The configuration directories are the system directory
+(`/etc/opencode` on Linux, `/Library/Application Support/opencode` on macOS,
+`%ProgramData%\opencode` on Windows), the global configuration directory
+(`~/.config/opencode`), `~/.claude`, `~/.agents`, and each `.claude`,
+`.agents` and `.opencode` in the working directory and every directory above
+it (`packages/core/src/config/discovery.ts`, `systemDirectory` and
+`fs.up`). Frontmatter `name` and
+`description` are read; the skill's id is its directory's name. The docs list
+`.opencode/skills`, `.claude/skills` and `.agents/skills` in the project, and
+`~/.config/opencode/skills`, `~/.claude/skills` and `~/.agents/skills`.
+
+The `skills` list in `opencode.json` could serve as an install path, naming a
+clone of the package's `skills/` or an `index.json` URL; it carries no agents,
+so `recs-code-reviewer` would still need a copy under `agents/` (inferred from
+`config/plugin/skill.ts` and `skill/discovery.ts`).
+
+A run with the thirteen recs skills copied to `.opencode/skills/` offered
+them beside the built-in `opencode` and `report`; copied to
+`$HOME/.config/opencode/skills/` instead, it offered the same thirteen.
+
+* A skill is loaded with the `skill` tool, naming it in `id`
+`packages/core/src/tool/plugin/skill.ts`: input `id`, "The ID of an available
+skill or a skill explicitly referenced by the user". opencode 1.19.3's takes
+`name` (`packages/opencode/src/tool/skill.ts`).
+
+* opencode 2 has no task-list tool
+The files under opencode 2.0.29's `packages/core/src/tool/plugin/` are
+`edit`, `file-diff`, `glob`, `grep`, `mcp-resource`, `opencode`, `patch`,
+`question`, `read`, `shell`, `skill`, `subagent`, `webfetch`, `websearch` and
+`write`, none a todo tool, and
+the binary says `todowrite` "is no longer available". opencode 1.19.3 has
+`todowrite`, which takes `todos` (`packages/opencode/src/tool/todo.ts`), and
+its `task` tool denies `todowrite` to the subagent it spawns
+(`task.ts`). The docs' tools page lists no todo tool.
+
+* opencode has no package install that carries skills
+`opencode plugin` offers `list`, `add` ("Install a plugin and add it to the
+global configuration"), `check`, `update` and `remove` (`opencode plugin
+--help`). A plugin is a JavaScript or TypeScript module of hooks, loaded from
+`.opencode/plugins/`, `~/.config/opencode/plugins/` or an npm package in
+`opencode.json`'s `plugin` list (docs/plugins); the docs say nothing of a
+plugin carrying skills or agents. That a copy into `.opencode/` (project
+scope) or `~/.config/opencode/` (user scope) is the install is inferred from
+this and from the runs above.
+
+* `opencode serve` lists skills and agents with no model reached
+#+begin_src sh
+export OPENCODE_SERVER_PASSWORD=probe
+opencode serve --hostname 127.0.0.1 --port 47123 &
+curl -s -u opencode:probe "http://127.0.0.1:47123/api/skill?location%5Bdirectory%5D=$PWD"
+curl -s -u opencode:probe "http://127.0.0.1:47123/api/agent?location%5Bdirectory%5D=$PWD"
+#+end_src
+Without the password the server prints one ("server password ...") and
+answers `{"_tag":"UnauthorizedError","message":"Authentication required"}`.
+The first answer after start was `{"location":{...},"data":[]}`; a second,
+two seconds later, listed the skills. With `--port 0` the server prints
+"server listening on http://127.0.0.1:<port>" (`packaging/validate.sh`, run).
+`opencode api --standalone skill.list` spawns `opencode serve --stdio --port 0`
+for the one call (`--print-logs`) and answered `"data":[]`; `opencode debug
+agents` answered `[]` (runs). With the network shared, `opencode debug agents`
+failed on "Managed service port 49374 on 127.0.0.1 is already in use"; with
+`--unshare-all` and no `--share-net` it started.

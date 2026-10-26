@@ -289,6 +289,34 @@ tests:
         metric: links resolve
         value: file://checks/org-lines.js:linksResolve
 
+  - description: Memory is kept in the harness's own way
+    providers:
+      - with-skills:*
+    vars:
+      case: keeping-the-task-list
+      request: file://cases/keeping-the-task-list/prompt.md
+    assert:
+      # ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
+      - type: javascript
+        metric: memory file kept
+        value: file://checks/harness-capabilities.js:memoryFileKept
+      # ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
+      - type: javascript
+        metric: only planned files written
+        value: file://checks/harness-capabilities.js:onlyPlannedFilesWritten
+
+  - description: The code reviewer is delegated in the harness's own way
+    providers:
+      - with-skills:*
+    vars:
+      case: dispatching-the-code-reviewer
+      request: file://cases/dispatching-the-code-reviewer/prompt.md
+    assert:
+      # ADR-20261019-71m6 §Consequences: Render each harness's package from capability markers and a harness profile
+      - type: javascript
+        metric: reviewer delegated
+        value: file://checks/harness-capabilities.js:reviewerDelegated
+
   - description: "The agent cites records to the record keeper (train: renewing-a-reserved-book)"
     vars:
       case: citing-records-to-the-record-keeper

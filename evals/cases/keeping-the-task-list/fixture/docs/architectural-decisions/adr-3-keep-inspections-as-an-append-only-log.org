@@ -1,0 +1,13 @@
+* ADR-3 Keep inspections as an append-only log
+:PROPERTIES:
+:STATUS: Rejected
+:END:
+** Context
+A beekeeper sometimes corrects an inspection days later, and an edit in
+place loses what was first written.
+** Decision
+We will never update an inspection; a correction is a new inspection that
+names the one it corrects.
+** Consequences
+The history of every inspection is kept. Reading a hive's current state
+means following each correction to its latest one.

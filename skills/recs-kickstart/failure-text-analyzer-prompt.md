@@ -3,7 +3,7 @@
 Use this template when dispatching the failure-text analyzer.
 
 ```
-Task tool (general-purpose):
+{{trf: delegate general-purpose brief}}:
   description: "Analyze failure text for [slice]"
   prompt: |
     You are analyzing the text the codebase at [path] gives when it refuses

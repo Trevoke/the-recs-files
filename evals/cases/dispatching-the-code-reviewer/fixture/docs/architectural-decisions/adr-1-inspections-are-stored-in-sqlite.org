@@ -1,0 +1,11 @@
+* ADR-1 Inspections are stored in SQLite
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+The log runs on one beekeeper's laptop, offline in the field, and holds a
+few thousand inspections at most.
+** Decision
+We will store hives and inspections in a single SQLite file.
+** Consequences
+There is no server to run. A backup is a copy of one file.

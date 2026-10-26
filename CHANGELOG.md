@@ -2,6 +2,28 @@
 
 ## Unreleased
 
+- Each harness's package is rendered from capability markers in the skill
+  text and a harness profile per harness (`ADR-20261019-71m6: Render each harness's package from capability markers and a harness profile`).
+- The Claude Code package keeps its task list with the task tools
+  (`TaskCreate`, `TaskUpdate`) in place of TodoWrite, and Claude Code must run
+  with `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of the
+  recs files is undefined.
+- A plan's header names the agent rather than Claude: "**For the agent:**".
+- The recs files install at project scope by default (`ADR-20261019-0fex: Install the recs files at project scope by default`).
+- Delegation stops two levels deep, counted in `TRF_DELEGATE_DEPTH` (`ADR-20261019-t4qq: Stop delegation two levels deep`).
+- The order of the skills is kept in `skills/skill-flow.dot` (`ADR-20261019-bwyc: Keep the order of the skills in a skill flow beside them`).
+- pi's package carries a subagent extension; Codex and pi get the reviewer's
+  role as a role file.
+- An opencode package, for opencode 2, is built and validated but not yet
+  published.
+- Every package is checked, and installed where its harness CLI runs, before
+  any is published.
+- The evals render each run's package: pi's for the pi runs, Claude Code's for
+  the new Claude Code runs.
+- Two eval cases, `dispatching-the-code-reviewer` and
+  `keeping-the-task-list`, check that a run delegates and keeps its memory as
+  its harness profile says. Neither these nor the Claude Code runs have yet
+  been run against a model.
 - The agent cites a record to the record keeper in its title's exact words,
   with any section between the number and the title, in backticks, and on one
   line (`F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words`).
@@ -10,7 +32,6 @@
 - The seed and `recs-writing-records` say that a new record is written to disk
   as Proposed and committed before it is shown for agreement, as
   `UW-20261014-8c8f: Create a record` orders it.
-- The evals run in Claude Code on a Claude subscription, beside pi.
 - A new eval case, `citing-records-to-the-record-keeper`: six questions on one
   fixture, four to tune the wording against and two held out, scored by
   `npm run score:citations`.

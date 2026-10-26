@@ -1,147 +1,113 @@
-import { execFileSync, spawn } from 'node:child_process';
+import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-const evalsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const repoDir = path.join(evalsDir, '..');
-const casesDir = path.join(evalsDir, 'cases');
-
-const identity = {
-  GIT_AUTHOR_NAME: 'Record Keeper',
-  GIT_AUTHOR_EMAIL: 'keeper@example.com',
-  GIT_COMMITTER_NAME: 'Record Keeper',
-  GIT_COMMITTER_EMAIL: 'keeper@example.com',
-};
-
-function git(cwd, ...args) {
-  execFileSync('git', args, {
-    cwd,
-    stdio: 'ignore',
-    env: { ...process.env, ...identity, GIT_AUTHOR_DATE: '2026-01-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-01-01T00:00:00Z' },
-  });
-}
-
-function resolved(command) {
-  return fs.realpathSync(execFileSync('sh', ['-c', `command -v ${command}`], { encoding: 'utf8' }).trim());
-}
+import { events, evalsDir, exclude, identity, prepare as prepareProject, renderedPackage, run, sandbox } from './common.js';
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: The `claude` binary is one executable that needs only the system's libraries
 function claudeBinary() {
-  return resolved('claude');
-}
-
-export function recsSkills() {
-  return fs
-    .readdirSync(path.join(repoDir, 'skills'), { withFileTypes: true })
-    .filter((e) => e.isDirectory() && e.name.startsWith('recs-'))
-    .map((e) => e.name)
-    .sort();
-}
-
-export function recsAgents() {
-  return fs
-    .readdirSync(path.join(repoDir, 'agents'), { withFileTypes: true })
-    .filter((e) => e.isFile() && e.name.endsWith('.md'))
-    .map((e) => path.basename(e.name, '.md'))
-    .sort();
+  return fs.realpathSync(execFileSync('sh', ['-c', 'command -v claude'], { encoding: 'utf8' }).trim());
 }
 
 export function caseProblem(caseName) {
-  if (!caseName || !fs.existsSync(path.join(casesDir, caseName, 'fixture'))) return `no case named ${caseName}`;
+  if (!caseName || !fs.existsSync(path.join(evalsDir, 'cases', caseName, 'fixture'))) return `no case named ${caseName}`;
   return undefined;
 }
 
-// docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code loads CLAUDE.md and AGENTS.md from the working directory and its parents
-function prepare(caseName, withSkills) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
-  const project = path.join(root, 'project');
-  const home = path.join(root, 'home');
-  const configDir = path.join(home, '.claude');
-  fs.cpSync(path.join(casesDir, caseName, 'fixture'), project, { recursive: true });
-  if (withSkills) {
-    fs.cpSync(path.join(repoDir, 'skills'), path.join(project, '.claude', 'skills'), { recursive: true });
-    fs.cpSync(path.join(repoDir, 'agents'), path.join(project, '.claude', 'agents'), { recursive: true });
-  }
-  fs.mkdirSync(configDir, { recursive: true });
-  git(project, 'init', '--quiet', '--initial-branch=main');
-  // docs/knowledge-base/pi-as-an-eval-harness.org: `git init` creates `.git/info` only when its template directory has one
-  fs.mkdirSync(path.join(project, '.git', 'info'), { recursive: true });
-  // docs/knowledge-base/pi-as-an-eval-harness.org: `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
-  fs.appendFileSync(path.join(project, '.git', 'info', 'exclude'), '/.claude/skills/\n/.claude/agents/\n');
-  git(project, 'add', '-A');
-  git(project, 'commit', '--quiet', '-m', 'Start the project');
-  return { root, project, home, configDir };
+function prepare(caseName) {
+  const dirs = prepareProject(caseName);
+  const configDir = path.join(dirs.home, '.claude');
+  fs.mkdirSync(configDir);
+  return { ...dirs, configDir };
 }
 
-// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness and its own directory
-// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: Options read from `--args` keep the environment out of `/proc/<pid>/cmdline`
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: `HOME` and `CLAUDE_CONFIG_DIR` inside the run keep the user's configuration out
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A tmpfs over `/etc/claude-code` keeps the host's managed settings out
-function sandboxed({ root, project, home, configDir }, binary, env, args) {
-  const options = [
-    '--unshare-all', '--share-net', '--die-with-parent', '--clearenv',
-    '--ro-bind', '/usr', '/usr',
-    '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/lib', '/lib',
-    '--symlink', 'usr/lib', '/lib64', '--symlink', 'usr/bin', '/sbin',
-    '--ro-bind', '/etc', '/etc',
-    '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp',
-    '--bind', root, root,
-    '--ro-bind', binary, '/opt/claude/claude',
-    ...(fs.existsSync('/etc/claude-code') ? ['--tmpfs', '/etc/claude-code'] : []),
-    ...Object.entries({ PATH: '/opt/claude:/usr/bin', HOME: home, CLAUDE_CONFIG_DIR: configDir, LANG: 'C.UTF-8', DISABLE_AUTOUPDATER: '1', ...env })
-      .flatMap(([k, v]) => ['--setenv', k, v]),
-    '--chdir', project,
-  ];
-  return { argv: ['--args', '3', '--', '/opt/claude/claude', ...args], options: options.map((o) => `${o}\0`).join('') };
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code 2.1.304 offers claude-sonnet-5-5 no TodoWrite in print mode
+function sandboxed(dirs, binary, env, args) {
+  return sandbox(
+    dirs,
+    [[binary, '/opt/claude/claude']],
+    { PATH: '/opt/claude:/usr/bin', HOME: dirs.home, CLAUDE_CONFIG_DIR: dirs.configDir, LANG: 'C.UTF-8', DISABLE_AUTOUPDATER: '1', CLAUDE_CODE_ENABLE_TODO_TOOLS: '1', ...env },
+    ['/opt/claude/claude', ...args],
+    fs.existsSync('/etc/claude-code') ? ['/etc/claude-code'] : [],
+  );
 }
 
-function run(bwrap, { argv, options }, timeoutMs) {
-  return new Promise((resolve) => {
-    const child = spawn(bwrap, argv, { argv0: 'bwrap', env: {}, stdio: ['ignore', 'pipe', 'pipe', 'pipe'] });
-    child.stdio[3].on('error', () => {});
-    child.stdio[3].end(options);
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => (stdout += d));
-    child.stderr.on('data', (d) => (stderr += d));
-    let timedOut = false;
-    const timer = setTimeout(() => {
-      timedOut = true;
-      child.kill('SIGKILL');
-    }, timeoutMs);
-    child.on('error', (error) => {
-      clearTimeout(timer);
-      resolve({ code: null, signal: null, stdout, stderr: `${stderr}${error.message}`, timedOut });
-    });
-    child.on('close', (code, signal) => {
-      clearTimeout(timer);
-      resolve({ code, signal, stdout, stderr, timedOut });
-    });
-  });
+function manifest(pkg, file) {
+  return JSON.parse(fs.readFileSync(path.join(pkg, '.claude-plugin', file), 'utf8'));
+}
+
+async function install(dirs, binary, env) {
+  const { project } = dirs;
+  const rendered = renderedPackage('claude');
+  const marketplace = manifest(rendered, 'marketplace.json').name;
+  const plugin = `${manifest(rendered, 'plugin.json').name}@${marketplace}`;
+  const pkg = path.join(project, '.claude', marketplace);
+  fs.cpSync(rendered, pkg, { recursive: true });
+  exclude(project, ['/.claude/settings.json', `/.claude/${marketplace}/`]);
+  // ADR-20261019-0fex §Consequences: Install the recs files at project scope by default
+  // docs/knowledge-base/claude-code-as-an-eval-harness.org: The plugin commands install a local marketplace at project scope with no network
+  for (const args of [
+    ['plugin', 'marketplace', 'add', `./${path.relative(project, pkg)}`, '--scope', 'project'],
+    ['plugin', 'install', plugin, '--scope', 'project'],
+  ]) {
+    const result = await run(sandboxed(dirs, binary, env, args), 60 * 1000);
+    if (result.code !== 0) throw new Error(`claude ${args.slice(0, 3).join(' ')} exited ${result.code ?? result.signal}: ${(result.stdout + result.stderr).slice(-2000)}`);
+  }
+  const settings = JSON.parse(fs.readFileSync(path.join(project, '.claude', 'settings.json'), 'utf8'));
+  if (settings.enabledPlugins?.[plugin] !== true) throw new Error(`.claude/settings.json does not enable ${plugin}`);
+  const listed = await run(sandboxed(dirs, binary, env, ['plugin', 'list', '--json']), 60 * 1000);
+  let entry;
+  try {
+    entry = JSON.parse(listed.stdout).find((p) => p.id === plugin);
+  } catch {}
+  if (!entry || entry.scope !== 'project' || !entry.enabled || entry.projectPath !== project) {
+    throw new Error(`claude plugin list does not show ${plugin} enabled at project scope: ${listed.stdout.slice(-2000)}`);
+  }
+  // docs/knowledge-base/claude-code-as-an-eval-harness.org: A print-mode run with no credential lists the skills and agents it loads, with no model reached
+  const offered = await run(sandboxed(dirs, binary, env, ['-p', '--output-format', 'stream-json', '--verbose', '--no-session-persistence', '--', 'hi']), 60 * 1000);
+  const init = events(offered.stdout).find((e) => e.type === 'system' && e.subtype === 'init');
+  if (!init) throw new Error(`claude reported no init event: ${offered.stderr.slice(-2000)}`);
+  const prefix = `${plugin.split('@')[0]}:`;
+  const found = (init.skills ?? []).filter((s) => s.startsWith(prefix)).map((s) => s.slice(prefix.length));
+  const missing = fs.readdirSync(path.join(pkg, 'skills'), { withFileTypes: true })
+    .filter((e) => e.isDirectory() && e.name.startsWith('recs-'))
+    .map((e) => e.name)
+    .filter((skill) => !found.includes(skill));
+  if (missing.length > 0) throw new Error(`Claude Code does not offer ${missing.join(', ')} from the installed plugin`);
+  const unoffered = taskToolsMissing(init);
+  if (unoffered.length > 0) throw new Error(`Claude Code does not offer ${unoffered.join(', ')} with CLAUDE_CODE_ENABLE_TODO_TOOLS=1 set`);
+  const agents = fs.readdirSync(path.join(pkg, 'agents')).map((f) => `${prefix}${path.basename(f, '.md')}`);
+  const absent = agents.filter((a) => !(init.agents ?? []).includes(a));
+  if (absent.length > 0) throw new Error(`Claude Code does not offer ${absent.join(', ')} from the installed plugin`);
+  return { pkg, skills: found.sort() };
+}
+
+// docs/knowledge-base/claude-code-as-an-eval-harness.org: Claude Code 2.1.304 offers claude-sonnet-5-5 no TodoWrite in print mode
+export function taskToolsMissing(init) {
+  return ['TaskCreate', 'TaskUpdate'].filter((tool) => !(init.tools ?? []).includes(tool));
 }
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A print-mode run is `claude -p --output-format stream-json --verbose`
-function events(stdout) {
-  return stdout
-    .split('\n')
-    .filter((line) => line.startsWith('{'))
-    .flatMap((line) => {
-      try {
-        return [JSON.parse(line)];
-      } catch {
-        return [];
-      }
-    });
+function toolUses(all) {
+  return all
+    .filter((e) => e.type === 'assistant' && e.parent_tool_use_id == null)
+    .flatMap((e) => (e.message?.content ?? []).filter((c) => c.type === 'tool_use'));
 }
 
-function mainThread(all) {
-  return all.filter((e) => e.type === 'assistant' && e.parent_tool_use_id == null).flatMap((e) => e.message?.content ?? []);
+function toolResults(all) {
+  return new Map(
+    all
+      .filter((e) => e.type === 'user')
+      .flatMap((e) => (Array.isArray(e.message?.content) ? e.message.content : []).filter((c) => c.type === 'tool_result'))
+      .map((c) => [c.tool_use_id, c]),
+  );
 }
 
 export function said(all) {
-  return mainThread(all)
+  return all
+    .filter((e) => e.type === 'assistant' && e.parent_tool_use_id == null)
+    .flatMap((e) => e.message?.content ?? [])
     .filter((c) => c.type === 'text')
     .map((c) => c.text)
     .join('\n\n');
@@ -149,32 +115,23 @@ export function said(all) {
 
 // docs/knowledge-base/claude-code-as-an-eval-harness.org: A skill load is a `Skill` tool use naming the skill
 export function skillCalls(all) {
-  const results = new Map(
-    all
-      .filter((e) => e.type === 'user')
-      .flatMap((e) => (Array.isArray(e.message?.content) ? e.message.content : []).filter((c) => c.type === 'tool_result'))
-      .map((c) => [c.tool_use_id, c]),
-  );
-  return mainThread(all)
-    .filter((c) => c.type === 'tool_use' && c.name === 'Skill')
+  const results = toolResults(all);
+  return toolUses(all)
+    .filter((c) => c.name === 'Skill')
     .map((c) => ({ name: c.input?.skill, is_error: !results.has(c.id) || Boolean(results.get(c.id).is_error) }));
 }
 
-export function initProblem(all, expected, agents = []) {
+export function initProblem(all, plugin) {
   const init = all.find((e) => e.type === 'system' && e.subtype === 'init');
   if (!init) return 'the run reported no init event';
   if (init.permissionMode !== 'bypassPermissions') return `the run started in permission mode ${init.permissionMode}, not bypassPermissions`;
-  const offered = init.skills ?? [];
-  const named = (skill) => offered.some((o) => o === skill || o.endsWith(`:${skill}`));
-  const missing = expected.filter((skill) => !named(skill));
-  if (missing.length > 0) return `the run's init event does not offer ${missing.join(', ')}`;
-  const offeredAgents = init.agents ?? [];
-  const missingAgents = agents.filter((agent) => !offeredAgents.some((o) => o === agent || o.endsWith(`:${agent}`)));
-  if (missingAgents.length > 0) return `the run's init event does not offer agent ${missingAgents.join(', ')}`;
-  const stray = expected.length === 0 ? offered.filter((o) => /(^|:)recs-/.test(o)) : [];
-  if (stray.length > 0) return `the run without the skills offers ${stray.join(', ')}`;
-  const strayAgents = expected.length === 0 ? offeredAgents.filter((o) => /(^|:)recs-/.test(o)) : [];
-  if (strayAgents.length > 0) return `the run without the skills offers agent ${strayAgents.join(', ')}`;
+  if (plugin && !(init.skills ?? []).some((s) => s.startsWith(`${plugin}:`))) return `the run's init event lists no ${plugin}: skill`;
+  if (!plugin) {
+    const stray = (init.skills ?? []).filter((o) => /(^|:)recs-/.test(o));
+    if (stray.length > 0) return `the run without the skills offers ${stray.join(', ')}`;
+    const strayAgents = (init.agents ?? []).filter((o) => /(^|:)recs-/.test(o));
+    if (strayAgents.length > 0) return `the run without the skills offers agent ${strayAgents.join(', ')}`;
+  }
   return undefined;
 }
 
@@ -194,35 +151,39 @@ export default class ClaudeCodeProvider {
   }
 
   id() {
-    return `claude-code:${this.config.model}`;
+    return `${this.config.skills ? 'with' : 'without'}-skills:claude-code:${this.config.model}`;
   }
 
   async callApi(prompt, context) {
+    const caseName = context?.vars?.case;
+    const unknown = caseProblem(caseName);
+    if (unknown) return { error: unknown, metadata: { harness: 'claude-code', skillCalls: [] } };
     let binary;
     try {
       binary = claudeBinary();
     } catch (error) {
-      return { error: `no claude binary on PATH: ${error.message}` };
+      return { error: `no claude binary on PATH: ${error.message}`, metadata: { harness: 'claude-code', skillCalls: [] } };
     }
-    let bwrap;
-    try {
-      bwrap = resolved('bwrap');
-    } catch (error) {
-      return { error: `no bwrap binary on PATH: ${error.message}` };
+    const dirs = prepare(caseName);
+    const { root, project } = dirs;
+    let pkg;
+    let packageSkills;
+    if (this.config.skills) {
+      try {
+        ({ pkg, skills: packageSkills } = await install(dirs, binary, identity));
+      } catch (error) {
+        return { error: `the package did not install: ${error.message}`, metadata: { harness: 'claude-code', workingDir: project, skillCalls: [] } };
+      }
     }
-    const caseName = context?.vars?.case;
-    const unknown = caseProblem(caseName);
-    if (unknown) return { error: unknown };
     const token = process.env.CLAUDE_CODE_OAUTH_TOKEN;
-    if (!token) return { error: 'CLAUDE_CODE_OAUTH_TOKEN is not set: run `claude setup-token` and export the token it prints' };
-    let dirs;
-    try {
-      dirs = prepare(caseName, this.config.skills);
-    } catch (error) {
-      return { error: `the run could not be prepared: ${error.message}` };
+    if (!token) {
+      return {
+        error: 'CLAUDE_CODE_OAUTH_TOKEN is not set: run `claude setup-token` and export the token it prints',
+        metadata: { harness: 'claude-code', workingDir: project, ...(pkg ? { packageDir: pkg, packageSkills } : {}), skillCalls: [] },
+      };
     }
-    const expected = this.config.skills ? recsSkills() : [];
-    const expectedAgents = this.config.skills ? recsAgents() : [];
+    // docs/knowledge-base/claude-code-as-an-eval-harness.org: `CLAUDE_CODE_OAUTH_TOKEN` authenticates a run on the subscription
+    const env = { ...identity, CLAUDE_CODE_OAUTH_TOKEN: token };
     const args = [
       '-p', '--output-format', 'stream-json', '--verbose', '--no-session-persistence',
       // docs/knowledge-base/claude-code-as-an-eval-harness.org: Inside bubblewrap, bypassing permissions is the sandbox's to confine
@@ -230,21 +191,22 @@ export default class ClaudeCodeProvider {
       '--model', this.config.model,
       '--', prompt,
     ];
-    // docs/knowledge-base/claude-code-as-an-eval-harness.org: `CLAUDE_CODE_OAUTH_TOKEN` authenticates a run on the subscription
-    const env = { ...identity, CLAUDE_CODE_OAUTH_TOKEN: token };
     const started = Date.now();
     const timeoutMs = this.config.timeoutMs ?? 15 * 60 * 1000;
-    const result = await run(bwrap, sandboxed(dirs, binary, env, args), timeoutMs);
-    const transcript = path.join(dirs.root, 'claude.jsonl');
-    fs.writeFileSync(transcript, result.stdout);
-    fs.writeFileSync(path.join(dirs.root, 'claude.stderr'), result.stderr);
+    const result = await run(sandboxed(dirs, binary, env, args), timeoutMs);
+    fs.writeFileSync(path.join(root, 'claude.jsonl'), result.stdout);
+    fs.writeFileSync(path.join(root, 'claude.stderr'), result.stderr);
     const all = events(result.stdout);
     const final = all.findLast((e) => e.type === 'result');
-    const problem = initProblem(all, expected, expectedAgents);
-    const metadata = { workingDir: dirs.project, transcript, said: said(all), skillCalls: skillCalls(all), initProblem: problem, timedOut: result.timedOut, durationMs: Date.now() - started };
+    const problem = initProblem(all, pkg ? manifest(pkg, 'plugin.json').name : undefined);
+    const metadata = { harness: 'claude-code', workingDir: project, transcript: path.join(root, 'claude.jsonl'), ...(pkg ? { packageDir: pkg, packageSkills } : {}), said: said(all), skillCalls: skillCalls(all), initProblem: problem, timedOut: Boolean(result.timedOut), durationMs: Date.now() - started };
     const failed = runError(result, final, timeoutMs);
     if (failed) return { error: failed, metadata };
     if (problem) return { error: problem, metadata };
-    return { output: final.result ?? '', cost: final.total_cost_usd ?? 0, metadata };
+    return {
+      output: final.result ?? '',
+      cost: final.total_cost_usd ?? 0,
+      metadata,
+    };
   }
 }

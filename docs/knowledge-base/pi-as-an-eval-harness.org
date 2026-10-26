@@ -103,11 +103,192 @@ back-off with it: the same six runs all failed on OpenRouter's 429 "Rate limit
 exceeded: new-account-rpm/google/gemini-3.1-pro-preview" (`dist/src/shared-*.js`,
 `RateLimitRegistry`; runs, 2026-10-15).
 
+* An explicit `-e` extension loads under `--no-extensions`
+`--no-extensions` turns off discovery only; an extension named with `-e`
+still loads beside it (pi 0.87.1, `--help`, 2026-10-19).
+#+begin_src sh
+node evals/node_modules/@earendil-works/pi-coding-agent/dist/bundle/cli.js --help | grep -E 'no-extensions|--extension'
+#+end_src
+#+begin_example
+  --extension, -e <path>         Load an extension file (can be used multiple times)
+  --no-extensions, -ne           Disable extension discovery (explicit -e paths still work)
+#+end_example
+
+* A print-mode run discovers `<agent-dir>/skills` without `--approve`
+Auto-discovery adds `<agent-dir>/skills` (the directory
+`PI_CODING_AGENT_DIR` names) and `$HOME/.agents/skills` as user skills,
+outside the project-trust check that gates a project's `.agents/skills`
+and `.pi/skills`. Read from pi 0.87.1's source, with no run:
+`dist/core/package-manager.js:713` (`globalBaseDir = this.agentDir`),
+`:1966` (`skills: join(globalBaseDir, "skills")`), `:1976` (`$HOME/.agents/skills`),
+`:1978` (project skill directories only when `projectTrusted`), and `:2010`
+and `:2017`, which add both user directories unconditionally. The bundle in
+`dist/bundle/chunks/` carries the same code.
+
+* A tool's `usage` reaches the JSONL on its `tool_execution_end`
+A tool's result may carry a `usage`; `tool_execution_end` carries the whole
+result as `result`, so the JSONL has it at `result.usage.cost.total`. Read
+from pi 0.87.1's source, with no run: `pi-agent-core/dist/agent-loop.js:588`
+keeps `usage` on the result, `:611-617` emits it as `result`, and
+`pi-coding-agent/dist/modes/json-event.js:17-18` writes every event but
+`message_update` unchanged.
+
+* `pi install -l <path>` records the path in `.pi/settings.json` and copies nothing
+A project-scoped install of a local path appends that path, relative to the
+project's `.pi`, to `packages` in `<project>/.pi/settings.json`; it checks
+that the path exists and does nothing else, so it needs no network. Read from
+pi 0.87.1's source: `dist/package-manager-cli.js:825` (`installAndPersist`
+with `local`), `dist/core/package-manager.js:777-783` (a local source is only
+checked for existence), `:787-790` and `:618-646` (the source added to the
+project's `packages`), `:1138-1146` and `:1785-1788` (the path made relative
+to `<cwd>/.pi`), `dist/core/settings-manager.js:62` (the project settings
+file). A first install needs no `--approve`: before `.pi/settings.json`
+exists the project has nothing that asks for trust
+(`dist/core/project-trust.js:21-23`, `dist/core/trust-manager.js:8-16`);
+once it exists, a second install without trust stops with "Project is not
+trusted. Use --approve to modify local package config."
+(`dist/package-manager-cli.js:809-810`). Run in bubblewrap with no network
+namespace shared, 2026-10-19:
+#+begin_src sh
+pi install -l ./.pi/the-recs-files-pi
+cat .pi/settings.json
+#+end_src
+#+begin_example
+Installing ./.pi/the-recs-files-pi...
+Installed ./.pi/the-recs-files-pi
+{
+  "packages": [
+    "the-recs-files-pi"
+  ]
+}
+#+end_example
+
+* A project package loads only under project trust
+`.pi/settings.json` is a project resource that asks for trust
+(`dist/core/trust-manager.js:8-16`, `:150-169`), and an untrusted project's
+settings load as empty, so its `packages` are never read
+(`dist/core/settings-manager.js:195-198`). In a run with no UI and no saved
+decision, trust defaults to no, silently (`dist/core/project-trust.js:37-51`,
+`dist/main.js:578-585`). Run in bubblewrap, 2026-10-19, after the install
+above: `pi --mode rpc` answered `get_commands` with no `skill:` entry, and with
+`--approve` with all thirteen `skill:recs-*` entries, each with
+`"scope":"project","origin":"package"`.
+
+* `<agent-dir>/trust.json` keeps a project trust decision; `--approve` lasts one run
+`--approve` sets a per-run override that is returned before any stored
+decision and never written (`dist/cli/args.js:215-216`,
+`dist/core/project-trust.js:18-19`, `dist/main.js:584`, `:599`). A stored
+decision lives in `trust.json` in the agent directory, keyed by the
+canonical project path, a parent's entry covering its children
+(`dist/core/trust-manager.js:20-33`, `:170-200`). A run with no `--approve`
+whose project asks for trust resolves it through `resolveProjectTrusted`
+(`dist/main.js:580-583`, `:595-600`), which reads `trust.json`
+(`dist/core/project-trust.js:37-40`); pi writes it when a person answers
+"Trust" at the interactive prompt (`dist/core/project-trust.js:52-55`).
+A pi started with no flags, with the same `PI_CODING_AGENT_DIR`, is therefore
+trusted. The recs files' subagent extension starts its child pi with
+`--mode json -p --no-session` and at most `--model` and `--thinking`, in the
+parent's working directory, with the parent's environment and
+`TRF_DELEGATE_DEPTH` one higher
+(`packaging/pi/extensions/subagent/index.ts:50-52`, `:75-77`): a parent's
+`--approve` does not reach the child, and `trust.json`,
+found through the inherited `PI_CODING_AGENT_DIR`, does. Run in bubblewrap,
+2026-10-19: after `--approve` runs the agent directory held no `trust.json`;
+with `trust.json` holding `{"<project>": true}`, a run with no flags loaded
+the package's thirteen skills and its `subagent` extension, the extension
+registering the `subagent` tool, with no load error (pi's
+`DefaultResourceLoader`, run inside the sandbox).
+
+* The subagent extension registers its tool only below `TRF_DELEGATE_DEPTH` 2
+The recs files' subagent extension reads `TRF_DELEGATE_DEPTH` when pi loads
+it, an unset or non-numeric value counting as 0, registers no `subagent`
+tool at 2 or more, and starts its child pi with the parent's environment and
+`TRF_DELEGATE_DEPTH` one higher
+(`packaging/pi/extensions/subagent/index.ts:13-16`, `:34-35`, `:75-77`). pi
+loads an extension in its own process, so the extension sees pi's
+environment, which the child inherits. Run in bubblewrap with
+`OPENROUTER_API_KEY` empty, 2026-10-19, in a project with the pi package
+installed at project scope and trusted: a script inside the sandbox loaded
+the project's extensions with pi 0.87.1's `DefaultResourceLoader` and
+printed each extension's registered tools and the load errors. With
+`--dispatch` it called the `subagent` tool's `execute`; the tool spawned the
+script itself as the child pi (`process.argv[1]`), which loaded the
+extensions again and answered as one `message_end`.
+#+begin_example
+--- TRF_DELEGATE_DEPTH unset
+parent: TRF_DELEGATE_DEPTH=(unset) extensions=1 tools=["subagent"] errors=[]
+child: TRF_DELEGATE_DEPTH=1 extensions=1 tools=["subagent"] errors=[]
+--- TRF_DELEGATE_DEPTH 1
+parent: TRF_DELEGATE_DEPTH=1 extensions=1 tools=["subagent"] errors=[]
+child: TRF_DELEGATE_DEPTH=2 extensions=1 tools=[] errors=[]
+--- TRF_DELEGATE_DEPTH 2
+parent: TRF_DELEGATE_DEPTH=2 extensions=1 tools=[] errors=[]
+--- TRF_DELEGATE_DEPTH nonsense
+parent: TRF_DELEGATE_DEPTH=nonsense extensions=1 tools=["subagent"] errors=[]
+#+end_example
+The script, run as `node probe.mjs [--dispatch]` with the project as its
+working directory:
+#+begin_src js
+import { DefaultResourceLoader } from '/opt/evals/node_modules/@earendil-works/pi-coding-agent/dist/index.js';
+
+const loader = new DefaultResourceLoader({ cwd: process.cwd(), agentDir: process.env.PI_CODING_AGENT_DIR });
+await loader.reload({ resolveProjectTrust: async () => true });
+const { extensions, errors } = loader.getExtensions();
+const tools = extensions.flatMap((e) => [...e.tools.keys()]);
+const depth = process.env.TRF_DELEGATE_DEPTH ?? '(unset)';
+const summary = `TRF_DELEGATE_DEPTH=${depth} extensions=${extensions.length} tools=${JSON.stringify(tools)} errors=${JSON.stringify(errors)}`;
+
+if (process.argv.includes('--mode')) {
+  console.log(JSON.stringify({ type: 'message_end', message: { role: 'assistant', stopReason: 'stop', content: [{ type: 'text', text: `child: ${summary}` }] } }));
+  process.exit(0);
+}
+console.log(`parent: ${summary}`);
+if (process.argv.includes('--dispatch')) {
+  const tool = extensions.flatMap((e) => [...e.tools.values()]).find((t) => t.definition.name === 'subagent');
+  const result = await tool.definition.execute('probe', { prompt: 'report' }, undefined, undefined, { cwd: process.cwd() });
+  console.log(result.content[0].text);
+}
+#+end_src
+
+* `--no-skills` and `--no-extensions` drop a package's skills and extensions
+Each keeps only paths named on the command line, and a package's resources
+are not among them (`dist/core/resource-loader.js:316-318`, `:330-332`). Run
+in bubblewrap, 2026-10-19: with the project trusted, `DefaultResourceLoader`
+with `noSkills` and `noExtensions` loaded no skill and no extension.
+
 * `.git/info/exclude` hides a path from `git status`, `git add -A` and `git ls-files --others --exclude-standard`
 It holds patterns in the form of `.gitignore` that apply to one repository and
 are not committed (gitignore(5)). An excluded untracked path is absent from
 `git status --porcelain` and from `git ls-files --others --exclude-standard`,
 and `git add -A` does not add it (run, 2026-10-19).
+
+* An rpc `get_commands` lists the skills a run loads, with no model reached
+`pi --mode rpc --no-session --offline`, given `{"type":"get_commands"}` on
+stdin, answers with every extension command, prompt template and skill the
+run loaded, each skill as `skill:<name>` with its `sourceInfo`, and exits
+when stdin closes; it needs no API key (`dist/modes/rpc/rpc-mode.js:542-569`).
+`packaging/validate.sh` counts the `skill:recs-*` entries this way to check a
+user-scope install. Run in bubblewrap with `OPENROUTER_API_KEY` empty,
+2026-10-19, in a project with the pi package installed at project scope and
+trusted:
+#+begin_src sh
+echo '{"type":"get_commands"}' | pi --mode rpc --no-session --offline | grep -o '"skill:recs-[a-z-]*"' | wc -l
+#+end_src
+#+begin_example
+13
+#+end_example
+
+* pi's bash tool inherits pi's whole environment, `OPENROUTER_API_KEY` included
+pi's bash tool runs each command with `env ?? getShellEnv()`
+(`dist/core/tools/bash.js:53`, `:123`), and `getShellEnv` returns
+`{...process.env}` with pi's bin directory added to `PATH`
+(`dist/utils/shell.js:115-123`); only the `PI_*` session variables are
+replaced (`dist/core/tools/bash.js:124-140`). Nothing in pi 0.87.1's `dist/`
+scrubs a subprocess's environment (grep for `scrub`, `sanitizeEnv`: no
+match). An agent told to run `env` in a sandboxed run listed
+`OPENROUTER_API_KEY` among its variables
+(bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness
+and its own directory).
 
 * `git init` creates `.git/info` only when its template directory has one
 `git init` creates `.git/info` only when its template directory has one. With

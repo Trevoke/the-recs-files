@@ -1,0 +1,6 @@
+#+TITLE: Ubiquitous language
+
+* Hive keeping
+- UL-1 :: [[./ubiquitous-language/ul-1-hive.org][Hive]]
+- UL-2 :: [[./ubiquitous-language/ul-2-inspection.org][Inspection]]
+- UL-3 :: [[./ubiquitous-language/ul-3-field-note.org][Field note]]

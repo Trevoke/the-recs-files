@@ -1,96 +1,55 @@
-import { execFileSync, spawn } from 'node:child_process';
 import fs from 'node:fs';
-import os from 'node:os';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { evalsDir, events, exclude, identity, prepare as prepareProject, renderedPackage, run, sandbox } from './common.js';
 
-const evalsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
-const skillsDir = path.join(evalsDir, '..', 'skills');
-const casesDir = path.join(evalsDir, 'cases');
 const modulesDir = path.join(evalsDir, 'node_modules');
 const pi = path.join(modulesDir, '@earendil-works', 'pi-coding-agent', 'dist', 'bundle', 'cli.js');
 const nodeDir = path.dirname(path.dirname(process.execPath));
 
-const identity = {
-  GIT_AUTHOR_NAME: 'Record Keeper',
-  GIT_AUTHOR_EMAIL: 'keeper@example.com',
-  GIT_COMMITTER_NAME: 'Record Keeper',
-  GIT_COMMITTER_EMAIL: 'keeper@example.com',
-};
-
-function git(cwd, ...args) {
-  execFileSync('git', args, {
-    cwd,
-    stdio: 'ignore',
-    env: { ...process.env, ...identity, GIT_AUTHOR_DATE: '2026-01-01T00:00:00Z', GIT_COMMITTER_DATE: '2026-01-01T00:00:00Z' },
-  });
+function prepare(caseName) {
+  const dirs = prepareProject(caseName);
+  const agentDir = path.join(dirs.root, 'agent');
+  fs.mkdirSync(agentDir);
+  return { ...dirs, agentDir };
 }
 
-// docs/knowledge-base/pi-as-an-eval-harness.org: A parent directory's AGENTS.md loads, even past a git root
-function prepare(caseName, withSkills) {
-  const root = fs.mkdtempSync(path.join(os.tmpdir(), `recs-eval-${caseName}-`));
-  const project = path.join(root, 'project');
-  const agentDir = path.join(root, 'agent');
-  const home = path.join(root, 'home');
-  fs.cpSync(path.join(casesDir, caseName, 'fixture'), project, { recursive: true });
-  if (withSkills) {
-    fs.cpSync(skillsDir, path.join(project, '.agents', 'skills'), { recursive: true });
-  }
-  fs.mkdirSync(agentDir);
-  fs.mkdirSync(home);
-  git(project, 'init', '--quiet', '--initial-branch=main');
-  git(project, 'add', '-A');
-  git(project, 'commit', '--quiet', '-m', 'Start the project');
-  return { root, project, agentDir, home };
+async function install(dirs, env) {
+  const { project, agentDir } = dirs;
+  const rendered = renderedPackage('pi');
+  const name = JSON.parse(fs.readFileSync(path.join(rendered, 'package.json'), 'utf8')).name;
+  const pkg = path.join(project, '.pi', name);
+  fs.cpSync(rendered, pkg, { recursive: true });
+  exclude(project, ['/.pi/settings.json', `/.pi/${name}/`]);
+  // docs/knowledge-base/pi-as-an-eval-harness.org: A project package loads only under project trust
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `<agent-dir>/trust.json` keeps a project trust decision; `--approve` lasts one run
+  fs.writeFileSync(path.join(agentDir, 'trust.json'), `${JSON.stringify({ [project]: true }, null, 2)}\n`);
+  // ADR-20261019-0fex §Consequences: Install the recs files at project scope by default
+  // docs/knowledge-base/pi-as-an-eval-harness.org: `pi install -l <path>` records the path in `.pi/settings.json` and copies nothing
+  const result = await run(sandboxed(dirs, env, ['install', '-l', `./${path.relative(project, pkg)}`]), 60 * 1000);
+  if (result.code !== 0) throw new Error(`pi install exited ${result.code ?? result.signal}: ${result.stderr.slice(-2000)}`);
+  const settings = JSON.parse(fs.readFileSync(path.join(project, '.pi', 'settings.json'), 'utf8'));
+  if (!(settings.packages ?? []).includes(name)) throw new Error(`.pi/settings.json does not list ${name} in packages`);
+  // docs/knowledge-base/pi-as-an-eval-harness.org: An rpc `get_commands` lists the skills a run loads, with no model reached
+  const offered = await run(sandboxed(dirs, env, ['--mode', 'rpc', '--no-session', '--offline']), 60 * 1000, '{"type":"get_commands"}\n');
+  const said = offered.stdout + offered.stderr;
+  if (said.includes('Failed to load extension')) throw new Error(`pi could not load the package's extension: ${said.slice(-2000)}`);
+  const found = new Set([...offered.stdout.matchAll(/"skill:(recs-[a-z-]+)"/g)].map((m) => m[1]));
+  const missing = fs.readdirSync(path.join(pkg, 'skills'), { withFileTypes: true })
+    .filter((e) => e.isDirectory() && e.name.startsWith('recs-'))
+    .map((e) => e.name)
+    .filter((skill) => !found.has(skill));
+  if (missing.length > 0) throw new Error(`pi does not offer ${missing.join(', ')} from the installed package`);
+  return { pkg, skills: [...found].sort() };
 }
 
 // docs/knowledge-base/pi-as-an-eval-harness.org: Nothing confines pi to its working directory
-// docs/knowledge-base/bubblewrap-confines-an-eval-run.org: A run sees only the system, its harness and its own directory
-function sandboxed({ root, project, home }, env, args) {
-  return [
-    '--unshare-all', '--share-net', '--die-with-parent', '--clearenv',
-    '--ro-bind', '/usr', '/usr',
-    '--symlink', 'usr/bin', '/bin', '--symlink', 'usr/lib', '/lib',
-    '--symlink', 'usr/lib', '/lib64', '--symlink', 'usr/bin', '/sbin',
-    '--ro-bind', '/etc', '/etc',
-    '--proc', '/proc', '--dev', '/dev', '--tmpfs', '/tmp',
-    '--bind', root, root,
-    '--ro-bind', nodeDir, '/opt/node',
-    '--ro-bind', modulesDir, '/opt/evals/node_modules',
-    ...Object.entries({ PATH: '/opt/node/bin:/usr/bin', HOME: home, LANG: 'C.UTF-8', ...env })
-      .flatMap(([k, v]) => ['--setenv', k, v]),
-    '--chdir', project,
-    '--', '/opt/node/bin/node', path.join('/opt/evals/node_modules', path.relative(modulesDir, pi)), ...args,
-  ];
-}
-
-function run(args, timeoutMs) {
-  return new Promise((resolve) => {
-    const child = spawn('bwrap', args, { stdio: ['ignore', 'pipe', 'pipe'] });
-    let stdout = '';
-    let stderr = '';
-    child.stdout.on('data', (d) => (stdout += d));
-    child.stderr.on('data', (d) => (stderr += d));
-    const timer = setTimeout(() => child.kill('SIGKILL'), timeoutMs);
-    child.on('close', (code, signal) => {
-      clearTimeout(timer);
-      resolve({ code, signal, stdout, stderr });
-    });
-  });
-}
-
-// docs/knowledge-base/pi-as-an-eval-harness.org: The JSONL is split on LF only
-function events(stdout) {
-  return stdout
-    .split('\n')
-    .filter((line) => line.startsWith('{'))
-    .flatMap((line) => {
-      try {
-        return [JSON.parse(line)];
-      } catch {
-        return [];
-      }
-    });
+function sandboxed(dirs, env, args) {
+  return sandbox(
+    dirs,
+    [[nodeDir, '/opt/node'], [modulesDir, '/opt/evals/node_modules']],
+    { PATH: '/opt/node/bin:/usr/bin', HOME: dirs.home, LANG: 'C.UTF-8', ...env },
+    ['/opt/node/bin/node', path.join('/opt/evals/node_modules', path.relative(modulesDir, pi)), ...args],
+  );
 }
 
 function text(message) {
@@ -116,6 +75,13 @@ function skillCalls(all) {
     .map(({ name, end }) => ({ name, is_error: !end || Boolean(end.isError) }));
 }
 
+// docs/knowledge-base/pi-as-an-eval-harness.org: A tool's `usage` reaches the JSONL on its `tool_execution_end`
+function subagentCost(all) {
+  return all
+    .filter((e) => e.type === 'tool_execution_end' && e.toolName === 'subagent')
+    .reduce((sum, e) => sum + (e.result?.usage?.cost?.total ?? 0), 0);
+}
+
 export default class PiProvider {
   constructor(options = {}) {
     this.config = options.config ?? {};
@@ -123,23 +89,30 @@ export default class PiProvider {
   }
 
   id() {
-    return `pi:${this.config.model}`;
+    return `${this.config.skills ? 'with' : 'without'}-skills:pi:${this.config.model}`;
   }
 
   async callApi(prompt, context) {
     const caseName = context?.vars?.case;
-    const dirs = prepare(caseName, this.config.skills);
+    const dirs = prepare(caseName);
     const { root, project, agentDir } = dirs;
-    // docs/knowledge-base/pi-as-an-eval-harness.org: `--no-skills --skill <dir>` loads exactly that directory's skills
+    // docs/knowledge-base/pi-as-an-eval-harness.org: `PI_CODING_AGENT_DIR` moves settings, models and auth
+    const env = { ...identity, PI_CODING_AGENT_DIR: agentDir, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? '' };
+    let pkg;
+    let packageSkills;
+    if (this.config.skills) {
+      try {
+        ({ pkg, skills: packageSkills } = await install(dirs, env));
+      } catch (error) {
+        return { error: `the package did not install: ${error.message}`, metadata: { workingDir: project, skillCalls: [] } };
+      }
+    }
     const args = [
       '-p', '--mode', 'json', '--no-session',
-      '--no-skills', '--no-extensions', '--no-prompt-templates', '--no-themes', '--offline',
-      ...(this.config.skills ? ['--skill', path.join(project, '.agents', 'skills')] : []),
+      '--no-prompt-templates', '--no-themes', '--offline',
       '--model', this.config.model,
       '--', prompt,
     ];
-    // docs/knowledge-base/pi-as-an-eval-harness.org: `PI_CODING_AGENT_DIR` moves settings, models and auth
-    const env = { ...identity, PI_CODING_AGENT_DIR: agentDir, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? '' };
     const started = Date.now();
     const result = await run(sandboxed(dirs, env, args), this.config.timeoutMs ?? 15 * 60 * 1000);
     fs.writeFileSync(path.join(root, 'pi.jsonl'), result.stdout);
@@ -147,7 +120,7 @@ export default class PiProvider {
     const all = events(result.stdout);
     const messages = all.filter((e) => e.type === 'message_end').map((e) => e.message);
     const assistant = messages.filter((m) => m?.role === 'assistant');
-    const metadata = { workingDir: project, transcript: path.join(root, 'pi.jsonl'), skillCalls: skillCalls(all), durationMs: Date.now() - started };
+    const metadata = { workingDir: project, transcript: path.join(root, 'pi.jsonl'), ...(pkg ? { packageDir: pkg, packageSkills } : {}), skillCalls: skillCalls(all), durationMs: Date.now() - started };
     // docs/knowledge-base/pi-as-an-eval-harness.org: pi exits 0 when the provider fails
     const failed = assistant.find((m) => m.stopReason === 'error');
     if (failed || result.code !== 0) {
@@ -158,7 +131,7 @@ export default class PiProvider {
     }
     return {
       output: text(assistant.at(-1)),
-      cost: assistant.reduce((sum, m) => sum + (m.usage?.cost?.total ?? 0), 0),
+      cost: assistant.reduce((sum, m) => sum + (m.usage?.cost?.total ?? 0), 0) + subagentCost(all),
       metadata,
     };
   }

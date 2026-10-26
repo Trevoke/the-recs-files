@@ -254,9 +254,9 @@ assert_equal "A reserved book cannot be renewed",
 <div>
 <h2 class="h2">Install the skills, then let kickstart draft your first records.</h2>
 <div class="box" style="margin-bottom: 24px; overflow-x: auto">
-<div class="line"><span class="id" style="min-width: 120px">Claude Code</span><span class="mono" style="font-size: 14px">claude plugin marketplace add Trevoke/the-recs-files-claude</span></div>
+<div class="line"><span class="id" style="min-width: 120px">Claude Code</span><span class="mono" style="font-size: 14px">claude plugin marketplace add --scope project Trevoke/the-recs-files-claude</span></div>
 <div class="line"><span class="id" style="min-width: 120px">Codex</span><span class="mono" style="font-size: 14px">codex plugin marketplace add Trevoke/the-recs-files-codex</span></div>
-<div class="line"><span class="id" style="min-width: 120px">pi</span><span class="mono" style="font-size: 14px">pi install git:github.com/Trevoke/the-recs-files-pi@v[VERSION]</span></div>
+<div class="line"><span class="id" style="min-width: 120px">pi</span><span class="mono" style="font-size: 14px">pi install -l git:github.com/Trevoke/the-recs-files-pi@v[VERSION]</span></div>
 <div class="line"><span class="id" style="min-width: 120px">Antigravity</span><span class="mono" style="font-size: 14px">agy plugin install https://github.com/Trevoke/the-recs-files-agy</span></div>
 </div>
 <p style="font-size: 18px; line-height: 1.6; max-width: 700px; margin: 0">Run <span class="mono">recs-kickstart</span> in a project that has code but no records. The agent reads the project and proposes records one category at a time, titles first and then bodies. Nothing is written until you approve each batch, and your code is left untouched.</p>

@@ -2,15 +2,67 @@ name: package
 
 on:
   push:
+    branches: [congruence]
     tags: ['v*']
+  pull_request:
   workflow_dispatch:
     inputs:
       tag:
-        description: Release tag to package, such as v1.0.0-beta
+        description: Release tag to package and publish, such as v1.0.0-beta.2; only tags with capability markers and skills/skill-flow.dot can be packaged
         required: true
 
+permissions:
+  contents: read
+
+env:
+  TAG: ${{ inputs.tag || (startsWith(github.ref, 'refs/tags/') && github.ref_name) || '' }}
+
 jobs:
-  package:
+  validate:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        harness: [claude, codex, pi, agy, opencode]
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          path: tools
+          persist-credentials: false
+      - uses: actions/checkout@v7
+        with:
+          ref: ${{ env.TAG || github.sha }}
+          path: source
+          persist-credentials: false
+      - uses: actions/setup-node@v7
+        with:
+          node-version: 24
+      - name: Install the harness CLI
+        run: |
+          case "${{ matrix.harness }}" in
+            claude) npm install -g @anthropic-ai/claude-code ;;
+            codex) npm install -g @openai/codex ;;
+            pi) npm install -g @earendil-works/pi-coding-agent ;;
+            agy) echo "agy has no CLI to install here" ;;
+            opencode) npm install -g @opencode/cli ;;
+          esac
+      - name: Build the package
+        run: |
+          rm -rf source/packaging
+          cp -r tools/packaging source/packaging
+          node source/packaging/build.mjs "${{ matrix.harness }}" "$RUNNER_TEMP/package" "${TAG:-0.0.0-dev.${{ github.run_number }}}"
+      - name: Test the packaging
+        if: matrix.harness == 'claude'
+        working-directory: source
+        run: |
+          node --test 'packaging/test/*.test.mjs'
+          node --test 'evals/checks/*.test.mjs'
+      - name: Validate the package
+        run: source/packaging/validate.sh "${{ matrix.harness }}" "$RUNNER_TEMP/package"
+
+  publish:
+    needs: validate
+    if: ${{ inputs.tag || startsWith(github.ref, 'refs/tags/v') }}
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
@@ -25,19 +77,26 @@ jobs:
           - harness: agy
             key: DEPLOY_KEY_AGY
     env:
-      TAG: ${{ inputs.tag || github.ref_name }}
       REPO: the-recs-files-${{ matrix.harness }}
     steps:
-      - uses: actions/checkout@v4
+      - name: Refuse a tag that is not a release tag
+        run: |
+          if ! [[ "$TAG" =~ ^v[0-9] ]]; then
+            echo "::error::$TAG is not a release tag; a release tag starts with v and a digit"
+            exit 1
+          fi
+      - uses: actions/checkout@v7
         with:
           path: tools
-      - uses: actions/checkout@v4
+          persist-credentials: false
+      - uses: actions/checkout@v7
         with:
           ref: ${{ env.TAG }}
           path: source
-      - uses: actions/setup-node@v4
+          persist-credentials: false
+      - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version: 24
       - name: Build the package
         run: |
           rm -rf source/packaging

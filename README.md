@@ -9,12 +9,6 @@ settles questions nobody asked it to settle, and leaves its reasons in places
 nobody reads. These skills make the agent keep the project's decisions as
 records, agreed with you before they stand, and build from them.
 
-> **Work in progress:** the `harness-rendering` branch renders each harness's
-> package from capability markers and a harness profile
-> (`ADR-20261019-71m6: Render each harness's package from capability markers and a harness profile`),
-> and adds an opencode package. It is not merged yet, and its evals have not
-> yet run against a model.
-
 ## The idea
 
 A project keeps **records**: short statements of what its system does and why,
@@ -83,20 +77,28 @@ The skills are generic: a project's own facts live in its AGENTS.md, which
 
 ## Installing
 
-Each harness has a package of its own, published from this repository on each
-release:
+Each harness has a package of its own, built from this repository on each
+release and published to its own repository; the opencode package is not yet
+published. The recs files install at project scope by default:
 
-| Harness | Install |
-|---|---|
-| Claude Code | `claude plugin marketplace add Trevoke/the-recs-files-claude`, then `claude plugin install recs-files@the-recs-files` |
-| Codex | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
-| pi | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
-| Antigravity | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+| Harness | Project scope (the default) | User scope |
+|---|---|---|
+| Claude Code | `claude plugin marketplace add --scope project Trevoke/the-recs-files-claude`, then `claude plugin install --scope project recs-files@the-recs-files` | `claude plugin marketplace add --scope user Trevoke/the-recs-files-claude`, then `claude plugin install --scope user recs-files@the-recs-files` |
+| Codex | `codex plugin` has no project-scope option | `codex plugin marketplace add Trevoke/the-recs-files-codex`, then `codex plugin add recs-files@the-recs-files` |
+| pi | `pi install -l git:github.com/Trevoke/the-recs-files-pi@v<version>` | `pi install git:github.com/Trevoke/the-recs-files-pi@v<version>` |
+| Antigravity | `agy plugin install` has no project-scope option | `agy plugin install https://github.com/Trevoke/the-recs-files-agy` |
+| opencode | Copy the package's `skills` and `agents` into the project's `.opencode/` | Copy the package's `skills` and `agents` into `~/.config/opencode/` |
 
-The Claude Code and Antigravity packages carry the `recs-code-reviewer`
-subagent as well as the skills. Elsewhere, such as in opencode, copy (or link)
-`skills/recs-*` into a directory the harness reads skills from, such as a
-project's `.agents/skills`.
+With the Claude Code package, Claude Code must run with the environment
+variable `CLAUDE_CODE_ENABLE_TODO_TOOLS=1` set; without it, the behaviour of
+the recs files is undefined.
+
+The Claude Code, Antigravity and opencode packages carry the
+`recs-code-reviewer` subagent as well as the skills.
+
+The opencode package is built and validated but not yet published, and is
+written for opencode 2 (`@opencode/cli`). Build it locally with
+`node packaging/build.mjs opencode <dir> <version>`, then copy from `<dir>`.
 
 Then open a project and ask for `recs-kickstart`.
 

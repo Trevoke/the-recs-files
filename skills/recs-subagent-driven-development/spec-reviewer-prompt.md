@@ -9,7 +9,7 @@ compliance includes checking cataloged text against the record verbatim, and
 checking the task itself did not drift from the records it cites.
 
 ```
-Task tool (general-purpose):
+{{trf: delegate general-purpose brief}}:
   description: "Review spec compliance for Task N"
   prompt: |
     You are reviewing whether an implementation matches its specification.

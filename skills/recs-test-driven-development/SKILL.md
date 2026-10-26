@@ -420,7 +420,7 @@ Can't check all boxes? You skipped TDD. Start over.
 
 ## Debugging Integration
 
-Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression. For finding the root cause first, use recs-systematic-debugging.
+Bug found? Write failing test reproducing it. Follow TDD cycle. Test proves fix and prevents regression. For finding the root cause first, use {{trf: load recs-systematic-debugging}}.
 
 Never fix bugs without a test.
 

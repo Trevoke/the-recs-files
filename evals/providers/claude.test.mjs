@@ -1,6 +1,6 @@
 import test from 'node:test';
 import assert from 'node:assert/strict';
-import { caseProblem, initProblem, recsAgents, runError, said, skillCalls } from './claude.js';
+import { caseProblem, initProblem, runError, said, skillCalls, taskToolsMissing } from './claude.js';
 
 const use = (id, name, input, parent = null) => ({
   type: 'assistant',
@@ -21,60 +21,69 @@ const init = (over = {}) => ({
   type: 'system',
   subtype: 'init',
   permissionMode: 'bypassPermissions',
-  skills: ['deep-research', 'recs-brainstorming', 'recs-writing-records'],
-  agents: ['claude', 'Explore', 'general-purpose', 'Plan', 'recs-code-reviewer', 'statusline-setup'],
+  skills: ['deep-research', 'recs-files:recs-writing-records'],
   ...over,
 });
 
 test('skillCalls reports the main agent\'s Skill tool uses, with their outcome', () => {
-  assert.deepEqual(
-    skillCalls([use('a', 'Skill', { skill: 'recs-brainstorming' }), answer('a'), use('b', 'Skill', { skill: 'recs-kickstart' })]),
-    [{ name: 'recs-brainstorming', is_error: false }, { name: 'recs-kickstart', is_error: true }],
-  );
+  const calls = skillCalls([
+    use('a', 'Skill', { skill: 'recs-files:recs-writing-records' }), answer('a'),
+    use('b', 'Skill', { skill: 'recs-files:recs-kickstart' }), answer('b', true),
+    use('c', 'Skill', { skill: 'recs-files:recs-brainstorming' }),
+  ]);
+  assert.deepEqual(calls, [
+    { name: 'recs-files:recs-writing-records', is_error: false },
+    { name: 'recs-files:recs-kickstart', is_error: true },
+    { name: 'recs-files:recs-brainstorming', is_error: true },
+  ]);
 });
 
 test('skillCalls leaves out a subagent\'s Skill tool uses', () => {
-  assert.deepEqual(skillCalls([use('s', 'Skill', { skill: 'recs-brainstorming' }, 't'), answer('s', false, 't')]), []);
+  const calls = skillCalls([
+    use('t', 'Task', { subagent_type: 'general-purpose', prompt: 'p', description: 'd' }),
+    use('s', 'Skill', { skill: 'recs-files:recs-writing-records' }, 't'), answer('s', false, 't'),
+    answer('t'),
+  ]);
+  assert.deepEqual(calls, []);
+});
+
+test('initProblem accepts a with-skills run that loaded the plugin\'s skills, bypassing permissions', () => {
+  assert.equal(initProblem([init()], 'recs-files'), undefined);
+});
+
+test('initProblem accepts a without-skills run with no plugin skills', () => {
+  assert.equal(initProblem([init({ skills: ['deep-research'] })], undefined), undefined);
+});
+
+test('initProblem reports a with-skills run whose init lists no plugin skill', () => {
+  assert.match(initProblem([init({ skills: ['deep-research'] })], 'recs-files'), /no recs-files: skill/);
+});
+
+test('initProblem reports a run not bypassing permissions', () => {
+  assert.match(initProblem([init({ permissionMode: 'default' })], 'recs-files'), /permission mode default/);
+});
+
+test('initProblem reports a run with no init event', () => {
+  assert.match(initProblem([], undefined), /no init event/);
+});
+
+test('taskToolsMissing names TaskCreate and TaskUpdate where the init event\'s tools lack them', () => {
+  assert.deepEqual(taskToolsMissing(init({ tools: ['Task', 'TaskCreate', 'TaskGet', 'TaskList', 'TaskStop', 'TaskUpdate'] })), []);
+  assert.deepEqual(taskToolsMissing(init({ tools: ['Task', 'TaskStop'] })), ['TaskCreate', 'TaskUpdate']);
+  assert.deepEqual(taskToolsMissing(init({ tools: ['Task', 'TaskCreate'] })), ['TaskUpdate']);
+  assert.deepEqual(taskToolsMissing(init()), ['TaskCreate', 'TaskUpdate']);
 });
 
 test('said joins the main agent\'s text and leaves out a subagent\'s', () => {
   assert.equal(said([words('first'), words('hidden', 't'), words('second')]), 'first\n\nsecond');
 });
 
-test('initProblem accepts a run offering every expected skill, bypassing permissions', () => {
-  assert.equal(initProblem([init()], ['recs-brainstorming', 'recs-writing-records']), undefined);
-});
-
-test('initProblem reports an expected skill the run does not offer', () => {
-  assert.match(initProblem([init()], ['recs-kickstart']), /does not offer recs-kickstart/);
-});
-
 test('initProblem reports a without-skills run that offers a recs skill', () => {
-  assert.match(initProblem([init()], []), /without the skills offers recs-brainstorming/);
-});
-
-test('initProblem reports a run not bypassing permissions', () => {
-  assert.match(initProblem([init({ permissionMode: 'default' })], ['recs-brainstorming']), /permission mode default/);
-});
-
-test('initProblem reports a run with no init event', () => {
-  assert.match(initProblem([], []), /no init event/);
-});
-
-test('initProblem accepts a run offering every expected agent', () => {
-  assert.equal(initProblem([init()], ['recs-brainstorming'], ['recs-code-reviewer']), undefined);
-});
-
-test('initProblem reports an expected agent the run does not offer', () => {
-  assert.match(initProblem([init({ agents: ['claude'] })], ['recs-brainstorming'], ['recs-code-reviewer']), /does not offer agent recs-code-reviewer/);
+  assert.match(initProblem([init()], undefined), /without the skills offers recs-files:recs-writing-records/);
 });
 
 test('initProblem reports a without-skills run that offers a recs agent', () => {
-  assert.match(initProblem([init({ skills: ['deep-research'] })], [], []), /without the skills offers agent recs-code-reviewer/);
-});
-
-test('recsAgents names the agents the with-skills arm copies', () => {
-  assert.deepEqual(recsAgents(), ['recs-code-reviewer']);
+  assert.match(initProblem([init({ skills: ['deep-research'], agents: ['claude', 'recs-files:recs-code-reviewer'] })], undefined), /without the skills offers agent recs-files:recs-code-reviewer/);
 });
 
 test('caseProblem accepts a case with a fixture', () => {
@@ -100,4 +109,10 @@ test('runError reports a run that could not start', () => {
 
 test('runError reports nothing for a successful run', () => {
   assert.equal(runError({ code: 0, signal: null, stderr: '' }, { type: 'result', is_error: false, result: 'done' }, 5000), undefined);
+});
+
+test('the provider id names its arm first', async () => {
+  const { default: Provider } = await import('./claude.js');
+  assert.equal(new Provider({ config: { model: 'claude-sonnet-5-5', skills: true } }).id(), 'with-skills:claude-code:claude-sonnet-5-5');
+  assert.equal(new Provider({ config: { model: 'claude-sonnet-5-5', skills: false } }).id(), 'without-skills:claude-code:claude-sonnet-5-5');
 });

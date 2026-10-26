@@ -1,0 +1,10 @@
+* ADR-4 Keep field notes as plain text files under notes/
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+Field notes are free text and need no query.
+** Decision
+We will keep each field note as a plain text file under notes/.
+** Consequences
+Notes are read and diffed as files.
