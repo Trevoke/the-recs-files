@@ -150,3 +150,18 @@ backticks and 8 with a section out of place; the winner's left 10 without
 their title and none otherwise. The winner did as well on the held-out
 questions as on the training ones (0.125 over 36 replies), so the loop did
 not overfit the training questions.
+
+* A wording change is checked against the other cases, not only its own
+After the citation wording (`cd8f79e`), the other five cases ran three times
+each with skills. Four passed every run; `proposing-a-record` passed 1 of 3.
+Run 24 times on each wording, it passed 16 on `cd8f79e` and 22 on `b74ffd3`,
+the wording before the citation work (one-sided Fisher exact p = 0.036).
+Every failure drafted the record in the reply, said nothing was written yet,
+and wrote no file. The text said "Make no record change on your own" and
+"Records change only at the record keeper's direction", and defined no
+proposal, so writing a Proposed record read as the change that waits for
+agreement. `67f3c8e` states what a proposal is, in the order of
+`UW-1: Create a record` steps 3–6, and passed 11 of 12, all 12 writing the
+proposal first; the one failure missed the vision's falsified sentence, as
+`b74ffd3` also did. Which part of the citation work raised the failures was
+not isolated. Then the other four cases passed 3 of 3 each.
