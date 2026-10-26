@@ -443,7 +443,7 @@ a development branch, git worktrees — use the `recs-*` one.
 no `recs-*` counterpart and are used as-is. A new record, and any sweep of an
 agreed term, goes through `recs-writing-records`.
 
-Writing and testing a skill is covered in `README.md`.
+Writing and testing a skill is covered in `CONTRIBUTING.md`.
 
 Drafted by recs-kickstart from its seed; the analysis ran against commit
 3564429.
