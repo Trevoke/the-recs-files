@@ -1,12 +1,14 @@
 #+TITLE: Vision
 
-* What the recs files are for
-The recs files are a set of skills that instruct an agent to keep the truth
+* What The Recs Files are for
+The Recs Files are a set of skills that instruct an agent to keep the truth
 of a system in records, and to realize the system from them. Each record
 belongs to a category, and each category's records are read through a
 projection named after it. A realization may be code, skill text, or other
 work. The recs files are reused across projects; each project's own facts
 live in its AGENTS.md.
+
+The Recs Files also serve a purpose for the record keeper: they provide clear, concise, readable and understandable units of text, at the record keeper's desired level of granularity and detail.
 
 * Who they serve
 The record keeper: the person or team whose job is to manage a project's
