@@ -242,8 +242,12 @@ sentence that handles it: one that names the record itself, one that names a
 section of it, one that says what a comment in code cites, one that maps a
 record's sections to its successor's, and one that quotes a requirement whose
 text carries a citation. Two sections are two citations, and a map of sections
-is written in sentences, one whole citation to a section.
+is written in sentences, one whole citation to a section. Everything you say
+reaches the record keeper, what you say while you work included: a record you
+are about to open, or have just opened, is named the same way, by the name its
+projection line carries.
 
+Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
 Good: "`src/widgets.py` cites `X-8 §2: Frobnicate the widgets` and `X-8 §1: Frobnicate the widgets`"
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
@@ -251,6 +255,7 @@ Good: "`X-8 §2: Frobnicate the widgets` reads: 'If the widget is reserved, then
 Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
 Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
 Bad: "`X-8 §1` → §1, `X-8 §2` → §2, §3"
+Bad: "I'll open X-8, X-9 and the terms X-8 uses"
 
 ## Framing a question
 
