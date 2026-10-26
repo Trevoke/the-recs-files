@@ -131,3 +131,22 @@ attempt 3 the proposer read the scorer's raw results under
 replies to the held-out questions. That file was moved out of `/tmp` before
 attempt 3 was scored. From then on the held-out questions are run only at
 the final check.
+
+* The winning wording holds on the held-out questions
+The loop ended on attempt 2 (`608e193`). The winner's text at `dbe5d3e` and
+the original wording at `ec7dd99` each ran the two held-out questions six
+times, with skills:
+
+| Question              | Original    | Winner      |
+|-----------------------+-------------+-------------|
+| Counting renewals     | 0.67 ± 0.07 | 0.09 ± 0.06 |
+| Releasing a held copy | 0.89 ± 0.13 | 0.03 ± 0.03 |
+| Both                  | 0.78 ± 0.08 | 0.06 ± 0.04 |
+| Replies passing       | 0 of 12     | 9 of 12     |
+
+Question by question the gap is 0.72 against a margin of 0.16. The
+original's 12 replies left 126 citations without their title, 18 out of
+backticks and 8 with a section out of place; the winner's left 10 without
+their title and none otherwise. The winner did as well on the held-out
+questions as on the training ones (0.125 over 36 replies), so the loop did
+not overfit the training questions.
