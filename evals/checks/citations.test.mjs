@@ -145,3 +145,13 @@ test('a section map after a whole citation is not a misplaced section', () => {
   assert.equal(c.titled, true);
   assert.equal(c.sectionMisplaced, false);
 });
+
+test('a citation by a dated identifier holds', () => {
+  const dated = new Map([['ADR-20261015-70tz', 'A record change is one commit of its own']]);
+  const found = citations('See `ADR-20261015-70tz: A record change is one commit of its own`.', dated);
+  assert.equal(found.length, 1);
+  assert.deepEqual(
+    { known: found[0].known, titled: found[0].titled, backticked: found[0].backticked },
+    { known: true, titled: true, backticked: true },
+  );
+});

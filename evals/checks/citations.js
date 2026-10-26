@@ -1,4 +1,6 @@
-const identifier = /(?<![\w-])(?:UL|ADR|F|UW|MSG)-\d+(?![\w-])/g;
+import { identifier as form, prefix } from './identifier.js';
+
+const identifier = new RegExp(`(?<![\\w-])${prefix}-${form}(?![\\w-])`, 'g');
 const name = '[\\w.]+(?:-[A-Za-z][\\w.]*)*';
 const sectionList = new RegExp(`^\\s+§${name}(?:,[ \\t]*§${name}|[ \\t]*[–-][ \\t]*§?(?=\\d)${name})*`);
 const separator = /,[ \t]*§|[ \t]*[–-][ \t]*§?\d/g;
