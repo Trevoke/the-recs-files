@@ -4,24 +4,24 @@
 
 - The agent cites a record to the record keeper in its title's exact words,
   with any section between the number and the title, in backticks, and on one
-  line (`F-12: The agent cites a record to the record keeper in its title's exact words`).
+  line (`F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words`).
   The seed says so with one example per kind of sentence where citations were
   shortened, and the skills' example citations are whole and in backticks.
 - The seed and `recs-writing-records` say that a new record is written to disk
   as Proposed and committed before it is shown for agreement, as
-  `UW-1: Create a record` orders it.
+  `UW-20261014-8c8f: Create a record` orders it.
 - The evals run in Claude Code on a Claude subscription, beside pi.
 - A new eval case, `citing-records-to-the-record-keeper`: six questions on one
   fixture, four to tune the wording against and two held out, scored by
   `npm run score:citations`.
 - A record names another record by an org link to its file, its description
   the number and title
-  (`ADR-14: A record names another record by an org link to its file`); a
+  (`ADR-20261026-y9zt: A record names another record by an org link to its file`); a
   successor's `:SUPERSEDES:` line holds one link per record it supersedes, a
   comma and a space between them.
 - The seed and `recs-writing-records` show the lines org reads whole — a
   heading, a property, a projection line, a link — with good and bad examples
-  (`ADR-6: Records are written in org`).
+  (`ADR-20261015-0v6s: Records are written in org`).
 - A new eval case, `superseding-two-features`, and checks on every case that
   writes records: org lines whole, records named by links, links resolving.
 
