@@ -108,6 +108,7 @@ score above 1 means some citations fail more than one check.
 | 2 | 608e193 | What the agent says while it works reaches the record keeper, and cites the same way | 0.11 ± 0.03 over 24 replies (current best 0.23 ± 0.05 over 24) | Kept |
 | 3 | c3c6a8c | Where a sentence would name several records or sections, a list, one whole citation to a line | 0.15 ± 0.04 (gap −0.04; renewing a reserved book rose from 0.04 to 0.25) | Reverted |
 | 4 | 4096b8a | A heading, or a list item's bold lead, that stands for a record or a section is the whole citation | 0.087 ± 0.033 over 24 (current best 0.125 ± 0.026 over 36; auditing the code 0.14 against 0.34, mapping a successor 0.16 against 0.07) | Reverted |
+| 5 | 65424d2 | Two changes: attempt 4's heading and bold-lead sentence, and the name is never an adjective or a possessive | 0.14 ± 0.03 (gap −0.015; mapping a successor 0.22, renewing a reserved book 0.10) | Reverted; the third discard in a row ends the loop |
 
 * Comparing two wordings question by question
 The first rule compared the two wordings' means over all their replies,
