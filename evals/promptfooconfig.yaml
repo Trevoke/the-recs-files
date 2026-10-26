@@ -186,6 +186,10 @@ tests:
       - type: javascript
         metric: supersedes both by link
         value: file://checks/superseding-two-features.js:supersedesBothByLink
+      # ADR-14 §Consequences: A record names another record by an org link to its file
+      - type: javascript
+        metric: links parted by a comma
+        value: file://checks/superseding-two-features.js:linksParted
       # ADR-6 §Consequences: Records are written in org
       - type: javascript
         metric: org lines whole

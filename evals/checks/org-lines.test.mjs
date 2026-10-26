@@ -55,3 +55,12 @@ test('this repository\'s records are whole and name records by links', () => {
     if (!/f-12-the-agent-cites/.test(rel)) assert.deepEqual(plainNames(rel, text), [], rel);
   }
 });
+
+test('links on a :SUPERSEDES: line are parted by a comma and a space, after any section map', async () => {
+  const { separators } = await import('./superseding-two-features.js');
+  const a = '[[./f-1-x.org][F-1: X]]';
+  const b = '[[./f-2-y.org][F-2: Y]]';
+  assert.deepEqual(separators(`:SUPERSEDES: ${a} (§1 → §1; §2 → none), ${b} (§1 → §2)`), [', ']);
+  assert.deepEqual(separators(`:SUPERSEDES: ${a}, ${b}`), [', ']);
+  assert.deepEqual(separators(`:SUPERSEDES: ${a} ${b}`), [' ']);
+});

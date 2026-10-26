@@ -28,3 +28,17 @@ export function supersedesBothByLink(output, context) {
   const ok = targets.some((t) => /^f-1-/.test(t)) && targets.some((t) => /^f-2-/.test(t));
   return result(ok, `:SUPERSEDES: links ${targets.join(', ') || 'nothing'}`);
 }
+
+export function separators(line) {
+  const value = line.replace(/^:SUPERSEDES\+?:\s*/, '');
+  const between = value.split(/\[\[[^\]]+\]\[[^\]]+\]\]/).slice(1, -1);
+  return between.map((s) => s.replace(/^\s*\([^)]*\)/, ''));
+}
+
+export function linksParted(output, context) {
+  const files = successors(context);
+  if (files.length !== 1) return result(false, `${files.length} new feature files`);
+  const line = files[0].text.split('\n').find((l) => /^:SUPERSEDES\+?:/.test(l)) ?? '';
+  const wrong = separators(line).filter((s) => s !== ', ');
+  return result(wrong.length === 0, wrong.length ? `links parted by ${wrong.map((s) => JSON.stringify(s)).join(', ')}` : 'links parted by a comma and a space');
+}
