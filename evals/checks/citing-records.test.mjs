@@ -39,3 +39,9 @@ test('a citation naming two sections fails', () => {
 test('two citations naming one section each pass', () => {
   assert.equal(check(`See \`F-1 §2: ${whole}\` and \`F-1 §3: ${whole}\`.`).pass, true);
 });
+
+test('a projection line with a dated identifier gives its title', async () => {
+  const { projectionTitles } = await import('./citing-records.js');
+  const text = '- ADR-20261015-70tz :: [[./architectural-decisions/adr-20261015-70tz-a-record-change-is-one-commit-of-its-own.org][A record change is one commit of its own]]\n';
+  assert.deepEqual([...projectionTitles(text)], [['ADR-20261015-70tz', 'A record change is one commit of its own']]);
+});

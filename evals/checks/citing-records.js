@@ -1,4 +1,5 @@
 import { citations } from './citations.js';
+import { identifier, prefix } from './identifier.js';
 import { original, result } from './workspace.js';
 
 const projections = [
@@ -9,13 +10,16 @@ const projections = [
   'docs/message-catalog.org',
 ];
 
+const projectionLine = new RegExp(`^- (${prefix}-${identifier}) :: \\[\\[[^\\]]*\\]\\[(.*)\\]\\]$`, 'gm');
+
+export function projectionTitles(text, map = new Map()) {
+  for (const m of text.matchAll(projectionLine)) map.set(m[1], m[2]);
+  return map;
+}
+
 function titles(context) {
   const map = new Map();
-  for (const file of projections) {
-    for (const m of original(context, file).matchAll(/^- ([A-Z]+-\d+) :: \[\[[^\]]*\]\[(.*)\]\]$/gm)) {
-      map.set(m[1], m[2]);
-    }
-  }
+  for (const file of projections) projectionTitles(original(context, file), map);
   return map;
 }
 
