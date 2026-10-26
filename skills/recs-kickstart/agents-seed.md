@@ -97,12 +97,12 @@ end of the projection. A record's file, its line in the projection, and its
 heading carry the same title, and a clarification that gives a record a new
 title changes all three.
 
-A proposal is a record written to its file with `:STATUS: Proposed` and its
-line under `* Proposed`, committed alone, and then shown to the record keeper
-with every sentence it falsifies and the wording that replaces each: they agree
-to a file that exists. Nothing stands before they agree. Accepting it, once
-they have, marks it Accepted, moves its line out from under `* Proposed` and
-writes the replacements, in a commit of its own.
+A new record is written to its file with `:STATUS: Proposed` and its line under
+`* Proposed`, committed alone, and then shown to the record keeper with every
+sentence it falsifies and the wording that replaces each: they agree to a file
+that exists. Nothing stands before they agree. Accepting it, once they have,
+marks it Accepted, moves its line out from under `* Proposed` and writes the
+replacements, in a commit of its own.
 
 ## A feature record's form
 

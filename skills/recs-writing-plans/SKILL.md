@@ -169,10 +169,12 @@ Expected: PASS
 
 ```bash
 git add tests/path/test.py src/path/file.py
-git commit -m "feat: add order validator
+git commit -F - <<'EOF'
+feat: add order validator
 
 `UW-3: [title]` requires every order checked on arrival.
-Validator added with its first passing test."
+Validator added with its first passing test.
+EOF
 ```
 ```
 
