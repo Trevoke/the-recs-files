@@ -233,16 +233,9 @@ text carries a citation. Two sections are two citations, and a map of sections
 is written in sentences, one whole citation to a section. Everything you say
 reaches the record keeper, what you say while you work included: a record you
 are about to open, or have just opened, is named the same way, by the name its
-projection line carries. A long name is not shortened to fit a sentence: where
-a sentence would name several records, or several sections, they go in a list,
-one whole citation to a line.
+projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
-Good:
-  "I read the records that bear on it:
-  - `X-8: Frobnicate the widgets`
-  - `X-9: Whirl the widgets`
-  - `MSG-4: A reserved widget cannot be frobnicated`"
 Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
 Good: "`src/widgets.py` cites `X-8 §2: Frobnicate the widgets` and `X-8 §1: Frobnicate the widgets`"
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
@@ -251,7 +244,6 @@ Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was gi
 Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
 Bad: "`X-8 §1` → §1, `X-8 §2` → §2, §3"
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
-Bad: "`src/widgets.py` covers `X-8 §1` and `X-8 §2` but not `X-8 §3`; I read `X-8`, `X-9` and `MSG-4`"
 
 ## Framing a question
 
