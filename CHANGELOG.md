@@ -14,6 +14,16 @@
 - A new eval case, `citing-records-to-the-record-keeper`: six questions on one
   fixture, four to tune the wording against and two held out, scored by
   `npm run score:citations`.
+- A record names another record by an org link to its file, its description
+  the number and title
+  (`ADR-14: A record names another record by an org link to its file`); a
+  successor's `:SUPERSEDES:` line holds one link per record it supersedes, a
+  comma and a space between them.
+- The seed and `recs-writing-records` show the lines org reads whole — a
+  heading, a property, a projection line, a link — with good and bad examples
+  (`ADR-6: Records are written in org`).
+- A new eval case, `superseding-two-features`, and checks on every case that
+  writes records: org lines whole, records named by links, links resolving.
 
 ### Eval results
 
@@ -22,7 +32,8 @@ Claude Code, Claude Sonnet 5.5, with the skills installed.
 | Case | Runs passing |
 |---|---|
 | citing-records-to-the-record-keeper, held-out questions | 7/12 (0/12 before), 0.12 faults per citation (0.78 before) |
-| proposing-a-record | 12/12 |
+| proposing-a-record | 12/12; with the org-line examples 6/6 |
+| superseding-two-features | 6/6 |
 | rejecting-a-proposed-record | 3/3 |
 | choosing-a-realization-modality | 3/3 |
 | planning-without-a-realization-modality | 3/3 |
