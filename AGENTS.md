@@ -245,9 +245,14 @@ text carries a citation. Two sections are two citations, and a map of sections
 is written in sentences, one whole citation to a section. Everything you say
 reaches the record keeper, what you say while you work included: a record you
 are about to open, or have just opened, is named the same way, by the name its
-projection line carries.
+projection line carries. A heading, or a list item's bold lead, that stands for
+a record or a section is the whole citation. The name is never an adjective or
+a possessive: the sentence is turned so the name stands whole, "the comment
+citing `X-8 §2: Frobnicate the widgets`", "the line for `X-8: Frobnicate the widgets`".
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
+Good: "- **`X-8 §3: Frobnicate the widgets` is not implemented.** The code has no limit."
+Good: "the comment citing `X-8 §2: Frobnicate the widgets` restates the title, and the text of `MSG-4: A reserved widget cannot be frobnicated` is copied into the code"
 Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
 Good: "`src/widgets.py` cites `X-8 §2: Frobnicate the widgets` and `X-8 §1: Frobnicate the widgets`"
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
@@ -256,6 +261,8 @@ Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was gi
 Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
 Bad: "`X-8 §1` → §1, `X-8 §2` → §2, §3"
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
+Bad: "- **`X-8 §3` is not implemented.** The code has no limit."
+Bad: "the `X-8 §2` comment restates the title, and the `MSG-4` text is copied into the code"
 
 ## Framing a question
 
