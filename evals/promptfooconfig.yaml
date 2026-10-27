@@ -302,39 +302,39 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # F-20261027-4zx7 §1, §2: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §1, §2: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: exact titles
         value: file://checks/citing-records.js:exactTitles
-      # F-20261027-4zx7 §3: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §3: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: section before title
         value: file://checks/citing-records.js:sectionBeforeTitle
-      # F-20261027-4zx7 §3: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §3: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: sections in one citation
         value: file://checks/citing-records.js:sectionsInOneCitation
-      # F-20261027-4zx7 §3: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §3: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: sections in record order
         value: file://checks/citing-records.js:sectionsInRecordOrder
-      # F-20261027-4zx7 §4: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §4: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: sections listed under their citation
         value: file://checks/citing-records.js:sectionsListedUnder
-      # F-20261027-4zx7 §7: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §7: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: no sections of a record not on disk
         value: file://checks/citing-records.js:noSectionsOfARecordNotOnDisk
-      # F-20261027-4zx7 §8: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §8: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: quotes in code blocks
         value: file://checks/citing-records.js:quotesInCodeBlocks
-      # F-20261027-4zx7 §5: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §5: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: in backticks
         value: file://checks/citing-records.js:inBackticks
-      # F-20261027-4zx7 §6: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
+      # F-20261027-q7eh §6: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
       - type: javascript
         metric: one line
         value: file://checks/citing-records.js:oneLine

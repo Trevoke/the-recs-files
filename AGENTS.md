@@ -308,8 +308,9 @@ title, so `X-8` or `X-8 §2` before the reply has cited the record reaches them
 as no record at all. Once a reply has cited a record, it names it again by its
 citation or by its identifier, in backticks: `X-8`, `X-8 §2`. Several sections
 of one record meant together are named together, after the identifier, in
-either form; what you say of each sits on a line of its own under the line that
-names them, the section's number beside it. A record not yet on disk has no
+either form. The first time a reply names a section, a line of its own under
+the line that names it says what that section says, the section's number
+beside it. A record not yet on disk has no
 sections to number: name what its sections say. A quote of a record's text is
 a code block under the line that names what it quotes, exactly as the file
 holds it. Everything you say reaches the record keeper, what you say while you
@@ -317,20 +318,27 @@ work included: a record you are about to open, or have just opened, is cited
 the same way, by the identifier and title its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
-Good: "`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`"
+Good:
+```
+`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`:
+- §1: frobnicates a widget on request
+- §2: refuses a reserved widget
+```
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
 Good:
 ```
 `X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is.
 Step 2 of `X-9` cites `X-8`, so the sweep repoints it; `src/widgets.py` misses `X-8 §3`.
+- §3: refuses a widget past its frobnication limit
 ```
 Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
 Good:
 ```
-`X-8 §1, §2, §3: Frobnicate the widgets` in the successor:
-- §1: carries over
-- §2: becomes two requirements
-- §3: carries over
+`X-8 §2, §3: Frobnicate the widgets` gets a successor:
+- §2: refuses a reserved widget
+- §3: refuses a widget past its frobnication limit
+
+The successor would refuse a reserved widget, notify the widget's owner when it does, and refuse a widget past its frobnication limit.
 ```
 Good:
 ````
@@ -358,7 +366,8 @@ each by identifier and title. Then state the situation, and only then the proble
 ```
 We are working on `UW-X: Frobnicate the widget`.
 
-`UW-X §1b: Frobnicate the widget` says the user frobnicates after having whirled.
+`UW-X §1b: Frobnicate the widget`
+- §1b: the user frobnicates after having whirled
 
 `F-Y: Frobnication` says that we must whirl only after whooping.
 
