@@ -226,3 +226,41 @@ record") and that what the agent says while it works counts; the
 requirements say neither. The record's own examples (E2) did not bring
 the faults down. Stating a feature's requirements is not, on this
 evidence, a substitute for the prose that realizes them.
+
+* A third of attempt 1's failures were the eval's, not the agent's
+Established 2026-10-27 by reading attempt 1's 48 replies (`50e0b6f`) in
+full. Of its 28 failing replies, 10 failed only on checks stricter than
+`F-20261027-tkzn: The agent cites a record to the record keeper in its title's exact words, with every section it means`:
+a lone "§3" in prose after a full citation, which §3 does not fault, and a
+property value named inline ("I'll write it as =:STATUS: Proposed="), which
+quotes nothing. Two more failed only on remarks about the fixture's own
+`F-1`, which cited its messages in backticks against the house form; 29 of
+264 replies across the session stopped to point that out. The checks and
+the fixture were fixed in `53988b4` and `70f66b4`.
+
+Of the 16 replies left, 46 of their 78 citations without a title sat in one
+kind of sentence: a working note naming the records the agent was about to
+open, written after reading only =docs/features.org=, so before it had read
+the other records' titles. The excerpts the proposer was given, a hundred
+characters each, never showed when in the work a fault was written.
+
+* The loop in use from 2026-10-27
+As from 2026-10-26, with these changes, agreed with the record keeper:
+- Every run is kept :: `score:citations` keeps promptfoo's raw results, each
+  reply's transcript, and =replies.md= (each reply's full text, its faults,
+  and the steps it took) under =evals/runs/=. Claude Code writes thinking
+  blocks to its transcripts empty, so the steps stand in for it.
+- Faults are sorted by cause after each run :: before the next attempt,
+  every failing reply is read in full and each fault is put under the
+  condition that produced it: where in the reply it sits, what the agent
+  was doing and had read when it wrote it. The table of causes and their
+  counts goes in the attempt log.
+- The eval is fixed first :: a cause that is a check stricter than its
+  record, or a fixture against the house form, is raised with the record
+  keeper and fixed before the skill text changes.
+- Each attempt goes after one cause's root condition :: the proposer gets
+  the table of causes and the full replies of the largest, and changes the
+  skill text so that it leads the model toward the meaning and the conduct
+  the record asks for, in the skill text alone, portable to any harness.
+- An attempt is judged on its causes too :: the cause it targets falls, and
+  no other rises, beside the score.
