@@ -299,16 +299,19 @@ one that names sections of it, one that says what a comment in code cites, one
 that says what becomes of a record's sections in its successor, and one that
 introduces a quote of the record's text. Several sections of one record meant
 together are one citation; what you say of each sits on a line of its own
-under it, the section's number beside it. A record not yet on disk has no
-sections to number: name what its sections say. A quote of a record's text is
-a code block under the citation of what it quotes, exactly as the file holds
-it. Everything you say reaches the record keeper, what you say while you work
-included: a record you are about to open, or have just opened, is cited the
-same way, by the number and title its projection line carries.
+under it, the section's number beside it. Those lines are the one place a
+section's number stands alone; in a sentence, a section is the whole citation.
+A record not yet on disk has no sections to number: name what its sections
+say. A quote of a record's text is a code block under the citation of what it
+quotes, exactly as the file holds it. Everything you say reaches the record
+keeper, what you say while you work included: a record you are about to open,
+or have just opened, is cited the same way, by the number and title its
+projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`"
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
+Good: "`X-8: Frobnicate the widgets` gets a successor. `X-8 §3: Frobnicate the widgets` changes."
 Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
 Good:
 ```
@@ -327,6 +330,7 @@ Good:
 ````
 Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
 Bad: "`X-8 §2` becomes two requirements"
+Bad: "`X-8: Frobnicate the widgets` gets a successor. §3 changes."
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
 Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over"
 Bad: "`X-8 §3, §1: Frobnicate the widgets` carry over"
