@@ -189,6 +189,11 @@ tests:
       - type: javascript
         metric: links parted by a comma
         value: file://checks/superseding-two-features.js:linksParted
+      # F-20261027-jtb9 §2: A superseded record names its successor
+      # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
+      - type: javascript
+        metric: supersedes by links only
+        value: file://checks/superseding-two-features.js:linksOnly
       # ADR-20261015-0v6s §Consequences: Records are written in org
       - type: javascript
         metric: org lines whole

@@ -35,6 +35,18 @@ export function separators(line) {
   return between.map((s) => s.replace(/^\s*\([^)]*\)/, ''));
 }
 
+export function outsideLinks(line) {
+  return line.replace(/^:SUPERSEDES\+?:\s*/, '').split(/\[\[[^\]]+\]\[[^\]]+\]\]/).join('').replace(/,\s*/g, '').trim();
+}
+
+export function linksOnly(output, context) {
+  const files = successors(context);
+  if (files.length !== 1) return result(false, `${files.length} new feature files`);
+  const line = files[0].text.split('\n').find((l) => /^:SUPERSEDES\+?:/.test(l)) ?? '';
+  const rest = outsideLinks(line);
+  return result(rest === '', rest ? `:SUPERSEDES: holds more than links: ${rest}` : ':SUPERSEDES: holds links only');
+}
+
 export function linksParted(output, context) {
   const files = successors(context);
   if (files.length !== 1) return result(false, `${files.length} new feature files`);

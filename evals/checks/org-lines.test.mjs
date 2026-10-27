@@ -56,7 +56,15 @@ test('this repository\'s records are whole and name records by links', () => {
   }
 });
 
-test('links on a :SUPERSEDES: line are parted by a comma and a space, after any section map', async () => {
+test('a :SUPERSEDES: line holding a section map holds more than links', async () => {
+  const { outsideLinks } = await import('./superseding-two-features.js');
+  const a = '[[./f-1-x.org][F-1: X]]';
+  const b = '[[./f-2-y.org][F-2: Y]]';
+  assert.equal(outsideLinks(`:SUPERSEDES: ${a}, ${b}`), '');
+  assert.equal(outsideLinks(`:SUPERSEDES: ${a} (§1 → §1; §2 → none), ${b} (§1 → §2)`), '(§1 → §1; §2 → none)(§1 → §2)');
+});
+
+test('links on a :SUPERSEDES: line are parted by a comma and a space', async () => {
   const { separators } = await import('./superseding-two-features.js');
   const a = '[[./f-1-x.org][F-1: X]]';
   const b = '[[./f-2-y.org][F-2: Y]]';

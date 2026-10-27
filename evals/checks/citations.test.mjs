@@ -140,10 +140,10 @@ test('a paraphrased title in backticks is not titled, and is backticked', () => 
   assert.equal(one('`F-1: Borrower renewal\nsays so`').backticked, false);
 });
 
-test('a section map after a whole citation is not a misplaced section', () => {
+test('a section map after a whole citation is a misplaced section', () => {
   const [c] = citations(`Supersedes \`F-1: ${whole}\` (§1 → §1; §2 → §2, §3; §3 → none)`, titles);
   assert.equal(c.titled, true);
-  assert.equal(c.sectionMisplaced, false);
+  assert.equal(c.sectionMisplaced, true);
 });
 
 test('a citation by a dated identifier holds', () => {
