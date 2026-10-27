@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { noSectionsOfARecordNotOnDisk, quotesInCodeBlocks, sectionBeforeTitle, sectionsInOneCitation, sectionsInRecordOrder, sectionsListedUnder } from './citing-records.js';
+import { exactTitles, noSectionsOfARecordNotOnDisk, quotesInCodeBlocks, sectionBeforeTitle, sectionsInOneCitation, sectionsInRecordOrder, sectionsListedUnder } from './citing-records.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = path.join(here, '..', 'cases', 'citing-records-to-the-record-keeper', 'fixture');
@@ -219,4 +219,20 @@ test('wording drafted for a record not on disk, in quotes, passes', () => {
 
 test('a property named without its value passes', () => {
   assert.equal(quoted(`The successor's \`:SUPERSEDES:\` names \`F-1: ${whole}\`.`).pass, true);
+});
+
+const titles = run(exactTitles);
+
+test('a record named by its identifier after the reply cited it in full passes', () => {
+  assert.equal(titles(`\`F-1: ${whole}\` gets a successor.\n\nThe code misses \`F-1 §3\`, and \`F-1\` stays until then.`).pass, true);
+});
+
+test('a record named by its identifier before the reply cites it fails', () => {
+  const r = titles(`The code misses \`F-1 §3\`.\n\n\`F-1: ${whole}\` gets a successor.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /^1 of 2 citations/);
+});
+
+test('an identifier after a full citation of another record fails', () => {
+  assert.equal(titles(`\`MSG-1: A reserved book cannot be renewed\` stands, and \`F-1\` changes.`).pass, false);
 });

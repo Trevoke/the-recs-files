@@ -3,8 +3,18 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { citations } from '../checks/citations.js';
+import { projectionTitles } from '../checks/citing-records.js';
 
 const evalsDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
+const fixtureDocs = path.join(evalsDir, 'cases', 'citing-records-to-the-record-keeper', 'fixture', 'docs');
+const fixtureTitles = new Map();
+for (const f of fs.readdirSync(fixtureDocs).filter((f) => f.endsWith('.org'))) projectionTitles(fs.readFileSync(path.join(fixtureDocs, f), 'utf8'), fixtureTitles);
+
+function budget(said) {
+  const known = citations(said || '', fixtureTitles).filter((c) => c.known);
+  return { records: new Set(known.map((c) => c.id)).size, citations: known.filter((c) => c.titled).length, namings: known.length };
+}
 const checks = ['exact titles', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
 
 function options(argv) {
@@ -61,7 +71,7 @@ function reply(result) {
     if (found?.excerpts.length) excerpts[check] = found.excerpts;
   }
   const sum = Object.values(faults).reduce((a, b) => a + b, 0);
-  return { scenario, total: titles.total, faults, score: sum / titles.total, pass: result.success === true, excerpts };
+  return { scenario, total: titles.total, faults, score: sum / titles.total, pass: result.success === true, excerpts, budget: budget(result.response?.metadata?.said) };
 }
 
 function mean(xs) {
@@ -87,7 +97,13 @@ function summary(replies, opts) {
     score: scores.length ? mean(scores) : null,
     standardError: standardError(scores),
     passing: scored.filter((r) => r.pass).length,
-    scenarios: Object.fromEntries(Object.entries(scenarios).map(([k, v]) => [k, { score: mean(v), standardError: standardError(v), replies: v.length }])),
+    scenarios: Object.fromEntries(Object.entries(scenarios).map(([k, v]) => {
+      const spent = scored.filter((r) => r.scenario === k && r.budget).map((r) => r.budget);
+      const most = (key) => Math.max(...spent.map((b) => b[key]));
+      const usual = (key) => Number(mean(spent.map((b) => b[key])).toFixed(1));
+      return [k, { score: mean(v), standardError: standardError(v), replies: v.length,
+        budget: spent.length ? { records: usual('records'), mostRecords: most('records'), citations: usual('citations'), mostCitations: most('citations'), namings: usual('namings') } : null }];
+    })),
     faults: Object.fromEntries(checks.map((c) => [c, scored.reduce((a, r) => a + r.faults[c], 0)])),
     detail: replies,
   };

@@ -59,7 +59,10 @@ export function citesRecords(output, context) {
 }
 
 export function exactTitles(output, context) {
-  return every(output, context, (c) => c.titled, 'do not carry the title as the heading does');
+  const firstCited = new Map();
+  for (const c of cited(output, context)) if (c.titled && !firstCited.has(c.id)) firstCited.set(c.id, c.start);
+  const citedBefore = (c) => firstCited.has(c.id) && firstCited.get(c.id) < c.start;
+  return every(output, context, (c) => c.titled || citedBefore(c), 'do not carry the title before the reply has cited the record');
 }
 
 export function sectionBeforeTitle(output, context) {
