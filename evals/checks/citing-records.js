@@ -87,15 +87,13 @@ export function sectionsInOneCitation(output, context) {
     const b = withSections.slice(i + 1).find((c) => c.id === a.id);
     if (!b) return;
     const between = plain.slice(a.end, b.start);
-    const named = new Set(a.sectionText.match(/§[\w.]+/g));
-    const more = b.sectionText.match(/§[\w.]+/g).some((m) => !named.has(m));
-    if (more && !/\n\s*\n/.test(between)) split.push(`${a.excerpt} … ${b.excerpt}`);
+    if (!/[.!?](?:\s|$)|\n/.test(between)) split.push(`${a.excerpt} … ${b.excerpt}`);
   });
   return result(
     split.length === 0,
     split.length === 0
-      ? `each paragraph names a record's sections in one citation`
-      : `${split.length} paragraphs cite one record's sections in more than one citation: ${split.join('; ')}`,
+      ? `each sentence names a record's sections in one citation`
+      : `${split.length} sentences cite one record's sections in more than one citation: ${split.join('; ')}`,
   );
 }
 

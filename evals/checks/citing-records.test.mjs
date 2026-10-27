@@ -61,30 +61,8 @@ test('two citations of one record\'s sections in one sentence fail', () => {
   assert.match(r.reason, /F-1/);
 });
 
-test('citations of one record\'s sections in two paragraphs pass', () => {
-  assert.equal(oneCitation(`\`F-1 §2: ${whole}\` holds.\n\nLater, \`F-1 §3: ${whole}\` changes.`).pass, true);
-});
-
-test('one record\'s sections in two sentences of one paragraph fail', () => {
-  const r = oneCitation(`\`F-1: ${whole}\` bears. Step 2 cites \`F-1 §1, §2\`. \`src/loans.py\` misses \`F-1 §3\`.`);
-  assert.equal(r.pass, false);
-  assert.match(r.reason, /F-1 §1, §2/);
-});
-
-test('one record\'s sections covered and missed in one sentence fail', () => {
-  assert.equal(oneCitation(`\`F-1: ${whole}\` bears; \`src/loans.py\` implements \`F-1 §1, §2\` and misses \`F-1 §3\`.`).pass, false);
-});
-
-test('one record\'s sections on two list lines fail', () => {
-  assert.equal(oneCitation(`\`F-1: ${whole}\` bears:\n- \`F-1 §1\` sets the due date\n- \`F-1 §2\` refuses a reserved book\n`).pass, false);
-});
-
-test('a section named again in its paragraph after its citation passes', () => {
-  assert.equal(oneCitation(`\`F-1 §1, §3: ${whole}\` bear. The code misses \`F-1 §3\`, and \`F-1 §3\` needs a test.`).pass, true);
-});
-
-test('one citation naming sections, each said of on a line under it, passes', () => {
-  assert.equal(oneCitation(`\`F-1 §1, §2, §3: ${whole}\` in \`src/loans.py\`:\n- §1: implemented\n- §2: implemented\n- §3: missing\n`).pass, true);
+test('citations of one record\'s sections in two sentences pass', () => {
+  assert.equal(oneCitation(`\`F-1 §2: ${whole}\` holds. Later, \`F-1 §3: ${whole}\` changes.`).pass, true);
 });
 
 test('sections listed on lines under their citation pass', () => {
