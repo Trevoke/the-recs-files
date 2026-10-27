@@ -39,7 +39,7 @@
      yet written would add a requirement that notifies the borrower.
 8. When the agent quotes a record's text to the record keeper, the agent
    shall set the quote in a code block, exactly as the file holds it, under
-   the citation of what it quotes.
+   the line that names what it quotes.
    - The one where the agent quotes the second requirement of F-20261027-jtb9
      in a code block under
      `F-20261027-jtb9 §2: A superseded record names its successor`.
