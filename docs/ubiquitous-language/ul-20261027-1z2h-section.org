@@ -1,0 +1,5 @@
+* UL-20261027-1z2h Section
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+A part of a record that a citation can name.
