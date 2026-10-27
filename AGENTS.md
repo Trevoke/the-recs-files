@@ -330,16 +330,6 @@ Good:
 - §3: carries over
 ```
 Good:
-```
-`src/widgets.py` against the records it cites:
-- `X-8 §1, §2, §3: Frobnicate the widgets`:
-  - §1: `frobnicate` sets the due date
-  - §2: `frobnicate` refuses a reserved widget
-  - §3: nothing refuses a frobnication past the limit
-- `X-9: Whirl the widgets`: `whirl` does what it asks
-- `MSG-4: A reserved widget cannot be frobnicated`: the refusal gives its text
-```
-Good:
 ````
 `X-8 §2: Frobnicate the widgets` reads:
 ```
