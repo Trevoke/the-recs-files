@@ -295,7 +295,10 @@ thing is built, so it lives in the decision that chose to build it that way.
 
 Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
-you need to talk to the record keeper about it, cite the records.
+you need to talk to the record keeper about it, cite the records. Everything you
+say reaches the record keeper, what you say while you work included: a record
+you are about to open, or have just opened, is cited as any other is, by the
+identifier and title its projection line carries.
 
 A citation is a record's identifier, every section of it the statement means,
 each written out and in the record's order, and its title as the record's
@@ -314,9 +317,7 @@ together are one citation; what you say of each sits on a line of its own
 under it, the section's number beside it. A record not yet on disk has no
 sections to number: name what its sections say. A quote of a record's text is
 a code block under the citation of what it quotes, exactly as the file holds
-it. Everything you say reaches the record keeper, what you say while you work
-included: a record you are about to open, or have just opened, is cited the
-same way, by the identifier and title its projection line carries.
+it.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`"
