@@ -264,3 +264,46 @@ As from 2026-10-26, with these changes, agreed with the record keeper:
   the record asks for, in the skill text alone, portable to any harness.
 - An attempt is judged on its causes too :: the cause it targets falls, and
   no other rises, beside the score.
+
+* Three attempts aimed at causes: each moved its cause, none beat the text
+Established 2026-10-27 under the loop from that date, on the six training
+questions, on the text of `a27c492` (attempt 1's, the checks and the
+fixture fixed). Runs are kept under =evals/runs/=; the attempt log with
+each run's causes is in the session's scratchpad, summarized here.
+
+| Wording | Commit | Score | Passing | What moved |
+|---------+--------+-------+---------+------------|
+| Baseline, first six runs | `a27c492` | 0.092 over 36 | 20 | |
+| Baseline, second six runs | `60c286d` (same text) | 0.109 over 36 | 13 | |
+| Baseline, pooled | | 0.101 ± 0.014 over 72 | 33 | |
+| R1: a comment points at a record, and the citation of it is your own | `3f3277d` | 0.115 over 36 | 22 | one record's sections split 12 → 5 |
+| R2: a citation is what the record says, read for its headline | `8a0bc4c` | 0.096 over 36 | 20 | out of backticks 14 → 2 |
+| R3: identifier and title are the record's name in every role it plays | `39b76aa` | 0.146 ± 0.023 over 72 | 35 | citations without title 83 → 140 |
+
+The same text ran twice, six runs a question, scored 0.092 and 0.109, with
+20 and 13 replies passing; single questions moved by up to 0.13 between
+the two. The margin at six runs, about 0.06, was larger than any effect
+an attempt produced, so every verdict there rests on noise. Twelve runs
+a question brought it to 0.047. Counts of each cause moved more steadily
+than the score.
+
+What remained in the baseline: a record is shortened to its identifier
+where the sentence handles it as an object, not for what it says: a file
+the agent read ("I opened the records that bear on it: `F-1`, `MSG-1`,
+`MSG-2`…"), a version a successor replaces ("the old `F-1`"), an item code
+covers or misses ("covers `F-1 §1` and `F-1 §2` and misses `F-1 §3`"), and
+what code comments cite, where the agent also carries the comments over
+as two citations in the code's order. Where the record is the subject of
+its sentence, 2% of citations lose the title.
+
+Two things the attempts showed about the skill text:
+- The sentence on what a bare identifier does to the reader is
+  load-bearing. "`X-8` or `X-8 §2` on its own reaches them as no record
+  at all", with "not only the first time", stands in the baseline; R2 and
+  R3 each replaced it with a framing of what a citation is, and each lost.
+- Naming a situation in the skill text brings it on. R1 named code
+  comments in the citation rule, and an agent audited the code's comments
+  against it ("The two comments cite `F-1 §2` and then `F-1 §1`, but a
+  citation is written in the record's order"). R3 named "the file you
+  opened" among a record's roles, and replies opened with the files they
+  opened, by bare identifier.
