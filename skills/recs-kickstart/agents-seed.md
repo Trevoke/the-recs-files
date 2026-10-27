@@ -308,7 +308,7 @@ citation or by its identifier, in backticks: `X-8`, `X-8 §2`. Several sections
 of one record meant together are named together, after the identifier, in
 either form. The first time a reply names a section, a line of its own under
 the line that names it says what that section says, the section's number
-beside it. A record not yet on disk has no
+beside it, or a quote of the section sits there instead. A record not yet on disk has no
 sections to number: name what its sections say. A quote of a record's text is
 a code block under the line that names what it quotes, exactly as the file
 holds it. Everything you say reaches the record keeper, what you say while you
