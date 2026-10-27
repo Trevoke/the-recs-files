@@ -344,7 +344,6 @@ Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` ca
 Bad: "`X-8 §3, §1: Frobnicate the widgets` carry over"
 Bad: "`X-8 §1, §3: Frobnicate the widgets`: §1 carries over, §3 becomes two requirements"
 Bad: "The successor to `X-8: Frobnicate the widgets` adds a new §3"
-Bad: "`X-8: Frobnicate the widgets` carries `:STATUS: Proposed`"
 
 ## Framing a question
 
