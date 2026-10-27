@@ -93,6 +93,20 @@ test('a section listed under no citation fails', () => {
   assert.equal(listed(`The refusals:\n- §2: of a reserved book\n`).pass, false);
 });
 
+test('one section named in prose after its citation passes', () => {
+  assert.equal(listed(`\`F-1 §1, §2, §3: ${whole}\` gets a successor, because §3 changes.`).pass, true);
+});
+
+test('sections named together in prose pass', () => {
+  assert.equal(listed(`\`F-2: ${whole}\` gets a successor that would carry over §1 and §2 and add a requirement.`).pass, true);
+});
+
+test('what each of two sections says, in prose, fails', () => {
+  const r = listed(`\`F-1 §1, §3: ${whole}\` say nothing about reservation. §1 sets the due date. §3 refuses past the limit.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /§1 sets/);
+});
+
 test('a section in a sentence of its own fails', () => {
   assert.equal(listed(`\`F-1: ${whole}\` changes.\n\nOld §3 becomes §4.\n`).pass, false);
 });
@@ -182,9 +196,13 @@ test('a requirement quoted in a blockquote fails', () => {
   assert.equal(quoted(`\`F-1 §2: ${whole}\` reads:\n\n> If the book is reserved, then the library shall refuse the renewal.\n`).pass, false);
 });
 
-test('a property line quoted inline fails', () => {
+test('a property line holding a link, quoted inline, fails', () => {
   assert.equal(quoted(`The successor carries \`:SUPERSEDES: [[./f-1-x.org][F-1: ${whole}]]\`.`).pass, false);
-  assert.equal(quoted(`\`F-1: ${whole}\` carries \`:STATUS: Accepted\`.`).pass, false);
+});
+
+test('a property value named inline passes', () => {
+  assert.equal(quoted(`I'll write it as \`:STATUS: Proposed\` and commit it alone.`).pass, true);
+  assert.equal(quoted(`\`F-1: ${whole}\` carries \`:STATUS: Accepted\`.`).pass, true);
 });
 
 test('an org link outside a code block fails', () => {

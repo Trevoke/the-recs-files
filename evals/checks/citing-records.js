@@ -96,6 +96,7 @@ export function sectionsInOneCitation(output, context) {
 
 const sectionMark = /§[\w.]+/g;
 const listItem = /^(\s*)(?:[-*+]|\d+[.)])\s+/;
+const namedTogether = /^(?:,?\s+(?:and|or)\s+|,\s*)$/;
 const sectionLine = /^\s*(?:[-*+]|\d+[.)])\s+(?:\*{1,2}|_{1,2})?`?§/;
 const anyIdentifier = new RegExp(`(?<![\\w-])${prefix}-${identifier}(?![\\w-])`);
 
@@ -131,18 +132,27 @@ export function sectionsListedUnder(output, context) {
   const lineOf = (at) => lineStarts.findLastIndex((s) => s <= at);
   const inCitation = (at) => found(output, context).some((c) => c.start <= at && at < c.end);
   const failing = new Map();
+  const bare = new Map();
   for (const m of plain.matchAll(sectionMark)) {
     if (inCitation(m.index)) continue;
     const n = lineOf(m.index);
-    if (failing.has(n)) continue;
-    if (!sectionLine.test(lines[n]) || !listedUnderACitation(lines, n)) failing.set(n, m.index);
+    if (!bare.has(n)) bare.set(n, []);
+    bare.get(n).push(m);
+  }
+  for (const [n, marks] of bare) {
+    if (sectionLine.test(lines[n])) {
+      if (!listedUnderACitation(lines, n)) failing.set(n, marks[0].index);
+      continue;
+    }
+    const apart = marks.slice(1).some((m, i) => !namedTogether.test(plain.slice(marks[i].index + marks[i][0].length, m.index)));
+    if (apart) failing.set(n, marks[0].index);
   }
   const shown = [...failing].map(([n, at]) => plain.slice(at, lineStarts[n] + lines[n].length).slice(0, 100));
   return result(
     failing.size === 0,
     failing.size === 0
       ? 'every section said of outside a citation is listed under it'
-      : `${failing.size} lines say something of a section outside a list under its citation: ${shown.join('; ')}`,
+      : `${failing.size} lines say something of each of several sections outside a list under their citation: ${shown.join('; ')}`,
   );
 }
 
@@ -200,7 +210,6 @@ export function noSectionsOfARecordNotOnDisk(output, context) {
 }
 
 const orgLink = /\[\[[^\]]+\]\[[^\]]+\]\]/g;
-const propertyQuote = /(?:^|`)[ \t]*:[A-Z][A-Z_+]*:[ \t]+[^\s`][^\n`]*/gm;
 const quotedSentence = /["“]([^"”\n]*\bshall\b[^"”\n]*)["”]|^[ \t]*>([^\n]*\bshall\b[^\n]*)/gm;
 
 function normal(text) {
@@ -234,7 +243,7 @@ export function quotesInCodeBlocks(output, context) {
     const words = normal(m[1] ?? m[2]).replace(/[.,;:!?\s]+$/, '').trim();
     return words.length > 0 && records.includes(words);
   });
-  const hits = [...plain.matchAll(orgLink), ...plain.matchAll(propertyQuote), ...quotes].map((m) => m[0].trim().slice(0, 100));
+  const hits = [...plain.matchAll(orgLink), ...quotes].map((m) => m[0].trim().slice(0, 100));
   return result(
     hits.length === 0,
     hits.length === 0 ? 'every quote of a record\'s text is in a code block' : `${hits.length} lines quote a record's text outside a code block: ${hits.join('; ')}`,
