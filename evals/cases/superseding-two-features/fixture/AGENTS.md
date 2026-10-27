@@ -285,29 +285,54 @@ Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, cite the records.
 
-A citation is a record's number, one section of it where a section is meant, and
-its title as the record's heading carries it, in that order, in backticks, on
-one line: `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`. To
-the record keeper, the number and the record's title together are the record,
-and nothing shorter is: the record keeper picks each citation out of your reply
-by this form, and `X-8` or `X-8 §2` on its own reaches them as no record at all.
-So the number and title are written whole every time the record comes up, not
-only the first time, and in every sentence that handles it: one that names the
-record itself, one that names a section of it, one that says what a comment in
-code cites, one that says what becomes of a record's sections in its successor,
-and one that quotes a requirement whose text carries a citation. Two sections
-are two citations. Everything you say reaches the record keeper, what you say
-while you work included: a record you are about to open, or have just opened,
-is cited the same way, by the number and title its projection line carries.
+A citation is a record's number, every section of it the statement means,
+each written out and in the record's order, and its title as the record's
+heading carries it, in that order, in backticks, on one line:
+`X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`,
+`X-8 §1, §3: Frobnicate the widgets`. To the record keeper, the number and
+the record's title together are the record, and nothing shorter is: the record
+keeper picks each citation out of your reply by this form, and `X-8` or
+`X-8 §2` on its own reaches them as no record at all. So the number and
+title are written whole every time the record comes up, not only the first
+time, and in every sentence that handles it: one that names the record itself,
+one that names sections of it, one that says what a comment in code cites, one
+that says what becomes of a record's sections in its successor, and one that
+introduces a quote of the record's text. Several sections of one record meant
+together are one citation; what you say of each sits on a line of its own
+under it, the section's number beside it. A record not yet on disk has no
+sections to number: name what its sections say. A quote of a record's text is
+a code block under the citation of what it quotes, exactly as the file holds
+it. Everything you say reaches the record keeper, what you say while you work
+included: a record you are about to open, or have just opened, is cited the
+same way, by the number and title its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
-Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
-Good: "`src/widgets.py` cites `X-8 §2: Frobnicate the widgets` and `X-8 §1: Frobnicate the widgets`"
+Good: "`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`"
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
-Good: "`X-8 §2: Frobnicate the widgets` reads: 'If the widget is reserved, then the system shall refuse with `MSG-4: A reserved widget cannot be frobnicated`'"
+Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
+Good:
+```
+`X-8 §1, §2, §3: Frobnicate the widgets` in the successor:
+- §1: carries over
+- §2: becomes two requirements
+- §3: carries over
+```
+Good:
+````
+`X-8 §2: Frobnicate the widgets` reads:
+```
+2. If the widget is reserved, then the system shall refuse the frobnication with
+   [[../message-catalog/msg-4-a-reserved-widget-cannot-be-frobnicated.org][MSG-4: A reserved widget cannot be frobnicated]].
+```
+````
 Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
-Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
+Bad: "`X-8 §2` becomes two requirements"
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
+Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over"
+Bad: "`X-8 §3, §1: Frobnicate the widgets` carry over"
+Bad: "`X-8 §1, §3: Frobnicate the widgets`: §1 carries over, §3 becomes two requirements"
+Bad: "The successor to `X-8: Frobnicate the widgets` adds a new §3"
+Bad: "`X-8: Frobnicate the widgets` carries `:STATUS: Proposed`"
 
 ## Framing a question
 
