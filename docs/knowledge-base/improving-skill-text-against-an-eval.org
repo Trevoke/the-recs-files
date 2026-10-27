@@ -175,3 +175,19 @@ copy 0.08), 7 of 12 replies passing, all 22 faults a citation without its
 title; against the original, the gap is 0.66 and the margin 0.18. Against
 the winner's 0.06 ± 0.04 at `dbe5d3e` the difference is within the noise.
 `proposing-a-record` passed 12 of 12.
+
+* Removing a rule needed no loop when its replacements were agreed first
+Established 2026-10-27, removing the section map from a successor's
+=:SUPERSEDES:= for `F-20261027-jtb9: A superseded record names its successor`
+and `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`.
+The eval came first (`01f5530`): on the text before the change (`88500f1`)
+the successor carried a section map in 5 of 5 runs of
+`superseding-two-features`, and the citation questions scored
+0.120 ± 0.030 faults per citation over 18 replies, 6 passing.
+
+The first attempt was the seven replacements the record keeper agreed
+before the eval was written, checked against the records and written by a
+Fable subagent (`c3b288b`). The successor carried no map in 5 of 5 runs;
+the citation questions scored 0.095 ± 0.031, 10 of 18 passing (gap 0.025,
+margin 0.078: no regression); the five other cases passed 3 of 3 each. The
+loop stopped there.
