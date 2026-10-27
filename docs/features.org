@@ -12,3 +12,6 @@
 - F-20261027-jtb9 :: [[./features/f-20261027-jtb9-a-superseded-record-names-its-successor.org][A superseded record names its successor]]
 - F-20261027-tkzn :: [[./features/f-20261027-tkzn-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-with-every-section-it-means.org][The agent cites a record to the record keeper in its title's exact words, with every section it means]]
 - F-20261027-v2mt :: [[./features/f-20261027-v2mt-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][A sweep repoints or removes citations, and leaves plans as written]]
+
+* Proposed
+- F-20261027-4zx7 :: [[./features/f-20261027-4zx7-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-then-names-it-again-by-its-identifier.org][The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier]]
