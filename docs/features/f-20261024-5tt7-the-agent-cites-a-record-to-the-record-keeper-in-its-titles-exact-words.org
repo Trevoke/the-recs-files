@@ -6,11 +6,11 @@
    the record's identifier and its title as the record's heading carries it.
 2. Where a citation to the record keeper names a section, the agent shall
    name one section in it, after the identifier and before the title.
-   - The one where the agent cites the fourth requirement of F-20261015-egtj as
-     `F-20261015-egtj §4: A sweep repoints or removes citations, and leaves plans as written`.
-   - The one where the agent cites the second and third requirements of F-20261015-egtj
-     as two citations, `F-20261015-egtj §2: A sweep repoints or removes citations, and leaves plans as written`
-     and `F-20261015-egtj §3: A sweep repoints or removes citations, and leaves plans as written`.
+   - The one where the agent cites the fourth requirement of F-20261027-v2mt as
+     `F-20261027-v2mt §4: A sweep repoints or removes citations, and leaves plans as written`.
+   - The one where the agent cites the second and third requirements of F-20261027-v2mt
+     as two citations, `F-20261027-v2mt §2: A sweep repoints or removes citations, and leaves plans as written`
+     and `F-20261027-v2mt §3: A sweep repoints or removes citations, and leaves plans as written`.
 3. The agent shall set each citation it gives the record keeper in
    backticks.
 4. The agent shall write each citation it gives the record keeper with no

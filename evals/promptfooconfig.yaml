@@ -180,7 +180,7 @@ tests:
       - type: javascript
         metric: written as proposed
         value: file://checks/superseding-two-features.js:writtenAsProposed
-      # F-20261014-bhn8 §2: A superseded record names its successor
+      # F-20261027-jtb9 §2: A superseded record names its successor
       # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
       - type: javascript
         metric: supersedes both by link

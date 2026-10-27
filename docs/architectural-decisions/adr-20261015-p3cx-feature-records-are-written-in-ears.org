@@ -15,6 +15,5 @@ requirements, one sentence each, in one of Mavin's five patterns, and not
 in Gherkin.
 ** Consequences
 A feature cannot retell its workflow, because an EARS sentence has no
-actor and no sequence. Each requirement is a section a citation can name,
-and a successor maps the old record's sections to its own. A feature record
-is never run as a test; tests are written from it.
+actor and no sequence. Each requirement is a section a citation can name. A
+feature record is never run as a test; tests are written from it.

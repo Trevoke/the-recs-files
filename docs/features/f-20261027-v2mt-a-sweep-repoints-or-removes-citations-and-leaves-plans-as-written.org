@@ -1,6 +1,6 @@
 * F-20261027-v2mt A sweep repoints or removes citations, and leaves plans as written
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :SUPERSEDES: [[./f-20261015-egtj-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][F-20261015-egtj: A sweep repoints or removes citations, and leaves plans as written]]
 :END:
 1. When a supersede is agreed, the agent shall repoint every citation of

@@ -1,7 +1,7 @@
 * F-20261026-tacr A record is written with its identifier and its line in its projection
 :PROPERTIES:
 :STATUS: Accepted
-:SUPERSEDES: [[./f-20261014-d03n-a-record-is-written-with-its-line-in-its-projection.org][F-20261014-d03n: A record is written with its line in its projection]] (§1 → §1; §2 → §2; §3 → §4; §4 → §5; §5 → §6; §6 → §7; §7 → §8)
+:SUPERSEDES: [[./f-20261014-d03n-a-record-is-written-with-its-line-in-its-projection.org][F-20261014-d03n: A record is written with its line in its projection]]
 :END:
 1. When the agent drafts a new record, the agent shall write it as
    proposed, in a file of its own, with its line under its projection's

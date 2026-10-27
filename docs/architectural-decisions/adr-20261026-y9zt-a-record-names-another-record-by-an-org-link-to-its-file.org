@@ -7,8 +7,8 @@ A record names other records: a successor the records it supersedes, a
 workflow's extension the workflow it goes to, a decision the decisions it
 rests on. Written as plain text, a name wrapped across two lines is found by
 no search for it, and several names on one property line have nothing to
-part them: a title holds commas, and a section map semicolons. An org link
-ends where its brackets close, and opens the file it names.
+part them: a title holds commas. An org link ends where its brackets close,
+and opens the file it names.
 ** Decision
 We will name a record, wherever another record names it, by an org link to
 its file, relative to the naming record's file, the link's description its
