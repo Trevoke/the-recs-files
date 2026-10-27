@@ -4,7 +4,7 @@
 
 **Goal:** The agent cites one record once for all the sections it means, and lists what it says of each section on the lines under that citation, as `docs/plans/2026-10-27-citing-sections-design.md` sets out, proven by the citing-records eval.
 
-**Architecture:** Records first: a term, Section, and a feature superseding `F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words`, proposed, agreed, accepted. Then the eval, red on the skill text as it stands. Then the skill text, starting from the replacements the record keeper agreed and improved by a Fable keep-if-better loop (`docs/knowledge-base/improving-skill-text-against-an-eval.org`), until the eval holds.
+**Architecture:** Records first: a term, Section, and a feature superseding `F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words`, proposed, agreed, accepted. Then the eval, red on the skill text as it stands. Then the skill text: every change to its prose is made by a Fable subagent working from the records, starting from the replacements the record keeper agreed and improved by a keep-if-better loop (`docs/knowledge-base/improving-skill-text-against-an-eval.org`). Beside the prose, a few rounds put the feature's EARS requirements into the skill text as they stand, to learn how that behaves.
 
 **Tech Stack:** org records; promptfoo with the Claude Code provider only (`claude-code-sonnet with-skills`, token from `MY_CLAUDE_CODE_OAUTH_TOKEN`, never printed); Node (`node --test`); bubblewrap.
 
@@ -62,7 +62,7 @@ No task touches cataloged text.
 
 ### Task 3: Show both, with every falsified sentence — STOP for agreement
 
-Show the record keeper both records' text and paths, and each falsified sentence quoted beside its replacement (the design's "What it falsifies"), every Good example checked to obey the new feature and every Bad one to break it. Ask, too, for the window between Task 4 and Task 8 where the skill text still says one section to a citation. Nothing proceeds before agreement.
+A Fable subagent (`model: fable`, edits nothing, reads the two proposed records and the skill text) drafts the replacement for each falsified sentence from the records. Show the record keeper both records' text and paths, and each falsified sentence quoted beside its replacement (the design's "What it falsifies"), every Good example checked to obey the new feature and every Bad one to break it. Ask, too, for the window between Task 4 and Task 8 where the skill text still says one section to a citation. Nothing proceeds before agreement.
 
 ### Task 4: Accept
 
@@ -99,6 +99,16 @@ A Fable subagent (`model: fable`, edits only, never commits) writes Task 3's agr
 
 Per the knowledge base entry: one change per attempt across the same files, from failing excerpts of train questions only and the attempt log; every example checked against the feature before a run; kept when the gap beats the margin, pooled when within it, reverted otherwise. Stop after three discards in a row or ten attempts. Then held-out, six runs each, best against baseline; the supersede case five runs; the other cases three runs each.
 
-### Task 10: Review and close
+### Task 10: The EARS rounds
+
+An experiment the record keeper asked for, to learn from whatever it shows. Each round starts from the baseline text (Task 7's commit), is written by a Fable subagent into the same files, and is scored like an attempt (train, three runs each, `--against` the baseline and the best prose):
+
+- **E1** — the citation section's prose replaced by the feature's seven requirements, verbatim, under one sentence naming the feature.
+- **E2** — E1 with the feature's examples under their requirements.
+- **E3**, if E1 or E2 shows something worth chasing — the best prose with the requirements added after it.
+
+Each round is its own commit, reverted after it is scored; the attempt log holds every round's score and failing excerpts. Report all rounds to the record keeper beside the prose loop's best, and the record keeper chooses what stays.
+
+### Task 11: Review and close
 
 The record keeper reviews the skill-text diff. Add the attempts to the knowledge base entry. Remove the entry from `docs/todo.org`. Commit.
