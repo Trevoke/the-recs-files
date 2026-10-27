@@ -1,16 +1,2 @@
 #+TITLE: To do
 
-* TODO Cite a record once for all the sections meant, and describe each on the lines below
-A record for how the agent cites a record to the record keeper: the
-identifier, every section meant, and the title, in one citation; what is said
-of each section listed on the lines under it, one section to a line.
-
-Before anything is proposed:
-- Survey every standing record and skill for what this touches: quoted
-  requirements, quoted =:SUPERSEDES:= lines, code comments that cite
-  sections, records naming other records by link, framing a question.
-- Brainstorm it with the record keeper (recs-brainstorming).
-- Write the plan (recs-writing-plans), and agree it.
-
-An earlier attempt, undone, is on the branch =backup/vzqw-session=; one before
-it on =backup/citation-sections-session=.
