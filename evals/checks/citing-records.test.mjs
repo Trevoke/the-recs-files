@@ -70,45 +70,54 @@ test('sections listed on lines under their citation pass', () => {
   assert.equal(listed(said).pass, true);
 });
 
-test('a section map listed under its citation passes', () => {
-  const said = `\`F-1: ${whole}\` maps to its successor:\n\n- §1 → §1\n- §2 → §2, §3\n`;
-  assert.equal(listed(said).pass, true);
+test('a section cited with its line beneath passes', () => {
+  assert.equal(listed(`\`F-1 §2: ${whole}\`\n- §2: refuses a renewal of a reserved book\n\nThe ledger change doesn't touch it.`).pass, true);
 });
 
-test('a reply with no section outside a citation passes', () => {
-  assert.equal(listed(`See \`F-1 §2: ${whole}\`.`).pass, true);
+test('a section cited with no line beneath fails', () => {
+  const r = listed(`See \`F-1 §2: ${whole}\`.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /^1 citations .*\(§2\)/);
+});
+
+test('a section cited with its quote beneath passes', () => {
+  assert.equal(listed(`\`F-1 §2: ${whole}\` reads:\n\n\`\`\`\n2. If the book is reserved, then the library shall refuse the renewal.\n\`\`\`\n`).pass, true);
+});
+
+test('one of two sections without its line fails', () => {
+  const r = listed(`\`F-1 §2, §3: ${whole}\`:\n- §2: refuses a reserved book\n`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /\(§3\)/);
 });
 
 test('what a section says on the citation\'s own line fails', () => {
-  const r = listed(`\`F-1 §2, §3: ${whole}\`: §2 refuses a reserved book, §3 refuses past the limit.`);
-  assert.equal(r.pass, false);
-  assert.match(r.reason, /§2 refuses/);
+  assert.equal(listed(`\`F-1 §2, §3: ${whole}\`: §2 refuses a reserved book, §3 refuses past the limit.`).pass, false);
 });
 
-test('a section map on the citation\'s own line fails', () => {
-  assert.equal(listed(`\`F-1: ${whole}\` maps as §1 → §1; §2 → §2, §3.`).pass, false);
+test('a section named again after its line needs none', () => {
+  assert.equal(listed(`\`F-1 §2: ${whole}\`\n- §2: refuses a reserved book\n\nThe code already enforces \`F-1 §2\`.`).pass, true);
+});
+
+test('a section first named by identifier after the record\'s citation needs its line', () => {
+  assert.equal(listed(`\`F-1: ${whole}\` gets a successor.\n\nThe code misses \`F-1 §3\`.`).pass, false);
+});
+
+test('a record cited whole needs no line', () => {
+  assert.equal(listed(`\`F-1: ${whole}\` gets a successor.`).pass, true);
+});
+
+test('what is said of sections in prose after their lines passes', () => {
+  const said = `\`F-1 §1, §2: ${whole}\`:\n- §1: sets the due date\n- §2: refuses a reserved book\n\nThe successor carries §1 over and makes §2 two requirements.`;
+  assert.equal(listed(said).pass, true);
+});
+
+test('a section map listed under its citation passes', () => {
+  const said = `\`F-1 §1, §2: ${whole}\` maps to its successor:\n\n- §1 → §1\n- §2 → §2, §3\n`;
+  assert.equal(listed(said).pass, true);
 });
 
 test('a section listed under no citation fails', () => {
-  assert.equal(listed(`The refusals:\n- §2: of a reserved book\n`).pass, false);
-});
-
-test('one section named in prose after its citation passes', () => {
-  assert.equal(listed(`\`F-1 §1, §2, §3: ${whole}\` gets a successor, because §3 changes.`).pass, true);
-});
-
-test('sections named together in prose pass', () => {
-  assert.equal(listed(`\`F-2: ${whole}\` gets a successor that would carry over §1 and §2 and add a requirement.`).pass, true);
-});
-
-test('what each of two sections says, in prose, fails', () => {
-  const r = listed(`\`F-1 §1, §3: ${whole}\` say nothing about reservation. §1 sets the due date. §3 refuses past the limit.`);
-  assert.equal(r.pass, false);
-  assert.match(r.reason, /§1 sets/);
-});
-
-test('a section in a sentence of its own fails', () => {
-  assert.equal(listed(`\`F-1: ${whole}\` changes.\n\nOld §3 becomes §4.\n`).pass, false);
+  assert.equal(listed(`\`F-1: ${whole}\` bears.\n\nThe refusals:\n- §2: of a reserved book\n`).pass, false);
 });
 
 test('a listed section that cites another record passes', () => {
@@ -116,9 +125,14 @@ test('a listed section that cites another record passes', () => {
   assert.equal(listed(said).pass, true);
 });
 
-test('a section map nested under the list item that cites its record passes', () => {
-  const said = `1. \`F-1: ${whole}\` gets a successor\n   - Its sections map as:\n     - §1 → §1\n     - §2 → §2\n`;
+test('a section line nested under the list item that cites its record passes', () => {
+  const said = `1. \`F-1 §1, §2: ${whole}\` bears\n   - §1: sets the due date\n   - §2: refuses a reserved book\n2. \`MSG-1: A reserved book cannot be renewed\` stands\n`;
   assert.equal(listed(said).pass, true);
+});
+
+test('a sibling item\'s section lines do not count for an earlier item', () => {
+  const said = `- \`F-1 §1: ${whole}\` bears\n- \`F-2 §1: A returned copy is held for the borrower who reserved it\` bears\n  - §1: holds a copy\n`;
+  assert.equal(listed(said).pass, false);
 });
 
 test('sections listed under a record not yet on disk pass', () => {
@@ -126,7 +140,7 @@ test('sections listed under a record not yet on disk pass', () => {
   assert.equal(listed(said).pass, true);
 });
 
-test('a section listed under a sibling item that cites nothing fails', () => {
+test('a section line under a sibling item that cites nothing fails', () => {
   const said = `\`F-1: ${whole}\` gets a successor.\n\nWhat changes:\n- the title\n- §2: the refusal\n`;
   assert.equal(listed(said).pass, false);
 });

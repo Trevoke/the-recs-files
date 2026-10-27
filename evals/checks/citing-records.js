@@ -97,10 +97,9 @@ export function sectionsInOneCitation(output, context) {
   );
 }
 
-const sectionMark = /§[\w.]+/g;
 const listItem = /^(\s*)(?:[-*+]|\d+[.)])\s+/;
-const namedTogether = /^(?:,?\s+(?:and|or)\s+|,\s*)$/;
-const sectionLine = /^\s*(?:[-*+]|\d+[.)])\s+(?:\*{1,2}|_{1,2})?`?§/;
+const sectionLine = /^\s*(?:[-*+]|\d+[.)])\s+(?:\*{1,2}|_{1,2})?`?(§[\w.]+)/;
+const fenceLine = /^\s*(`{3,}|~{3,})/;
 const anyIdentifier = new RegExp(`(?<![\\w-])${prefix}-${identifier}(?![\\w-])`);
 
 function indent(line) {
@@ -125,37 +124,57 @@ function listedUnderACitation(lines, n) {
   return false;
 }
 
+// What sits beneath line n: the section numbers on the list lines under it,
+// and whether a code block (a quote) opens there.
+function beneath(raw, lines, n) {
+  const own = indent(lines[n]);
+  const numbers = new Set();
+  let quote = false;
+  for (let i = n + 1; i < lines.length; i++) {
+    if (raw[i].trim() === '' && lines[i].trim() === '') continue;
+    if (fenceLine.test(raw[i]) && lines[i].trim() === '') {
+      if (numbers.size === 0) quote = true;
+      break;
+    }
+    if (!listItem.test(lines[i])) break;
+    const m = sectionLine.exec(lines[i]);
+    if (m) numbers.add(m[1].replace(/[.:]+$/, ''));
+    else if (listItem.test(lines[n]) && indent(lines[i]) <= own) break;
+  }
+  return { numbers, quote };
+}
+
 export function sectionsListedUnder(output, context) {
   const all = cited(output, context);
   if (all.length === 0) return result(false, 'no citation of a record on disk');
-  const plain = unfenced(said(output, context));
+  const text = said(output, context);
+  const raw = text.split('\n');
+  const plain = unfenced(text);
   const lines = plain.split('\n');
   const lineStarts = [];
   lines.reduce((at, line) => (lineStarts.push(at), at + line.length + 1), 0);
   const lineOf = (at) => lineStarts.findLastIndex((s) => s <= at);
-  const inCitation = (at) => found(output, context).some((c) => c.start <= at && at < c.end);
-  const failing = new Map();
-  const bare = new Map();
-  for (const m of plain.matchAll(sectionMark)) {
-    if (inCitation(m.index)) continue;
-    const n = lineOf(m.index);
-    if (!bare.has(n)) bare.set(n, []);
-    bare.get(n).push(m);
+  const named = new Set();
+  const missing = [];
+  for (const c of all) {
+    if (c.sections === 0) continue;
+    const fresh = c.sectionText.match(/§[\w.]+/g).map((m) => m.replace(/[.:]+$/, '')).filter((m) => !named.has(`${c.id} ${m}`));
+    if (fresh.length === 0) continue;
+    fresh.forEach((m) => named.add(`${c.id} ${m}`));
+    const { numbers, quote } = beneath(raw, lines, lineOf(c.start));
+    const unsaid = quote ? [] : fresh.filter((m) => !numbers.has(m));
+    if (unsaid.length) missing.push(`${c.excerpt} (${unsaid.join(', ')})`);
   }
-  for (const [n, marks] of bare) {
-    if (sectionLine.test(lines[n])) {
-      if (!listedUnderACitation(lines, n)) failing.set(n, marks[0].index);
-      continue;
-    }
-    const apart = marks.slice(1).some((m, i) => !namedTogether.test(plain.slice(marks[i].index + marks[i][0].length, m.index)));
-    if (apart) failing.set(n, marks[0].index);
-  }
-  const shown = [...failing].map(([n, at]) => plain.slice(at, lineStarts[n] + lines[n].length).slice(0, 100));
+  const stray = [];
+  lines.forEach((line, n) => {
+    if (sectionLine.test(line) && !listedUnderACitation(lines, n)) stray.push(line.trim().slice(0, 100));
+  });
+  const faults = missing.length + stray.length;
   return result(
-    failing.size === 0,
-    failing.size === 0
-      ? 'every section said of outside a citation is listed under it'
-      : `${failing.size} lines say something of each of several sections outside a list under their citation: ${shown.join('; ')}`,
+    faults === 0,
+    faults === 0
+      ? 'each section, the first time a reply names it, has its line or its quote beneath'
+      : `${faults} citations name a section with no line or quote beneath, or a section line sits under no record: ${[...missing, ...stray.map((l) => `stray ${l}`)].join('; ')}`,
   );
 }
 
