@@ -12,3 +12,6 @@
 - F-20261015-wxwj :: [[./features/f-20261015-wxwj-a-retired-record-gives-its-reason.org][A retired record gives its reason]]
 - F-20261024-5tt7 :: [[./features/f-20261024-5tt7-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words.org][The agent cites a record to the record keeper in its title's exact words]]
 - F-20261026-tacr :: [[./features/f-20261026-tacr-a-record-is-written-with-its-identifier-and-its-line-in-its-projection.org][A record is written with its identifier and its line in its projection]]
+
+* Proposed
+- F-20261027-jtb9 :: [[./features/f-20261027-jtb9-a-superseded-record-names-its-successor.org][A superseded record names its successor]]
