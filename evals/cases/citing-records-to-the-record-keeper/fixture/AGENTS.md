@@ -289,25 +289,25 @@ A citation is a record's number, every section of it the statement means,
 each written out and in the record's order, and its title as the record's
 heading carries it, in that order, in backticks, on one line:
 `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`,
-`X-8 §1, §3: Frobnicate the widgets`. The number and title together are the
-record's name, the one name it goes by in every role it plays in a sentence:
-the file you opened, the version a successor replaces, the item the code
-covers or misses, the section that carries over, the thing a comment points
-at, the text you quote. The record keeper picks each record out of your reply
-by its whole name; `X-8` or `X-8 §2` is part of a name, and a record is never
-referred to by part of its name, however often its name was given. Several
-sections of one record meant together are one citation; what you say of each
-sits on a line of its own under it, the section's number beside it. A record
-not yet on disk has no sections to number: name what its sections say. A quote
-of a record's text is a code block under the citation of what it quotes,
-exactly as the file holds it. Everything you say reaches the record keeper,
-what you say while you work included: a record you are about to open, or have
-just opened, is cited the same way, by the number and title its projection
-line carries.
+`X-8 §1, §3: Frobnicate the widgets`. To the record keeper, the number and
+the record's title together are the record, and nothing shorter is: the record
+keeper picks each citation out of your reply by this form, and `X-8` or
+`X-8 §2` on its own reaches them as no record at all. So the number and
+title are written whole every time the record comes up, not only the first
+time, and in every sentence that handles it: one that names the record itself,
+one that names sections of it, one that says what a comment in code cites, one
+that says what becomes of a record's sections in its successor, and one that
+introduces a quote of the record's text. Several sections of one record meant
+together are one citation; what you say of each sits on a line of its own
+under it, the section's number beside it. A record not yet on disk has no
+sections to number: name what its sections say. A quote of a record's text is
+a code block under the citation of what it quotes, exactly as the file holds
+it. Everything you say reaches the record keeper, what you say while you work
+included: a record you are about to open, or have just opened, is cited the
+same way, by the number and title its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`"
-Good: "`src/widgets.py` misses `X-8 §3: Frobnicate the widgets`"
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
 Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
 Good:
@@ -328,7 +328,6 @@ Good:
 Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
 Bad: "`X-8 §2` becomes two requirements"
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
-Bad: "`src/widgets.py` misses `X-8 §3`, and the successor replaces the old `X-8`"
 Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over"
 Bad: "`X-8 §3, §1: Frobnicate the widgets` carry over"
 Bad: "`X-8 §1, §3: Frobnicate the widgets`: §1 carries over, §3 becomes two requirements"
