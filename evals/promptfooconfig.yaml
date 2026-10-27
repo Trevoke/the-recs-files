@@ -302,19 +302,19 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # F-20261024-5tt7 §1: The agent cites a record to the record keeper in its title's exact words
+      # F-20261027-tkzn §1: The agent cites a record to the record keeper in its title's exact words, with every section it means
       - type: javascript
         metric: exact titles
         value: file://checks/citing-records.js:exactTitles
-      # F-20261024-5tt7 §2: The agent cites a record to the record keeper in its title's exact words
+      # F-20261027-tkzn §2: The agent cites a record to the record keeper in its title's exact words, with every section it means
       - type: javascript
         metric: section before title
         value: file://checks/citing-records.js:sectionBeforeTitle
-      # F-20261024-5tt7 §3: The agent cites a record to the record keeper in its title's exact words
+      # F-20261027-tkzn §4: The agent cites a record to the record keeper in its title's exact words, with every section it means
       - type: javascript
         metric: in backticks
         value: file://checks/citing-records.js:inBackticks
-      # F-20261024-5tt7 §4: The agent cites a record to the record keeper in its title's exact words
+      # F-20261027-tkzn §5: The agent cites a record to the record keeper in its title's exact words, with every section it means
       - type: javascript
         metric: one line
         value: file://checks/citing-records.js:oneLine

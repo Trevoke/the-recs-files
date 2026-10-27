@@ -1,6 +1,6 @@
 * F-20261027-tkzn The agent cites a record to the record keeper in its title's exact words, with every section it means
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :SUPERSEDES: [[./f-20261024-5tt7-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words.org][F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words]]
 :END:
 1. When the agent cites a record to the record keeper, the agent shall give
@@ -13,8 +13,7 @@
      `F-20261027-v2mt §4: A sweep repoints or removes citations, and leaves plans as written`.
    - The one where the agent cites the second and seventh requirements of
      F-20261027-v2mt as one citation,
-     `F-20261027-v2mt §2, §7: A sweep repoints or removes citations, and leaves plans as written`,
-     and not as `§7, §2` or as two citations.
+     `F-20261027-v2mt §2, §7: A sweep repoints or removes citations, and leaves plans as written`.
 3. When the agent tells the record keeper something of each of several
    sections of one record, the agent shall list each section by its number
    on a line of its own under that record's citation, beside what it says of
@@ -31,8 +30,7 @@
 6. Where a record the agent speaks of is not yet on disk, the agent shall
    name its sections by what they say, without numbers.
    - The one where the agent tells the record keeper that a successor not
-     yet written would add a requirement that notifies the borrower, and not
-     that it would add a "new §3".
+     yet written would add a requirement that notifies the borrower.
 7. When the agent quotes a record's text to the record keeper, the agent
    shall set the quote in a code block, exactly as the file holds it, under
    the citation of what it quotes.

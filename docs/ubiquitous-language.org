@@ -23,11 +23,9 @@
 - UL-20261015-xjgm :: [[./ubiquitous-language/ul-20261015-xjgm-projection.org][Projection]]
 - UL-20261015-yr9q :: [[./ubiquitous-language/ul-20261015-yr9q-clarification.org][Clarification]]
 - UL-20261026-3m08 :: [[./ubiquitous-language/ul-20261026-3m08-identifier.org][Identifier]]
+- UL-20261027-1z2h :: [[./ubiquitous-language/ul-20261027-1z2h-section.org][Section]]
 
 * Record realization
 - UL-20261015-1phg :: [[./ubiquitous-language/ul-20261015-1phg-record-realization.org][Record realization]]
 - UL-20261015-jekq :: [[./ubiquitous-language/ul-20261015-jekq-realization-modality.org][Realization modality]]
 - UL-20261015-rj8e :: [[./ubiquitous-language/ul-20261015-rj8e-realization.org][Realization]]
-
-* Proposed
-- UL-20261027-1z2h :: [[./ubiquitous-language/ul-20261027-1z2h-section.org][Section]]
