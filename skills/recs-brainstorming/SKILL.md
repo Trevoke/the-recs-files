@@ -15,7 +15,7 @@ Start by reading the project's records, then ask questions one at a time to refi
 
 **Reading the records first:**
 - Before any dialogue, read the project's records - the project's AGENTS.md says where they live. Commonly: user workflows, architectural decisions, features, a ubiquitous language, and a message catalog.
-- Speak in record identifiers and titles throughout the dialogue ("that touches `UW-4: Import contacts from a spreadsheet`") - never a bare identifier, and never a paraphrase where a record already says it.
+- Cite a record the first time a reply names it ("that touches `UW-4: Import contacts from a spreadsheet`"), and name it again by its citation or its identifier, in backticks; never a paraphrase where a record already says it.
 - Read which realization modalities AGENTS.md names: the forms the project's realization takes, such as code or skill text. Where it names none, ask the record keeper to choose one before anything else, and once they have, name it in AGENTS.md. Work only in a modality the record keeper chose; files already in the project are not a choice.
 - Check out the current project state too (files, docs, recent commits).
 

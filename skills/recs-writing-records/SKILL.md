@@ -39,7 +39,7 @@ Example, from a papers-screening pipeline: "screening takes a paper and returns 
 
 - **Define by defining.** State what something is; never define by contrast with what it isn't. "A quote offers, it does not oblige" helps no one. "A quote is the price offered for a set of line items, valid until its expiry date, before anything is reserved" is a definition.
 - **Be brief.** A record is a sentence or a short paragraph, not an essay.
-- **Address by identifier and title.** `ADR-12: One retry queue per provider`, in backticks, never a bare `ADR-12`. Inside a record, name another record in the form the project's AGENTS.md gives.
+- **Address by identifier and title, then by identifier.** `ADR-12: One retry queue per provider`, in backticks, the first time a reply names it; `ADR-12`, in backticks, names it again. Inside a record, name another record in the form the project's AGENTS.md gives.
 - **Keep each line org reads whole.** A heading, a property, a projection line, a table row and a keyword line each stay on one line, however long; only prose wraps. A drawer holds each property once. The project's AGENTS.md shows each, good and bad.
 - **Match the category's form.** Read two neighbouring records before drafting; yours should be indistinguishable in shape.
 
@@ -162,6 +162,6 @@ def refund(order): ...
 | "The plan cites the old record too, so I repointed it" | A plan is the work as planned against the records then standing. Its words and citations stay as written. |
 | "It's only a wording fix, so I'll edit it in place" | Small is not the test; intent is. Assess it, show the assessment, and let the record keeper decide. |
 | "Nothing cites this record any more, so I'll delete it" | A retired record stays, marked, and its identifier stays taken. Deleting it loses why it once held. |
-| `ADR-12`, bare | Identifier and title, in backticks, always — the title is what makes the reference readable. |
+| `ADR-12`, bare, before the reply has cited it | Identifier and title, in backticks, the first time a reply names a record — the title is what the record keeper reads a record by. |
 
 **All of these mean: stop, and do it the record way.**

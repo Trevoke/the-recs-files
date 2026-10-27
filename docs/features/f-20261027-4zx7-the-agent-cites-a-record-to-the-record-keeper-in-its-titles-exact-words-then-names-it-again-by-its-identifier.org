@@ -1,6 +1,6 @@
 * F-20261027-4zx7 The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :SUPERSEDES: [[./f-20261027-tkzn-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-with-every-section-it-means.org][F-20261027-tkzn: The agent cites a record to the record keeper in its title's exact words, with every section it means]]
 :END:
 1. When the agent first names a record in a reply to the record keeper, the
