@@ -8,7 +8,7 @@ const evalsDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
 const checks = ['exact titles', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
 
 function options(argv) {
-  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null };
+  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null, keep: null, label: null };
   for (let i = 0; i < argv.length; i += 2) {
     const key = argv[i].replace(/^--/, '');
     if (!(key in opts)) throw new Error(`unknown option --${key}`);
@@ -125,17 +125,62 @@ function pooled(files) {
   return { split: scores[0].split, detail: scores.flatMap((s) => s.detail) };
 }
 
+function trace(transcript) {
+  if (!transcript || !fs.existsSync(transcript)) return [];
+  const steps = [];
+  for (const line of fs.readFileSync(transcript, 'utf8').split('\n')) {
+    if (!line.trim()) continue;
+    const entry = JSON.parse(line);
+    const content = entry.type === 'assistant' && Array.isArray(entry.message?.content) ? entry.message.content : [];
+    for (const block of content) {
+      if (block.type === 'text' && block.text.trim()) steps.push(`said: ${block.text.trim().split('\n')[0].slice(0, 160)}`);
+      if (block.type === 'tool_use') {
+        const input = block.input || {};
+        steps.push(`${block.name}: ${String(input.file_path || input.command || input.pattern || input.path || '').split('\n')[0].slice(0, 160)}`);
+      }
+    }
+  }
+  return steps;
+}
+
+function keep(dir, raw, replies, scored) {
+  fs.mkdirSync(path.join(dir, 'transcripts'), { recursive: true });
+  fs.copyFileSync(raw, path.join(dir, 'results.json'));
+  const results = JSON.parse(fs.readFileSync(raw, 'utf8')).results.results;
+  const pages = [`# ${opts.label || 'Run'} at ${scored.commit}`, '', `${scored.replies} replies, ${scored.passing} passing, score ${scored.score?.toFixed(3)}.`];
+  results.forEach((result, i) => {
+    const r = replies[i];
+    const n = String(i + 1).padStart(2, '0');
+    const transcript = result.response?.metadata?.transcript;
+    if (transcript && fs.existsSync(transcript)) fs.copyFileSync(transcript, path.join(dir, 'transcripts', `${n}-${r.scenario}.jsonl`));
+    const failing = (result.gradingResult?.componentResults || []).filter((c) => !c.pass);
+    pages.push('', `## Reply ${n}: ${r.scenario}, ${r.pass ? 'passes' : 'fails'}`, '');
+    for (const c of failing) pages.push(`- ${c.assertion?.metric}: ${c.reason}`);
+    pages.push('', '### Steps', '', ...trace(transcript).map((s) => `- ${s}`));
+    pages.push('', '### What it said', '', '`````', result.response?.metadata?.said || result.response?.output || result.error || '', '`````');
+  });
+  fs.writeFileSync(path.join(dir, 'replies.md'), pages.join('\n') + '\n');
+  fs.writeFileSync(path.join(dir, 'score.json'), JSON.stringify(scored, null, 2));
+}
+
 const opts = options(process.argv.slice(2));
 let replies;
+let raw;
 if (opts.pool) {
   const merged = pooled(opts.pool);
   opts.split = merged.split;
   replies = merged.detail;
 } else {
-  const raw = opts.from || run(opts);
+  raw = opts.from || run(opts);
   replies = JSON.parse(fs.readFileSync(raw, 'utf8')).results.results.map(reply);
 }
 const scored = summary(replies, opts);
+if (raw) {
+  const stamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+  const dir = opts.keep || path.join(evalsDir, 'runs', `${stamp}-${scored.commit}${opts.label ? `-${opts.label}` : ''}`);
+  keep(dir, raw, replies, scored);
+  scored.kept = dir;
+}
 if (opts.against) scored.verdict = verdict(scored, pooled(opts.against));
 if (opts.out) fs.writeFileSync(opts.out, JSON.stringify(scored, null, 2));
 if (opts.log) {
