@@ -200,11 +200,11 @@ stands in for When where the trigger is unwanted.
 Requirements are numbered from 1, and the number is the requirement's section:
 a citation of one requirement is `F-12 §2: A borrower can renew a loan`. A
 number is never reused within its record. A successor numbers its own
-requirements from 1, and its `:SUPERSEDES:` line maps each of the old record's
-sections to the successor's sections that carry it, or to none:
-`:SUPERSEDES: [[./f-12-a-borrower-can-renew-a-loan.org][F-12: A borrower can renew a loan]] (§1 → §1; §2 → §2, §3; §3 → none)`.
+requirements from 1, and its `:SUPERSEDES:` line names each record it
+supersedes by a link:
+`:SUPERSEDES: [[./f-12-a-borrower-can-renew-a-loan.org][F-12: A borrower can renew a loan]]`.
 The sweep of the old identifier repoints each citation of a section of the old
-record by that map.
+record to the successor's sections that carry what the citing site rests on.
 
 ```org
 * F-12 A borrower can renew a loan
@@ -306,12 +306,11 @@ by this form, and `X-8` or `X-8 §2` on its own reaches them as no record at all
 So the identifier and title are written whole every time the record comes up, not
 only the first time, and in every sentence that handles it: one that names the
 record itself, one that names a section of it, one that says what a comment in
-code cites, one that maps a record's sections to its successor's, and one that
-quotes a requirement whose text carries a citation. Two sections are two
-citations, and a map of sections is written in sentences, one whole citation to
-a section. Everything you say reaches the record keeper, what you say while you
-work included: a record you are about to open, or have just opened, is cited the
-same way, by the identifier and title its projection line carries.
+code cites, one that says what becomes of a record's sections in its successor,
+and one that quotes a requirement whose text carries a citation. Two sections
+are two citations. Everything you say reaches the record keeper, what you say
+while you work included: a record you are about to open, or have just opened,
+is cited the same way, by the identifier and title its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over; `X-8 §2: Frobnicate the widgets` becomes two requirements"
@@ -320,7 +319,6 @@ Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` 
 Good: "`X-8 §2: Frobnicate the widgets` reads: 'If the widget is reserved, then the system shall refuse with `MSG-4: A reserved widget cannot be frobnicated`'"
 Bad: "`X-8` gets a successor", even after "`X-8: Frobnicate the widgets`" was given once
 Bad: "`X-8 §1` and `X-8 §3` carry over; `X-8 §2` becomes two requirements"
-Bad: "`X-8 §1` → §1, `X-8 §2` → §2, §3"
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
 
 ## Framing a question
