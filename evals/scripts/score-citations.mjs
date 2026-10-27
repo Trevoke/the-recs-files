@@ -18,7 +18,7 @@ function budget(said) {
 const checks = ['exact titles', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
 
 function options(argv) {
-  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null, keep: null, label: null };
+  const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null, keep: null, label: null, question: null };
   for (let i = 0; i < argv.length; i += 2) {
     const key = argv[i].replace(/^--/, '');
     if (!(key in opts)) throw new Error(`unknown option --${key}`);
@@ -34,7 +34,7 @@ function run(opts) {
   const args = [
     'promptfoo', 'eval', '--no-cache',
     '--filter-providers', 'claude-code-sonnet with-skills',
-    '--filter-pattern', `cites records to the record keeper \\(${split}:`,
+    '--filter-pattern', `cites records to the record keeper \\(${split}: ${opts.question ?? ''}`,
     '--repeat', String(opts.repeat), '-j', String(opts.jobs), '-o', raw,
   ];
   const child = spawnSync('npx', args, {
