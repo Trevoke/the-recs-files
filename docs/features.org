@@ -12,3 +12,6 @@
 - F-20261026-tacr :: [[./features/f-20261026-tacr-a-record-is-written-with-its-identifier-and-its-line-in-its-projection.org][A record is written with its identifier and its line in its projection]]
 - F-20261027-jtb9 :: [[./features/f-20261027-jtb9-a-superseded-record-names-its-successor.org][A superseded record names its successor]]
 - F-20261027-v2mt :: [[./features/f-20261027-v2mt-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][A sweep repoints or removes citations, and leaves plans as written]]
+
+* Proposed
+- F-20261027-tkzn :: [[./features/f-20261027-tkzn-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-with-every-section-it-means.org][The agent cites a record to the record keeper in its title's exact words, with every section it means]]

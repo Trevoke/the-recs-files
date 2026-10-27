@@ -1,0 +1,41 @@
+* F-20261027-tkzn The agent cites a record to the record keeper in its title's exact words, with every section it means
+:PROPERTIES:
+:STATUS: Proposed
+:SUPERSEDES: [[./f-20261024-5tt7-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words.org][F-20261024-5tt7: The agent cites a record to the record keeper in its title's exact words]]
+:END:
+1. When the agent cites a record to the record keeper, the agent shall give
+   the record's identifier and its title as the record's heading carries it.
+2. Where a citation to the record keeper names sections, the agent shall
+   name every section of that record the statement means in the one
+   citation, after the identifier and before the title, each written out,
+   in the record's order.
+   - The one where the agent cites the fourth requirement of F-20261027-v2mt as
+     `F-20261027-v2mt §4: A sweep repoints or removes citations, and leaves plans as written`.
+   - The one where the agent cites the second and seventh requirements of
+     F-20261027-v2mt as one citation,
+     `F-20261027-v2mt §2, §7: A sweep repoints or removes citations, and leaves plans as written`,
+     and not as `§7, §2` or as two citations.
+3. When the agent tells the record keeper something of each of several
+   sections of one record, the agent shall list each section by its number
+   on a line of its own under that record's citation, beside what it says of
+   that section.
+   - The one where the agent tells the record keeper what the first and third
+     requirements of F-20261027-v2mt do, under
+     `F-20261027-v2mt §1, §3: A sweep repoints or removes citations, and leaves plans as written`,
+     on the lines "§1: a supersede repoints each citation to the successor"
+     and "§3: a retirement removes each citation".
+4. The agent shall set each citation it gives the record keeper in
+   backticks.
+5. The agent shall write each citation it gives the record keeper with no
+   line break inside it.
+6. Where a record the agent speaks of is not yet on disk, the agent shall
+   name its sections by what they say, without numbers.
+   - The one where the agent tells the record keeper that a successor not
+     yet written would add a requirement that notifies the borrower, and not
+     that it would add a "new §3".
+7. When the agent quotes a record's text to the record keeper, the agent
+   shall set the quote in a code block, exactly as the file holds it, under
+   the citation of what it quotes.
+   - The one where the agent quotes the second requirement of F-20261027-jtb9
+     in a code block under
+     `F-20261027-jtb9 §2: A superseded record names its successor`.
