@@ -8,7 +8,7 @@ const sectionBefore = new RegExp(`§${name}[ \\t]+(?:of[ \\t]+)?\`?$`);
 const sectionAfter = /^`?[ \t]*(?:,[ \t]*)?\(?§/;
 const nextCitation = new RegExp(`^\`?,?[ \\t]*§${name}[ \\t]+of[ \\t]+\`?(?:UL|ADR|F|UW|MSG)-\\d`);
 
-function unfenced(text) {
+export function unfenced(text) {
   let fence = null;
   return text
     .split('\n')
@@ -62,11 +62,15 @@ export function citations(text, titles) {
     const end = titled ? at + match[0].length : at;
     const before = plain.slice(Math.max(0, start - 60), start);
     const after = plain.slice(end, end + 60);
+    const close = closingTick(plain, at, opened);
     return {
       id,
+      start: opened ? start - 1 : start,
+      end: titled ? end + (plain[end] === '`' ? 1 : 0) : close >= 0 ? close + 1 : at,
       known: title !== undefined,
       titled,
       sections: section ? 1 + (section[0].match(separator) || []).length : 0,
+      sectionText: section ? section[0].trim() : '',
       backticked: titled ? opened && plain[end] === '`' : closingTick(plain, at, opened) >= 0,
       broken: plain.slice(start, end).includes('\n'),
       sectionMisplaced: !section && (sectionBefore.test(before) || (sectionAfter.test(after) && !nextCitation.test(after))),

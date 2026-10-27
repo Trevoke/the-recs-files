@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { sectionBeforeTitle } from './citing-records.js';
+import { noSectionsOfARecordNotOnDisk, quotesInCodeBlocks, sectionBeforeTitle, sectionsInOneCitation, sectionsInRecordOrder, sectionsListedUnder } from './citing-records.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = path.join(here, '..', 'cases', 'citing-records-to-the-record-keeper', 'fixture');
@@ -22,7 +22,10 @@ function project() {
 }
 
 const workingDir = project();
-const check = (said) => sectionBeforeTitle('', { providerResponse: { metadata: { workingDir, said } } });
+const run = (fn) => (said) => fn('', { providerResponse: { metadata: { workingDir, said } } });
+const check = run(sectionBeforeTitle);
+const oneCitation = run(sectionsInOneCitation);
+const listed = run(sectionsListedUnder);
 
 test.after(() => fs.rmSync(workingDir, { recursive: true, force: true }));
 
@@ -30,10 +33,12 @@ test('a citation naming one section passes', () => {
   assert.equal(check(`See \`F-1 §2: ${whole}\`.`).pass, true);
 });
 
-test('a citation naming two sections fails', () => {
-  const r = check(`See \`F-1 §2, §3: ${whole}\`.`);
-  assert.equal(r.pass, false);
-  assert.match(r.reason, /or name more than one/);
+test('a citation naming two sections passes', () => {
+  assert.equal(check(`See \`F-1 §2, §3: ${whole}\`.`).pass, true);
+});
+
+test('a section after the title fails', () => {
+  assert.equal(check(`See \`F-1: ${whole}\` §2.`).pass, false);
 });
 
 test('two citations naming one section each pass', () => {
@@ -44,4 +49,156 @@ test('a projection line with a dated identifier gives its title', async () => {
   const { projectionTitles } = await import('./citing-records.js');
   const text = '- ADR-20261015-70tz :: [[./architectural-decisions/adr-20261015-70tz-a-record-change-is-one-commit-of-its-own.org][A record change is one commit of its own]]\n';
   assert.deepEqual([...projectionTitles(text)], [['ADR-20261015-70tz', 'A record change is one commit of its own']]);
+});
+
+test('one citation naming a record\'s sections passes', () => {
+  assert.equal(oneCitation(`The refusals are \`F-1 §2, §3: ${whole}\`.`).pass, true);
+});
+
+test('two citations of one record\'s sections in one sentence fail', () => {
+  const r = oneCitation(`The refusals are \`F-1 §2: ${whole}\` and \`F-1 §3: ${whole}\`.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /F-1/);
+});
+
+test('citations of one record\'s sections in two sentences pass', () => {
+  assert.equal(oneCitation(`\`F-1 §2: ${whole}\` holds. Later, \`F-1 §3: ${whole}\` changes.`).pass, true);
+});
+
+test('sections listed on lines under their citation pass', () => {
+  const said = `\`F-1 §2, §3: ${whole}\` refuse a renewal:\n- §2: of a reserved book\n- §3: past the limit\n`;
+  assert.equal(listed(said).pass, true);
+});
+
+test('a section map listed under its citation passes', () => {
+  const said = `\`F-1: ${whole}\` maps to its successor:\n\n- §1 → §1\n- §2 → §2, §3\n`;
+  assert.equal(listed(said).pass, true);
+});
+
+test('a reply with no section outside a citation passes', () => {
+  assert.equal(listed(`See \`F-1 §2: ${whole}\`.`).pass, true);
+});
+
+test('what a section says on the citation\'s own line fails', () => {
+  const r = listed(`\`F-1 §2, §3: ${whole}\`: §2 refuses a reserved book, §3 refuses past the limit.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /§2 refuses/);
+});
+
+test('a section map on the citation\'s own line fails', () => {
+  assert.equal(listed(`\`F-1: ${whole}\` maps as §1 → §1; §2 → §2, §3.`).pass, false);
+});
+
+test('a section listed under no citation fails', () => {
+  assert.equal(listed(`The refusals:\n- §2: of a reserved book\n`).pass, false);
+});
+
+test('a section in a sentence of its own fails', () => {
+  assert.equal(listed(`\`F-1: ${whole}\` changes.\n\nOld §3 becomes §4.\n`).pass, false);
+});
+
+test('a listed section that cites another record passes', () => {
+  const said = `\`F-1 §2: ${whole}\` refuses:\n- §2: the book is reserved, with \`MSG-1: A reserved book cannot be renewed\`\n`;
+  assert.equal(listed(said).pass, true);
+});
+
+test('a section map nested under the list item that cites its record passes', () => {
+  const said = `1. \`F-1: ${whole}\` gets a successor\n   - Its sections map as:\n     - §1 → §1\n     - §2 → §2\n`;
+  assert.equal(listed(said).pass, true);
+});
+
+test('sections listed under a record not yet on disk pass', () => {
+  const said = `\`F-1: ${whole}\` gets a successor.\n\n**Proposed F-9 requirements:**\n- §1: when a borrower renews a loan\n`;
+  assert.equal(listed(said).pass, true);
+});
+
+test('a section listed under a sibling item that cites nothing fails', () => {
+  const said = `\`F-1: ${whole}\` gets a successor.\n\nWhat changes:\n- the title\n- §2: the refusal\n`;
+  assert.equal(listed(said).pass, false);
+});
+
+test('a listed section set in bold passes', () => {
+  const said = `\`F-1 §2, §3: ${whole}\`:\n- **§2:** the book is reserved\n- *§3*: past the limit\n`;
+  assert.equal(listed(said).pass, true);
+});
+
+const ordered = run(sectionsInRecordOrder);
+const onDisk = run(noSectionsOfARecordNotOnDisk);
+const quoted = run(quotesInCodeBlocks);
+
+test('sections in the record\'s order pass', () => {
+  assert.equal(ordered(`\`F-1 §1, §3: ${whole}\` hold.`).pass, true);
+});
+
+test('sections out of the record\'s order fail', () => {
+  const r = ordered(`\`F-1 §3, §1: ${whole}\` hold.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /§3, §1/);
+});
+
+test('a range of sections fails', () => {
+  assert.equal(ordered(`\`F-1 §1–§3: ${whole}\` hold.`).pass, false);
+  assert.equal(ordered(`\`F-1 §1-3: ${whole}\` hold.`).pass, false);
+});
+
+test('a workflow step before its extension passes, and after it fails', () => {
+  const title = 'Renew a loan before its due date';
+  assert.equal(ordered(`\`UW-1 §2, §2a: ${title}\` apply.`).pass, true);
+  assert.equal(ordered(`\`UW-1 §2a, §2: ${title}\` apply.`).pass, false);
+});
+
+test('named sections in the Nygard order pass, and out of it fail', () => {
+  const title = 'Keep loans as an append-only ledger of loan events';
+  assert.equal(ordered(`\`ADR-1 §Context, §Decision: ${title}\` say so.`).pass, true);
+  assert.equal(ordered(`\`ADR-1 §Consequences, §Context: ${title}\` say so.`).pass, false);
+});
+
+test('a section of a record on disk passes', () => {
+  assert.equal(onDisk(`\`F-1 §2: ${whole}\` refuses it.`).pass, true);
+});
+
+test('a section of a record not on disk fails', () => {
+  const r = onDisk(`\`F-1: ${whole}\` gets a successor, and \`F-3 §3: Renewals are limited\` refuses past the limit.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /F-3 §3/);
+});
+
+test('a record not on disk named without a section passes', () => {
+  assert.equal(onDisk(`\`F-1: ${whole}\` gets a successor, F-3.`).pass, true);
+});
+
+test('a requirement quoted in a code block passes', () => {
+  const said = `\`F-1 §2: ${whole}\` reads:\n\n\`\`\`\n2. If the book is reserved, then the library shall refuse the renewal with\n   [[../message-catalog/msg-1-a-reserved-book-cannot-be-renewed.org][MSG-1: A reserved book cannot be renewed]].\n\`\`\`\n`;
+  assert.equal(quoted(said).pass, true);
+});
+
+test('a requirement quoted inline fails', () => {
+  const r = quoted(`\`F-1 §2: ${whole}\` reads: "If the book is reserved, then the library shall refuse the renewal."`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /shall refuse/);
+});
+
+test('a requirement quoted in a blockquote fails', () => {
+  assert.equal(quoted(`\`F-1 §2: ${whole}\` reads:\n\n> If the book is reserved, then the library shall refuse the renewal.\n`).pass, false);
+});
+
+test('a property line quoted inline fails', () => {
+  assert.equal(quoted(`The successor carries \`:SUPERSEDES: [[./f-1-x.org][F-1: ${whole}]]\`.`).pass, false);
+  assert.equal(quoted(`\`F-1: ${whole}\` carries \`:STATUS: Accepted\`.`).pass, false);
+});
+
+test('an org link outside a code block fails', () => {
+  assert.equal(quoted(`It cites [[../message-catalog/msg-1-a-reserved-book-cannot-be-renewed.org][MSG-1: A reserved book cannot be renewed]].`).pass, false);
+});
+
+test('a reply that quotes nothing passes', () => {
+  assert.equal(quoted(`\`F-1 §2: ${whole}\` refuses a renewal of a reserved book.`).pass, true);
+});
+
+test('wording drafted for a record not on disk, in quotes, passes', () => {
+  assert.equal(quoted(`A successor would add: "When the library releases a held copy, the library shall tell the borrower it was held for."`).pass, true);
+});
+
+test('a property named without its value passes', () => {
+  assert.equal(quoted(`The successor's \`:SUPERSEDES:\` names \`F-1: ${whole}\`.`).pass, true);
 });

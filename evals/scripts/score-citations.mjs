@@ -5,7 +5,7 @@ import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const evalsDir = path.dirname(path.dirname(fileURLToPath(import.meta.url)));
-const checks = ['exact titles', 'section before title', 'in backticks', 'one line'];
+const checks = ['exact titles', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
 
 function options(argv) {
   const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null };
@@ -41,6 +41,9 @@ function counts(reason) {
   if (failing) return { faults: Number(failing[1]), total: Number(failing[2]), excerpts: failing[3].split('; ') };
   const holding = /^all (\d+) citations hold$/.exec(reason);
   if (holding) return { faults: 0, total: Number(holding[1]), excerpts: [] };
+  const faulty = /^(\d+) (?:sentences|lines|citations) [^:]*: (.*)$/s.exec(reason);
+  if (faulty) return { faults: Number(faulty[1]), total: null, excerpts: faulty[2].split('; ') };
+  if (/^(?:each|every) /.test(reason)) return { faults: 0, total: null, excerpts: [] };
   return null;
 }
 

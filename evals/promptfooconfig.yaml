@@ -310,6 +310,26 @@ tests:
       - type: javascript
         metric: section before title
         value: file://checks/citing-records.js:sectionBeforeTitle
+      # F-20261027-tkzn §2: The agent cites a record to the record keeper in its title's exact words, with every section it means
+      - type: javascript
+        metric: sections in one citation
+        value: file://checks/citing-records.js:sectionsInOneCitation
+      # F-20261027-tkzn §2: The agent cites a record to the record keeper in its title's exact words, with every section it means
+      - type: javascript
+        metric: sections in record order
+        value: file://checks/citing-records.js:sectionsInRecordOrder
+      # F-20261027-tkzn §3: The agent cites a record to the record keeper in its title's exact words, with every section it means
+      - type: javascript
+        metric: sections listed under their citation
+        value: file://checks/citing-records.js:sectionsListedUnder
+      # F-20261027-tkzn §6: The agent cites a record to the record keeper in its title's exact words, with every section it means
+      - type: javascript
+        metric: no sections of a record not on disk
+        value: file://checks/citing-records.js:noSectionsOfARecordNotOnDisk
+      # F-20261027-tkzn §7: The agent cites a record to the record keeper in its title's exact words, with every section it means
+      - type: javascript
+        metric: quotes in code blocks
+        value: file://checks/citing-records.js:quotesInCodeBlocks
       # F-20261027-tkzn §4: The agent cites a record to the record keeper in its title's exact words, with every section it means
       - type: javascript
         metric: in backticks
@@ -332,6 +352,16 @@ tests:
     vars:
       case: citing-records-to-the-record-keeper
       request: file://cases/citing-records-to-the-record-keeper/prompts/framing-a-complaint.md
+    assert: *citing-records-checks
+  - description: "The agent cites records to the record keeper (train: listing-the-refusals)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/listing-the-refusals.md
+    assert: *citing-records-checks
+  - description: "The agent cites records to the record keeper (train: quoting-a-requirement)"
+    vars:
+      case: citing-records-to-the-record-keeper
+      request: file://cases/citing-records-to-the-record-keeper/prompts/quoting-a-requirement.md
     assert: *citing-records-checks
   - description: "The agent cites records to the record keeper (held-out: counting-renewals)"
     vars:
