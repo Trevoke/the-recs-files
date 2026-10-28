@@ -1,6 +1,6 @@
 * UW-20261028-838j Answer a question the agent raises
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :ACTOR: Record keeper
 :SCOPE: The recs files
 :LEVEL: Subfunction

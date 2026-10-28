@@ -387,10 +387,9 @@ Bad: "The successor to `X-8: Frobnicate the widgets` adds a new §3"
 
 ## Framing a question
 
-Every question to the record keeper is framed from the records, and starts from the user
-workflow the work is in. Refer to that workflow by its record name, and to the step or extension of it that applies. Then bring in whatever else bears — a feature, an
+Every question to the record keeper is framed from the records, and starts from the user workflow the work is in, or each of them where it is in more than one. Refer to each by its record name, and to the step or extension of it that applies. Then bring in whatever else bears — a feature, an
 architectural decision, a message catalog entry, a ubiquitous language term —
-each by its record name. Then state the situation, and only then the problem.
+each by its record name. Then state the situation, give at least one example of it, and only then the problem.
 
 ```
 We are working on `UW-X: Frobnicate the widget`.

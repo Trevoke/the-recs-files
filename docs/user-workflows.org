@@ -8,6 +8,4 @@
 - UW-20261014-zb7e :: [[./user-workflows/uw-20261014-zb7e-retire-a-record.org][Retire a record]]
 - UW-20261015-nkb5 :: [[./user-workflows/uw-20261015-nkb5-realize-a-change-to-the-system.org][Realize a change to the system]]
 - UW-20261015-nqdn :: [[./user-workflows/uw-20261015-nqdn-start-a-projects-records-from-its-realization.org][Start a project's records from its realization]]
-
-* Proposed
 - UW-20261028-838j :: [[./user-workflows/uw-20261028-838j-answer-a-question-the-agent-raises.org][Answer a question the agent raises]]
