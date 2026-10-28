@@ -92,7 +92,7 @@ export function sectionsInOneCitation(output, context) {
   return result(
     split.length === 0,
     split.length === 0
-      ? `each sentence names a record's sections in one citation`
+      ? `each sentence refers to a record's sections in one citation`
       : `${split.length} sentences cite one record's sections in more than one citation: ${split.join('; ')}`,
   );
 }
@@ -176,8 +176,8 @@ export function sectionsListedUnder(output, context) {
   return result(
     faults === 0,
     faults === 0
-      ? 'each section, the first time a reply names it, has its line or its quote beneath'
-      : `${faults} citations name a section with no line or quote beneath, or a section line sits under no record: ${[...missing, ...stray.map((l) => `stray ${l}`)].join('; ')}`,
+      ? 'each section, the first time a reply refers to it, has its line or its quote beneath'
+      : `${faults} citations refer to a section with no line or quote beneath, or a section line sits under no record: ${[...missing, ...stray.map((l) => `stray ${l}`)].join('; ')}`,
   );
 }
 
@@ -212,8 +212,8 @@ export function sectionsInRecordOrder(output, context) {
   return result(
     failing.length === 0,
     failing.length === 0
-      ? 'every citation names its sections in the record\'s order, each written out'
-      : `${failing.length} citations name sections out of the record's order or as a range: ${failing.map((c) => c.excerpt).join('; ')}`,
+      ? 'every citation refers to its sections in the record\'s order, each written out'
+      : `${failing.length} citations refer to sections out of the record's order or as a range: ${failing.map((c) => c.excerpt).join('; ')}`,
   );
 }
 
@@ -230,7 +230,7 @@ export function noSectionsOfARecordNotOnDisk(output, context) {
     failing.length === 0,
     failing.length === 0
       ? 'every section cited is of a record on disk'
-      : `${failing.length} citations name sections of a record not on disk: ${failing.map((c) => c.excerpt).join('; ')}`,
+      : `${failing.length} citations refer to sections of a record not on disk: ${failing.map((c) => c.excerpt).join('; ')}`,
   );
 }
 

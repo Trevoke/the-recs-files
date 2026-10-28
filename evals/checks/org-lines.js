@@ -81,7 +81,7 @@ export function linesWhole(output, context) {
 
 export function namesByLink(output, context) {
   const names = changedOrg(context).flatMap((f) => plainNames(f.file, f.text));
-  return result(names.length === 0, names.length ? `plain names: ${names.join('; ')}` : 'every record named by a link');
+  return result(names.length === 0, names.length ? `plain names: ${names.join('; ')}` : 'every record referred to by a link');
 }
 
 export function linksResolve(output, context) {

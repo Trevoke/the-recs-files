@@ -20,8 +20,8 @@ identifier, a hyphen and its slug.
 A projection in identifier order lists its records by the date they were
 drafted, and those of one day in the order of their characters. Two
 records of one category drafted on one day share an identifier once in
-1,048,576 draws, and a draw that names an existing record file is drawn
-again. This project's numbered records are re-identified, each dated by
+1,048,576 draws, and a draw that an existing record file
+already carries is drawn again. This project's numbered records are re-identified, each dated by
 the commit that first added its file. A project that adopts the recs files
 keeps its numbered records until its record keeper directs otherwise, and
 the agent reads both forms. The identifier departs from Nygard's

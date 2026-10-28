@@ -11,7 +11,7 @@ The record keeper decides that what a standing record decides has changed.
 Nothing stands before the record keeper agrees to it.
 ** Success guarantee
 The successor is written and listed in its projection; the old record's
-status names its successor and is the only change to it; every citation of
+status refers to its successor and is the only change to it; every citation of
 the old record outside a plan points at the successor.
 ** Main success scenario
 *** 1. Record keeper tells the agent what has changed in what the record decides

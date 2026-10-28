@@ -82,8 +82,7 @@ title changes all three.
 
 A heading, a property, a projection line, a table row and a `#+` keyword line
 are each written on one line, however long it runs; prose may wrap. A record's
-drawer holds each property once. A record names another record by an org link
-to its file, its description the number and title, and the link sits whole on
+drawer holds each property once. A record refers to another record by an org link to its file, its description the record name, and the link sits whole on
 one line.
 
 Good:
@@ -123,7 +122,7 @@ Bad: a property repeated. Org keeps only the last, and ADR-4 is lost:
 :SUPERSEDES: [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
 ```
 
-Bad: a record named in plain text, and wrapped. No search for the title finds it:
+Bad: a record referred to in plain text, and wrapped. No search for the title finds it:
 ```org
 The shared queue lets one provider's outage hold up the rest, as ADR-4: Retry
 every failed job from one shared queue found.
@@ -147,7 +146,7 @@ Open a record's file before you cite a section of it, measure code, a test, a
 plan or a design against it, assert its text, propose a change to it, or frame
 a question to the record keeper with it. Its title tells you which records bear on the
 work; it is never the evidence that something conforms. Open each record that
-bears, and no others: a record named by a task, by a record you opened, or by a
+bears, and no others: a record referred to by a task, by a record you opened, or by a
 citation in the code you are changing bears; a title that only sounds near the
 work is opened to find out.
 
@@ -176,7 +175,7 @@ thing is built, so it lives in the decision that chose to build it that way.
 
 Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
-you need to talk to the record keeper about it, use the record number and the record title.
+you need to talk to the record keeper about it, use the record name.
 
 Good: "`X-8: Frobnicate the widgets`"
 Bad: "`X-8`"
@@ -184,10 +183,9 @@ Bad: "`X-8`"
 ## Framing a question
 
 Every question to the record keeper is framed from the records, and starts from the user
-workflow the work is in. Name that workflow by number and title, and the step or
-extension of it that applies. Then bring in whatever else bears — a feature, an
+workflow the work is in. Refer to that workflow by its record name, and to the step or extension of it that applies. Then bring in whatever else bears — a feature, an
 architectural decision, a message catalog entry, a ubiquitous language term —
-each by number and title. Then state the situation, and only then the problem.
+each by its record name. Then state the situation, and only then the problem.
 
 ```
 We are working on `UW-X: Frobnicate the widget`.

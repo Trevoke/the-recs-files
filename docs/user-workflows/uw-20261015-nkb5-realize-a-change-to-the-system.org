@@ -22,7 +22,7 @@ does what those records say, checked against them.
 *** 6. Agent shows the record keeper the realization and how it was checked
 *** 7. Record keeper agrees
 ** Extensions
-*** 1a. Record keeper names a user workflow, or a step or extension of it, that the change starts from
+*** 1a. Record keeper refers to a user workflow, or a step or extension of it, that the change starts from
 **** 1a1. Agent reads that user workflow first, and frames the change from it; continue at 2
 *** 2a. The project's AGENTS.md names no realization modality
 **** 2a1. Record keeper chooses one, and the agent names it in AGENTS.md; continue at 3

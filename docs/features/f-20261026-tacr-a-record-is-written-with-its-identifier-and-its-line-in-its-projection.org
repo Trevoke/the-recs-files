@@ -12,8 +12,8 @@
    characters drawn at random from lowercase Crockford base32.
    - The one where an architectural decision drafted on 26 October 2026
      is ADR-20261026-kzx5.
-3. If a drawn identifier names a record file in its category's
-   directory, then the agent shall draw again.
+3. If a record file in its category's directory already carries the drawn
+   identifier, then the agent shall draw again.
 4. The agent shall give a record's file, its heading and its line in the
    projection the same title.
 5. The agent shall never reuse a record's identifier.

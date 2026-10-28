@@ -103,5 +103,5 @@ Task tool (general-purpose):
     - ✅ Spec compliant (if everything matches after code inspection)
     - ❌ Issues found: [list specifically what's missing, extra, or drifted,
       with file:line references — and the record each drift is measured against,
-      cited by identifier and title]
+      cited by its record name]
 ```

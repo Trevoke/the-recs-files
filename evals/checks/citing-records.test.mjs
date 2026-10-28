@@ -29,11 +29,11 @@ const listed = run(sectionsListedUnder);
 
 test.after(() => fs.rmSync(workingDir, { recursive: true, force: true }));
 
-test('a citation naming one section passes', () => {
+test('a citation referring to one section passes', () => {
   assert.equal(check(`See \`F-1 §2: ${whole}\`.`).pass, true);
 });
 
-test('a citation naming two sections passes', () => {
+test('a citation referring to two sections passes', () => {
   assert.equal(check(`See \`F-1 §2, §3: ${whole}\`.`).pass, true);
 });
 
@@ -41,7 +41,7 @@ test('a section after the title fails', () => {
   assert.equal(check(`See \`F-1: ${whole}\` §2.`).pass, false);
 });
 
-test('two citations naming one section each pass', () => {
+test('two citations referring to one section each pass', () => {
   assert.equal(check(`See \`F-1 §2: ${whole}\` and \`F-1 §3: ${whole}\`.`).pass, true);
 });
 
@@ -51,7 +51,7 @@ test('a projection line with a dated identifier gives its title', async () => {
   assert.deepEqual([...projectionTitles(text)], [['ADR-20261015-70tz', 'A record change is one commit of its own']]);
 });
 
-test('one citation naming a record\'s sections passes', () => {
+test('one citation referring to a record\'s sections passes', () => {
   assert.equal(oneCitation(`The refusals are \`F-1 §2, §3: ${whole}\`.`).pass, true);
 });
 
@@ -102,11 +102,11 @@ test('what a section says on the citation\'s own line fails', () => {
   assert.equal(listed(`\`F-1 §2, §3: ${whole}\`: §2 refuses a reserved book, §3 refuses past the limit.`).pass, false);
 });
 
-test('a section named again after its line needs none', () => {
+test('a section referred to again after its line needs none', () => {
   assert.equal(listed(`\`F-1 §2: ${whole}\`\n- §2: refuses a reserved book\n\nThe code already enforces \`F-1 §2\`.`).pass, true);
 });
 
-test('a section first named by identifier after the record\'s citation needs its line', () => {
+test('a section first referred to by identifier after the record\'s citation needs its line', () => {
   assert.equal(listed(`\`F-1: ${whole}\` gets a successor.\n\nThe code misses \`F-1 §3\`.`).pass, false);
 });
 
@@ -183,7 +183,7 @@ test('a workflow step before its extension passes, and after it fails', () => {
   assert.equal(ordered(`\`UW-1 §2a, §2: ${title}\` apply.`).pass, false);
 });
 
-test('named sections in the Nygard order pass, and out of it fail', () => {
+test('sections referred to in the Nygard order pass, and out of it fail', () => {
   const title = 'Keep loans as an append-only ledger of loan events';
   assert.equal(ordered(`\`ADR-1 §Context, §Decision: ${title}\` say so.`).pass, true);
   assert.equal(ordered(`\`ADR-1 §Consequences, §Context: ${title}\` say so.`).pass, false);
@@ -199,7 +199,7 @@ test('a section of a record not on disk fails', () => {
   assert.match(r.reason, /F-3 §3/);
 });
 
-test('a record not on disk named without a section passes', () => {
+test('a record not on disk referred to without a section passes', () => {
   assert.equal(onDisk(`\`F-1: ${whole}\` gets a successor, F-3.`).pass, true);
 });
 
@@ -245,11 +245,11 @@ test('a property named without its value passes', () => {
 
 const titles = run(exactTitles);
 
-test('a record named by its identifier after the reply cited it in full passes', () => {
+test('a record referred to by its identifier after the reply cited it in full passes', () => {
   assert.equal(titles(`\`F-1: ${whole}\` gets a successor.\n\nThe code misses \`F-1 §3\`, and \`F-1\` stays until then.`).pass, true);
 });
 
-test('a record named by its identifier before the reply cites it fails', () => {
+test('a record referred to by its identifier before the reply cites it fails', () => {
   const r = titles(`The code misses \`F-1 §3\`.\n\n\`F-1: ${whole}\` gets a successor.`);
   assert.equal(r.pass, false);
   assert.match(r.reason, /^1 of 2 citations/);

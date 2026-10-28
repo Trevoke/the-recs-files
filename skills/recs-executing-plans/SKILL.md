@@ -54,7 +54,7 @@ After all tasks complete and verified:
 
 **Standing rule, in force for every batch:** never modify the project's record files - the user workflows, architectural decisions, features, ubiquitous language, message catalog, or whatever this project keeps (see its AGENTS.md). Records change only at the record keeper's direction.
 
-Work that seems to require a record change is a blocker to raise, not a task to absorb. Stop, name the record by identifier and title, say what the plan needs from it, and wait.
+Work that seems to require a record change is a blocker to raise, not a task to absorb. Stop, refer to the record by its record name, say what the plan needs from it, and wait.
 
 ## When to Stop and Ask for Help
 

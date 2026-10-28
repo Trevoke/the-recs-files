@@ -98,8 +98,7 @@ title changes all three.
 
 A heading, a property, a projection line, a table row and a `#+` keyword line
 are each written on one line, however long it runs; prose may wrap. A record's
-drawer holds each property once. A record names another record by an org link
-to its file, its description the identifier and title, and the link sits whole on
+drawer holds each property once. A record refers to another record by an org link to its file, its description the record name, and the link sits whole on
 one line.
 
 Good:
@@ -139,7 +138,7 @@ Bad: a property repeated. Org keeps only the last, and ADR-4 is lost:
 :SUPERSEDES: [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
 ```
 
-Bad: a record named in plain text, and wrapped. No search for the title finds it:
+Bad: a record referred to in plain text, and wrapped. No search for the title finds it:
 ```org
 The shared queue lets one provider's outage hold up the rest, as ADR-4: Retry
 every failed job from one shared queue found.
@@ -200,8 +199,7 @@ stands in for When where the trigger is unwanted.
 Requirements are numbered from 1, and the number is the requirement's section:
 a citation of one requirement is `F-12 §2: A borrower can renew a loan`. A
 number is never reused within its record. A successor numbers its own
-requirements from 1, and its `:SUPERSEDES:` line names each record it
-supersedes by a link:
+requirements from 1, and its `:SUPERSEDES:` line refers to each record it supersedes by a link:
 `:SUPERSEDES: [[./f-12-a-borrower-can-renew-a-loan.org][F-12: A borrower can renew a loan]]`.
 The sweep of the old identifier repoints each citation of a section of the old
 record to the successor's sections that carry what the citing site rests on.
@@ -247,16 +245,16 @@ nothing moves before the record keeper agrees.
 
 ## Relationships between records
 
-A user workflow record may name feature records, message catalog records,
+A user workflow record may refer to feature records, message catalog records,
 ubiquitous language records, as well as other user workflow records.
 
-A feature record may name message catalog records, ubiquitous language
+A feature record may refer to message catalog records, ubiquitous language
 records, and other feature records.
 
-An architectural decision record may name ubiquitous language records and other
+An architectural decision record may refer to ubiquitous language records and other
 architectural decision records.
 
-A ubiquitous language record may name other ubiquitous language records.
+A ubiquitous language record may refer to other ubiquitous language records.
 
 ## Records are read from disk
 
@@ -266,7 +264,7 @@ Open a record's file before you cite a section of it, measure code, a test, a
 plan or a design against it, assert its text, propose a change to it, or frame
 a question to the record keeper with it. Its title tells you which records bear on the
 work; it is never the evidence that something conforms. Open each record that
-bears, and no others: a record named by a task, by a record you opened, or by a
+bears, and no others: a record referred to by a task, by a record you opened, or by a
 citation in the code you are changing bears; a title that only sounds near the
 work is opened to find out.
 
@@ -297,26 +295,28 @@ Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, cite the records.
 
-A citation is a record's identifier, every section of it the sentence means,
-each written out and in the record's order, and its title as the record's
-heading carries it, in that order, in backticks, on one line:
-`X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`,
-`X-8 §1, §3: Frobnicate the widgets`. The first time a reply names a record, it
+A citation is a record's record name with every section of it the sentence
+means written after the identifier, each written out and in the record's
+order, in backticks, on one line: `X-8: Frobnicate the widgets`,
+`X-8 §2: Frobnicate the widgets`, `X-8 §1, §3: Frobnicate the widgets`. A
+reference is any mention of a record: by its record name, its identifier, its
+title, or a description of it. The first time a reply refers to a record, it
 cites it; a reply is everything you say between two of the record keeper's
-messages, working notes included. The record keeper reads a record by its
-title, so `X-8` or `X-8 §2` before the reply has cited the record reaches them
-as no record at all. Once a reply has cited a record, it names it again by its
-citation or by its identifier, in backticks: `X-8`, `X-8 §2`. Several sections
-of one record a sentence means are named together, in one citation, after the
-identifier, in either form. The first time a reply names a section, a list item
-of its own directly under the line that names it gives § and the section's
-number, then what that section says, or a quote of the section sits there
-instead. A record not yet on disk has no
-sections to number: name what its sections say. A quote of a record's text is
-a code block under the line that names what it quotes, exactly as the file
-holds it. Everything you say reaches the record keeper, what you say while you
-work included: a record you are about to open, or have just opened, is cited
-the same way, by the identifier and title its projection line carries.
+messages, working notes included. The record name bounds what you say to that
+record and gives its context, so `X-8`, `X-8 §2` or "the frobnication feature"
+before the reply has cited the record reaches them as no record at all. Once a
+reply has cited a record, it refers to it again by its citation or by its
+title, in backticks: `Frobnicate the widgets`, `Frobnicate the widgets §2`. The
+first time a reply refers to a section, it gives the section in a citation,
+and every section of one record a sentence means goes in that one citation.
+Directly under the line that cites it, a list item of its own gives § and the
+section's number, then what that section says, or a quote of the section sits
+there instead. A record not yet on disk has no sections to number: refer to its
+sections by what they say. A quote of a record's text is a code block under the
+line that refers to what it quotes, exactly as the file holds it. Everything
+you say reaches the record keeper, what you say while you work included: a
+record you are about to open, or have just opened, is cited the same way, by
+the record name its projection line carries.
 
 Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
 Good:
@@ -324,12 +324,16 @@ Good:
 `src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`:
 - §1: frobnicates a widget on request
 - §2: refuses a reserved widget
+
+`Frobnicate the widgets §2` has no test yet.
 ```
 Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
 Good:
 ```
 `X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is.
-Step 2 of `X-9` cites `X-8`, so the sweep repoints it; `src/widgets.py` misses `X-8 §3`.
+`X-9 §2: Whirl the widgets` cites `Frobnicate the widgets`, so the sweep repoints it.
+- §2: the user whirls a widget once it is frobnicated
+`src/widgets.py` misses `X-8 §3: Frobnicate the widgets`.
 - §3: refuses a widget past its frobnication limit
 ```
 Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
@@ -349,8 +353,11 @@ Good:
    [[../message-catalog/msg-4-a-reserved-widget-cannot-be-frobnicated.org][MSG-4: A reserved widget cannot be frobnicated]].
 ```
 ````
-Bad: "`X-8` gets a successor" or "`X-8 §2` becomes two requirements", as a reply's first naming of the record
+Bad: "`X-8` gets a successor" or "`X-8 §2` becomes two requirements", as a reply's first reference to the record
+Bad: "I'll open the frobnication feature and the terms it uses", as a reply's first reference to those records
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
+Bad: "`X-8 §2` has no test yet", after the reply cited `X-8 §2: Frobnicate the widgets`
+Bad: "`X-8: Frobnicate the widgets`" with "- §2: refuses a reserved widget" under it, as the reply's first reference to §2
 Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over"
 Bad: "`X-8 §3, §1: Frobnicate the widgets` carry over"
 Bad: "`X-8 §1, §3: Frobnicate the widgets`: §1 carries over, §3 becomes two requirements"
@@ -359,10 +366,9 @@ Bad: "The successor to `X-8: Frobnicate the widgets` adds a new §3"
 ## Framing a question
 
 Every question to the record keeper is framed from the records, and starts from the user
-workflow the work is in. Name that workflow by identifier and title, and the step or
-extension of it that applies. Then bring in whatever else bears — a feature, an
+workflow the work is in. Refer to that workflow by its record name, and to the step or extension of it that applies. Then bring in whatever else bears — a feature, an
 architectural decision, a message catalog entry, a ubiquitous language term —
-each by identifier and title. Then state the situation, and only then the problem.
+each by its record name. Then state the situation, and only then the problem.
 
 ```
 We are working on `UW-X: Frobnicate the widget`.
@@ -397,8 +403,7 @@ candidate against words the taxonomy already owns.
 
 # How to work on the realization
 
-Two kinds of comment are valid in code, and no third. One points at a record,
-by identifier and title. The other points at a heading of `docs/knowledge-base/`,
+Two kinds of comment are valid in code, and no third. One points at a record, by its record name. The other points at a heading of `docs/knowledge-base/`,
 where the code performs a technical operation whose reason the code does not
 show.
 
@@ -418,8 +423,7 @@ comments as it binds the code's, and applies at every site.
 
 A citation is laid out one record to a line —
 `ADR-13 §Consequences: One retry queue per provider` — and
-where a comment points at several, the citations lead it. A citation names the
-section carrying the claim the comment makes, not the record's most familiar
+where a comment points at several, the citations lead it. A citation refers to the section carrying the claim the comment makes, not the record's most familiar
 section. And citing what refuses a rule does not discharge the rule: where the
 claim rests on a feature's rule, the feature is cited, whatever message catalog
 entry stands beside it.

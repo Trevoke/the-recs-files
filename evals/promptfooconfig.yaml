@@ -92,11 +92,11 @@ tests:
       - type: javascript
         metric: org lines whole
         value: file://checks/org-lines.js:linesWhole
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
-        metric: records named by links
+        metric: records referred to by links
         value: file://checks/org-lines.js:namesByLink
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
         metric: links resolve
         value: file://checks/org-lines.js:linksResolve
@@ -161,11 +161,11 @@ tests:
       - type: javascript
         metric: org lines whole
         value: file://checks/org-lines.js:linesWhole
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
-        metric: records named by links
+        metric: records referred to by links
         value: file://checks/org-lines.js:namesByLink
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
         metric: links resolve
         value: file://checks/org-lines.js:linksResolve
@@ -180,17 +180,17 @@ tests:
       - type: javascript
         metric: written as proposed
         value: file://checks/superseding-two-features.js:writtenAsProposed
-      # F-20261027-jtb9 §2: A superseded record names its successor
-      # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
+      # F-20261027-jtb9 §2: A superseded record refers to its successor
+      # ADR-20261026-y9zt §Consequences: A record refers to another record by an org link to its file
       - type: javascript
         metric: supersedes both by link
         value: file://checks/superseding-two-features.js:supersedesBothByLink
-      # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Consequences: A record refers to another record by an org link to its file
       - type: javascript
         metric: links parted by a comma
         value: file://checks/superseding-two-features.js:linksParted
-      # F-20261027-jtb9 §2: A superseded record names its successor
-      # ADR-20261026-y9zt §Consequences: A record names another record by an org link to its file
+      # F-20261027-jtb9 §2: A superseded record refers to its successor
+      # ADR-20261026-y9zt §Consequences: A record refers to another record by an org link to its file
       - type: javascript
         metric: supersedes by links only
         value: file://checks/superseding-two-features.js:linksOnly
@@ -198,11 +198,11 @@ tests:
       - type: javascript
         metric: org lines whole
         value: file://checks/org-lines.js:linesWhole
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
-        metric: records named by links
+        metric: records referred to by links
         value: file://checks/org-lines.js:namesByLink
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
         metric: links resolve
         value: file://checks/org-lines.js:linksResolve
@@ -285,11 +285,11 @@ tests:
       - type: javascript
         metric: org lines whole
         value: file://checks/org-lines.js:linesWhole
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
-        metric: records named by links
+        metric: records referred to by links
         value: file://checks/org-lines.js:namesByLink
-      # ADR-20261026-y9zt §Decision: A record names another record by an org link to its file
+      # ADR-20261026-y9zt §Decision: A record refers to another record by an org link to its file
       - type: javascript
         metric: links resolve
         value: file://checks/org-lines.js:linksResolve
@@ -302,39 +302,39 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # F-20261027-q7eh §1, §2: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §1, §2: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: exact titles
         value: file://checks/citing-records.js:exactTitles
-      # F-20261027-q7eh §3: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: section before title
         value: file://checks/citing-records.js:sectionBeforeTitle
-      # F-20261027-q7eh §3: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: sections in one citation
         value: file://checks/citing-records.js:sectionsInOneCitation
-      # F-20261027-q7eh §3: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: sections in record order
         value: file://checks/citing-records.js:sectionsInRecordOrder
-      # F-20261027-q7eh §4: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §6: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: sections listed under their citation
         value: file://checks/citing-records.js:sectionsListedUnder
-      # F-20261027-q7eh §7: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §9: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: no sections of a record not on disk
         value: file://checks/citing-records.js:noSectionsOfARecordNotOnDisk
-      # F-20261027-q7eh §8: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §10: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: quotes in code blocks
         value: file://checks/citing-records.js:quotesInCodeBlocks
-      # F-20261027-q7eh §5: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §7: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: in backticks
         value: file://checks/citing-records.js:inBackticks
-      # F-20261027-q7eh §6: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
+      # F-20261028-1mkt §8: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: one line
         value: file://checks/citing-records.js:oneLine

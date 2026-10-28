@@ -1,6 +1,6 @@
 * UL-20261028-chtt Title
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 The words that state what a record is about, which its heading carries
 after its identifier.

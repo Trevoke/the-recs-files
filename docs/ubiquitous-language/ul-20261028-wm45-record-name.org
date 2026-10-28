@@ -1,6 +1,6 @@
 * UL-20261028-wm45 Record name
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 A record's identifier and its title, together: what bounds what is said to
 that record and gives its context.

@@ -96,7 +96,7 @@ the user. The plan does not proceed around it.
 
 ### 3. Reading List
 
-The records this plan is built against, in reading order, each cited by identifier and title — never a bare identifier.
+The records this plan is built against, in reading order, each cited by its record name — never a bare identifier.
 
 ```markdown
 ## Reading List
@@ -128,7 +128,7 @@ If no task touches cataloged text, the section says so in one line — its prese
 
 ## Task Structure
 
-Every task names the records it implements, by identifier and title. A task that builds surface names its feature.
+Every task refers to the records it implements, by record name. A task that builds surface refers to its feature.
 
 ```markdown
 ### Task N: [Component Name]
@@ -180,8 +180,7 @@ EOF
 
 **Snippets carry code, not comments.** A plan's prose restates records — that is
 what a derivation is — and a comment in the built code may not. Where the built
-code should carry one, the task names in prose the record it cites, and nothing
-of what that record says; the comment itself is written against the code once it
+code should carry one, the task refers in prose to the record it cites, and to nothing of what that record says; the comment itself is written against the code once it
 exists, by whoever writes that code.
 
 A plan is where what-comes-later lives. That is what a plan is for, and it is
@@ -191,7 +190,7 @@ belongs in the commit that changed it.
 
 For a task on cataloged text, Step 1's test asserts the catalog record's exact current text, and a step before it confirms that wording is settled (see Cataloged-Text Ordering).
 
-**Commits follow Tim Pope's rules:** imperative subject around 50 characters, blank line, body explaining why — which for this methodology means naming the record the change serves. Conventional-commit types (feat:, fix:, docs:, refactor:) are welcome in the subject.
+**Commits follow Tim Pope's rules:** imperative subject around 50 characters, blank line, body explaining why — which for this methodology means referring to the record the change serves. Conventional-commit types (feat:, fix:, docs:, refactor:) are welcome in the subject.
 
 ## Remember
 - Exact file paths always
@@ -199,7 +198,7 @@ For a task on cataloged text, Step 1's test asserts the catalog record's exact c
 - Claims about existing code are checked against it, never predicted
 - What comes later stays in the plan; the code it specifies never forecasts
 - Exact commands with expected output (pytest, cargo test, npm test, raco test — whatever the project uses)
-- Every task cites its records by identifier and title
+- Every task cites its records by record name
 - The project's words, exactly; coin nothing
 - A record that disagrees with the plan stops the plan
 - Surface with no feature record stops the plan

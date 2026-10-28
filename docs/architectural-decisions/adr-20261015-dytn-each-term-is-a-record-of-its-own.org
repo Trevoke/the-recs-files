@@ -16,7 +16,7 @@ record with a UL identifier, in a file of its own and titled with the term. The
 projection lists the terms grouped under their bounded contexts.
 ** Consequences
 A redefinition supersedes the term's record like any other record, with
-no exception. A term is cited by identifier and title, as
+no exception. A term is cited by its record name, as
 [[../ubiquitous-language/ul-20261015-5dhq-record-keeper.org][UL-20261015-5dhq: Record keeper]].
 A rename that keeps a term's meaning is a clarification of its title. The
 ubiquitous language takes as many files as it has terms.

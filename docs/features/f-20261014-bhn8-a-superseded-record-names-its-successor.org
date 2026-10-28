@@ -1,6 +1,6 @@
 * F-20261014-bhn8 A superseded record names its successor
 :PROPERTIES:
-:STATUS: Superseded by [[./f-20261027-jtb9-a-superseded-record-names-its-successor.org][F-20261027-jtb9: A superseded record names its successor]]
+:STATUS: Superseded by [[./f-20261027-jtb9-a-superseded-record-refers-to-its-successor.org][F-20261027-jtb9: A superseded record refers to its successor]]
 :END:
 1. When a supersede is agreed, the agent shall set the old record's status
    to name its successor by identifier and title.

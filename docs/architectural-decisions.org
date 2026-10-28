@@ -12,4 +12,4 @@
 - ADR-20261019-bwyc :: [[./architectural-decisions/adr-20261019-bwyc-keep-the-order-of-the-skills-in-a-skill-flow-beside-them.org][Keep the order of the skills in a skill flow beside them]]
 - ADR-20261019-m123 :: [[./architectural-decisions/adr-20261019-m123-the-code-realization-skills-are-a-prototype-adapted-from-superpowers.org][The code realization skills are a prototype adapted from superpowers]]
 - ADR-20261026-77gd :: [[./architectural-decisions/adr-20261026-77gd-identify-a-record-by-the-date-it-was-drafted-and-four-random-characters.org][Identify a record by the date it was drafted and four random characters]]
-- ADR-20261026-y9zt :: [[./architectural-decisions/adr-20261026-y9zt-a-record-names-another-record-by-an-org-link-to-its-file.org][A record names another record by an org link to its file]]
+- ADR-20261026-y9zt :: [[./architectural-decisions/adr-20261026-y9zt-a-record-refers-to-another-record-by-an-org-link-to-its-file.org][A record refers to another record by an org link to its file]]

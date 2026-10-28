@@ -1,6 +1,6 @@
 * UL-20261028-tk52 Reference
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 A mention of a record in what is said: by its record name, its identifier,
 its title, or a description of it.

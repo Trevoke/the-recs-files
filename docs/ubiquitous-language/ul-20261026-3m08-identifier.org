@@ -2,6 +2,6 @@
 :PROPERTIES:
 :STATUS: Accepted
 :END:
-The name of one record: its category's prefix, then what tells it from
-every other record of that category. A record's file, heading, projection
-line and every citation of it carry it.
+The part of a record name that tells one record from every other: its
+category's prefix, then what is unique to it in that category. A record's
+file, heading, projection line and every citation of it carry it.

@@ -2,5 +2,5 @@
 :PROPERTIES:
 :STATUS: Accepted
 :END:
-A reference to a record by its identifier and title, or to a heading of the
-knowledge base.
+A reference to a record by its record name, with any sections it means
+written after its identifier, or to a heading of the knowledge base.

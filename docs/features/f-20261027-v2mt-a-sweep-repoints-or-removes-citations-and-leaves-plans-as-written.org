@@ -6,7 +6,7 @@
 1. When a supersede is agreed, the agent shall repoint every citation of
    the old record outside a plan to the successor that carries what the
    citation meant.
-2. Where a citation names a section of a superseded record, the agent shall
+2. Where a citation refers to a section of a superseded record, the agent shall
    repoint it to the successor's sections that carry what the citing site
    rests on, read against the successor.
 3. When a retirement is agreed, the agent shall remove every citation of

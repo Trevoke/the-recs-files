@@ -2,4 +2,4 @@
 :PROPERTIES:
 :STATUS: Accepted
 :END:
-A part of a record that a citation can name.
+A part of a record that a citation can refer to.

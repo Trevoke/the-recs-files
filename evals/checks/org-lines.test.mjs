@@ -44,7 +44,7 @@ test('a plain record name in a record body is found, a linked one is not', () =>
   assert.deepEqual(plainNames(file, record(':STATUS: Proposed', 'Rests on `ADR-4: Retry every failed job from one shared queue`.')), [`${file}:5 ADR-4`]);
 });
 
-test('this repository\'s records are whole and name records by links', () => {
+test('this repository\'s records are whole and refer to records by links', () => {
   const docs = path.join(repo, 'docs');
   const files = fs.readdirSync(docs, { recursive: true }).filter((f) => f.endsWith('.org') && !f.startsWith('knowledge-base') && !f.startsWith('plans'));
   for (const f of files) {

@@ -178,7 +178,7 @@ the winner's 0.06 ± 0.04 at `dbe5d3e` the difference is within the noise.
 
 * Removing a rule needed no loop when its replacements were agreed first
 Established 2026-10-27, removing the section map from a successor's
-=:SUPERSEDES:= for `F-20261027-jtb9: A superseded record names its successor`
+=:SUPERSEDES:= for `F-20261027-jtb9: A superseded record refers to its successor`
 and `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`.
 The eval came first (`01f5530`): on the text before the change (`88500f1`)
 the successor carried a section map in 5 of 5 runs of

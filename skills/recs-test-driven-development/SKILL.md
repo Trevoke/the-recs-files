@@ -262,7 +262,7 @@ Next failing test for next feature.
 | **Cites its record** | Record id in parens at the end, where the test holds a record's promise: "rejects an empty email (MSG-3)", "refunds the full price inside the return window (MSG-4)" | A record identifier as the whole name: `test('MSG-3')` — the behavior vanished |
 | **Shows intent** | Demonstrates desired API | Obscures what code should do |
 
-Section-header comments inside a test file may cite the records or workflow steps the file walks — a comment names the record, the test names the behavior.
+Section-header comments inside a test file may cite the records or workflow steps the file walks — a comment refers to the record, the test names the behavior.
 
 ## Why Order Matters
 
