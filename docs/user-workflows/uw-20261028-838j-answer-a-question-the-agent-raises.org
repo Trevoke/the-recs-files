@@ -1,0 +1,38 @@
+* UW-20261028-838j Answer a question the agent raises
+:PROPERTIES:
+:STATUS: Proposed
+:ACTOR: Record keeper
+:SCOPE: The recs files
+:LEVEL: Subfunction
+:END:
+** Stakeholders & Interests
+- Record keeper: answers from their own records, with the question's context
+  given and bounded, and a concrete case of it in front of them, so they need
+  not work out which records, which parts of them, or which situation the
+  agent means.
+- Agent: gets an answer it can act on, resting on the records it cited.
+** Trigger
+The agent comes to a situation that needs the record keeper's decision.
+** Minimal guarantee
+The agent acts on nothing the question leaves to the record keeper before
+they answer.
+** Success guarantee
+The record keeper decides the question from the records cited, and the agent
+knows which records and sections the answer rests on.
+** Main success scenario
+*** 1. Agent finds the user workflow the situation is in, and the step or extension of it that applies
+*** 2. Agent finds every other record that bears on the situation, and the sections of each that do
+*** 3. Agent cites the workflow and its step or extension, then each record that bears, with what each cited section says ([[../features/f-20261028-1mkt-the-agent-cites-a-record.org][F-20261028-1mkt: The agent cites a record]])
+*** 4. Agent states the situation in the words the records have for it
+*** 5. Agent gives at least one example of the situation, concrete enough to show what the decision is about
+*** 6. Agent asks the question, and waits
+*** 7. Record keeper answers
+** Extensions
+*** 1a. No user workflow holds the situation
+**** 1a1. Agent says so, and frames the question from the records that bear; continue at 2
+*** 4a. The records have no word for the situation
+**** 4a1. Agent proposes candidate words and waits for the record keeper to agree to one; continue at 4
+*** 7a. The answer needs a record change
+**** 7a1. Agent raises it as a record change ([[./uw-20261014-8c8f-create-a-record.org][UW-20261014-8c8f: Create a record]]; [[./uw-20261014-wewg-supersede-a-record.org][UW-20261014-wewg: Supersede a record]]; [[./uw-20261014-q1yj-clarify-a-record.org][UW-20261014-q1yj: Clarify a record]])
+*** 7b. Record keeper cannot answer from what the question gives
+**** 7b1. Agent brings the record, the section or the example that is missing; back to 6
