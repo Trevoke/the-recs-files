@@ -15,11 +15,12 @@ test('an empty passage is dropped', () => {
   assert.deepEqual(verified([{ section: '§6', passage: '  ', why: 'x' }], 'Anything.'), []);
 });
 
-test('the prompt carries the feature record from disk, the terms, the records and the reply', () => {
-  const p = judgePrompt('THE REPLY', '=== docs/features.org\nRECORDS');
+test('the prompt carries the feature record from disk, the terms, the records, the question and the reply', () => {
+  const p = judgePrompt('THE REPLY', '=== docs/features.org\nRECORDS', 'THE QUESTION');
   assert.match(p, /\* F-20261028-1mkt The agent cites a record/);
   assert.match(p, /\* UW-20261028-838j Answer a question the agent raises/);
   assert.match(p, /\* UL-20261028-tk52 Reference/);
   assert.match(p, /RECORDS/);
+  assert.match(p, /<question>\nTHE QUESTION\n<\/question>/);
   assert.match(p, /<reply>\nTHE REPLY\n<\/reply>/);
 });

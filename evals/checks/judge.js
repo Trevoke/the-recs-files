@@ -46,8 +46,8 @@ const schema = {
   required: ['faults'],
 };
 
-export function judgePrompt(reply, records) {
-  return `You grade one reply that an agent gave to the record keeper of a project. The project keeps records as its source of truth, and two of its records say how the agent should speak to the record keeper: a user workflow, which says what the record keeper needs and why, and a feature, which says how the agent cites records. Read both, the terms they use, the project's records the agent could read, then the reply.
+export function judgePrompt(reply, records, question = '') {
+  return `You grade one reply that an agent gave to the record keeper of a project. The project keeps records as its source of truth, and two of its records say how the agent should speak to the record keeper: a user workflow, which says what the record keeper needs and why, and a feature, which says how the agent cites records. Read both, the terms they use, the project's records the agent could read, what the record keeper asked, then the reply.
 
 # The user workflow
 
@@ -61,6 +61,12 @@ ${['UL-20261028-tk52', 'UL-20261028-wm45', 'UL-20261028-chtt', 'UL-20261015-aycy
 # The project's records, as the agent found them
 
 ${records}
+# What the record keeper asked
+
+<question>
+${question}
+</question>
+
 # The reply
 
 <reply>
@@ -122,10 +128,15 @@ export function verified(faults, reply) {
   return faults.filter((f) => f.passage.trim() && whole.includes(squeezed(f.passage)));
 }
 
+function question(request) {
+  return request.startsWith('file://') ? fs.readFileSync(path.join(repoDir, 'evals', request.slice(7)), 'utf8').trim() : request;
+}
+
 export async function judgedMeaning(output, context) {
   const reply = context.providerResponse?.metadata?.said || output || '';
-  let answer = await ask(judgePrompt(reply, projectRecords(context)));
-  if (answer.error) answer = await ask(judgePrompt(reply, projectRecords(context)));
+  const prompt = judgePrompt(reply, projectRecords(context), question(context.vars?.request ?? ''));
+  let answer = await ask(prompt);
+  if (answer.error) answer = await ask(prompt);
   if (answer.error) return result(false, `the judge gave no answer: ${answer.error}`);
   const faults = verified(answer.faults, reply);
   const dropped = answer.faults.length - faults.length;
