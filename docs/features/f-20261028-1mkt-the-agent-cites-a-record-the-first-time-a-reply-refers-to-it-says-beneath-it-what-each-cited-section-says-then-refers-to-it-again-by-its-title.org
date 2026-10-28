@@ -10,15 +10,19 @@
      that it will open
      `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`.
 2. When the agent refers again to a record that the reply has cited, the
-   agent shall refer to it by its citation or by its title.
+   agent shall refer to it by its citation, by its title, or by a
+   description of it.
    - The one where the agent, having cited
      `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`
      earlier in its reply, says that
      `A sweep repoints or removes citations, and leaves plans as written`
      leaves plans as written.
+   - The one where the agent, having cited
+     `ADR-20261015-nz3v: A changed decision is a new record that supersedes the old`,
+     says that the decision keeps a superseded record's text as written.
 3. When the agent refers again to a section that the reply has cited, the
-   agent shall refer to it by its citation or by its record's title followed
-   by the section.
+   agent shall refer to it by its citation, by its record's title followed
+   by the section, or by a description of it.
    - The one where the agent, having cited
      `F-20261027-v2mt §3: A sweep repoints or removes citations, and leaves plans as written`
      earlier in its reply, says that

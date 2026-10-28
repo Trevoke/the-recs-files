@@ -298,9 +298,9 @@ is and what it is about. The first
 time a reply refers to a record, it cites it; a reply is everything you say
 between two of the record keeper's messages, working notes included. `X-8`,
 `X-8 §2` or "the frobnication feature" before the reply has cited the record
-reaches them as no record at all. Once a reply has cited a record, it refers
-to it again by its citation or by its title, in backticks:
-`Frobnicate the widgets`, `Frobnicate the widgets §2`; `X-8` or `X-8 §2` after
+reaches them as no record at all. Once a reply has cited a record, it refers to it again by its citation, by its
+title in backticks (`Frobnicate the widgets`, `Frobnicate the widgets §2`), or
+by a description of it, such as "the frobnication feature"; `X-8` or `X-8 §2` after
 the citation hands them the code to look up again, and the record's context
 goes with it. The first time a reply refers to a section, it gives the section
 in a citation, and every section of one record a sentence means goes in that
