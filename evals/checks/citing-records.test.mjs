@@ -81,7 +81,15 @@ test('a section cited with no line beneath fails', () => {
 });
 
 test('a section cited with its quote beneath passes', () => {
-  assert.equal(listed(`\`F-1 §2: ${whole}\` reads:\n\n\`\`\`\n2. If the book is reserved, then the library shall refuse the renewal.\n\`\`\`\n`).pass, true);
+  assert.equal(listed(`\`F-1 §2: ${whole}\` reads:\n\`\`\`\n2. If the book is reserved, then the library shall refuse the renewal.\n\`\`\`\n`).pass, true);
+});
+
+test('a section line set apart from its citation by a blank line fails', () => {
+  assert.equal(listed(`\`F-1 §2: ${whole}\`\n\n- §2: refuses a renewal of a reserved book\n`).pass, false);
+});
+
+test('a quote set apart from its citation by a blank line fails', () => {
+  assert.equal(listed(`\`F-1 §2: ${whole}\` reads:\n\n\`\`\`\n2. If the book is reserved, then the library shall refuse the renewal.\n\`\`\`\n`).pass, false);
 });
 
 test('one of two sections without its line fails', () => {
@@ -112,7 +120,7 @@ test('what is said of sections in prose after their lines passes', () => {
 });
 
 test('a section map listed under its citation passes', () => {
-  const said = `\`F-1 §1, §2: ${whole}\` maps to its successor:\n\n- §1 → §1\n- §2 → §2, §3\n`;
+  const said = `\`F-1 §1, §2: ${whole}\` maps to its successor:\n- §1 → §1\n- §2 → §2, §3\n`;
   assert.equal(listed(said).pass, true);
 });
 

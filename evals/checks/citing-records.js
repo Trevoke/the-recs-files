@@ -131,7 +131,10 @@ function beneath(raw, lines, n) {
   const numbers = new Set();
   let quote = false;
   for (let i = n + 1; i < lines.length; i++) {
-    if (raw[i].trim() === '' && lines[i].trim() === '') continue;
+    if (raw[i].trim() === '' && lines[i].trim() === '') {
+      if (i === n + 1) break;
+      continue;
+    }
     if (fenceLine.test(raw[i]) && lines[i].trim() === '') {
       if (numbers.size === 0) quote = true;
       break;
