@@ -9,7 +9,8 @@
 - Record keeper: answers from their own records, with the question's context
   given and bounded, and a concrete case of it in front of them, so they need
   not work out which records, which parts of them, or which situation the
-  agent means.
+  agent means. They read a record by its title: referred to only by its
+  identifier, one record is impossible for them to tell from another.
 - Agent: gets an answer it can act on, resting on the records it cited.
 ** Trigger
 The agent comes to a situation that needs the record keeper's decision, in a

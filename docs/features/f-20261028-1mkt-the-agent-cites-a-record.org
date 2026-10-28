@@ -10,8 +10,9 @@
      that it will open
      `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`.
 2. When the agent refers again to a record that the reply has cited, the
-   agent shall refer to it by its citation, by its title, or by a
-   description of it.
+   agent shall refer to it in words that make plain to the record keeper
+   which cited record is meant: its citation, its title, or a description
+   of it.
    - The one where the agent, having cited
      `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`
      earlier in its reply, says that
@@ -21,13 +22,17 @@
      `ADR-20261015-nz3v: A changed decision is a new record that supersedes the old`,
      says that the decision keeps a superseded record's text as written.
 3. When the agent refers again to a section that the reply has cited, the
-   agent shall refer to it by its citation, by its record's title followed
-   by the section, or by a description of it.
+   agent shall refer to it in words that make plain to the record keeper
+   which cited section is meant: its citation, its record's title followed
+   by the section, or a description of it.
    - The one where the agent, having cited
      `F-20261027-v2mt §3: A sweep repoints or removes citations, and leaves plans as written`
      earlier in its reply, says that
      `A sweep repoints or removes citations, and leaves plans as written §3`
      removes the citations of a retired record.
+   - The one where the agent, having cited
+     `UW-20261028-838j §3: Answer a question the agent raises`, refers to it
+     again as the step where the agent cites the records that bear.
 4. When the agent first refers to a section of a record in a reply to the
    record keeper, the agent shall give that section in a citation.
    - The one where the agent, having cited
@@ -66,9 +71,12 @@
    refer to its sections by what they say, without numbers.
    - The one where the agent tells the record keeper that a successor not
      yet written would add a requirement that notifies the borrower.
-10. When the agent quotes a record's text to the record keeper, the agent
-    shall set the quote in a code block, exactly as the file holds it, under
-    the line that refers to what it quotes.
+10. When the agent presents text as a record's own words, the agent shall
+    give it exactly as the file holds it, under the line that refers to what
+    it quotes, set in a code block.
     - The one where the agent quotes the second requirement of
       F-20261027-jtb9 in a code block under
       `F-20261027-jtb9 §2: A superseded record refers to its successor`.
+    - The one where the agent writes, in its own sentence, that a sweep
+      leaves plans as written, in the words of F-20261027-v2mt, and sets no
+      quote.
