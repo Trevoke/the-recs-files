@@ -1,6 +1,6 @@
 import fs from 'node:fs';
 import path from 'node:path';
-import { citations, unfenced } from './citations.js';
+import { citations, titleReferences, unfenced } from './citations.js';
 import { identifier, prefix } from './identifier.js';
 import { original, result, workingDir } from './workspace.js';
 
@@ -58,11 +58,50 @@ export function citesRecords(output, context) {
   return result(ids.length >= 2, `cited ${ids.join(', ') || 'no record on disk'}${ignored}`);
 }
 
-export function exactTitles(output, context) {
+function byTitle(output, context) {
+  return titleReferences(said(output, context), titles(context));
+}
+
+function citedFirst(output, context) {
   const firstCited = new Map();
   for (const c of cited(output, context)) if (c.titled && !firstCited.has(c.id)) firstCited.set(c.id, c.start);
-  const citedBefore = (c) => firstCited.has(c.id) && firstCited.get(c.id) < c.start;
-  return every(output, context, (c) => c.titled || citedBefore(c), 'do not carry the title before the reply has cited the record');
+  return (r) => firstCited.has(r.id) && firstCited.get(r.id) < r.start;
+}
+
+// F-20261028-1mkt §1: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+export function exactTitles(output, context) {
+  const all = cited(output, context);
+  if (all.length === 0) return result(false, 'no citation of a record on disk');
+  const citedBefore = citedFirst(output, context);
+  const failing = [...all.filter((c) => !c.titled && !citedBefore(c)), ...byTitle(output, context).filter((r) => !citedBefore(r))];
+  return result(
+    failing.length === 0,
+    failing.length === 0
+      ? `all ${all.length} citations hold`
+      : `${failing.length} of ${all.length} citations do not carry the title before the reply has cited the record: ${failing.map((c) => c.excerpt).join('; ')}`,
+  );
+}
+
+// F-20261028-1mkt §2, §3: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+export function againByCitationOrTitle(output, context) {
+  const citedBefore = citedFirst(output, context);
+  return every(output, context, (c) => c.titled || !citedBefore(c), 'refer to a record again by its identifier');
+}
+
+// F-20261028-1mkt §4: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+export function sectionsFirstCited(output, context) {
+  const all = cited(output, context);
+  if (all.length === 0) return result(false, 'no citation of a record on disk');
+  const failing = byTitle(output, context).filter((r) => r.sections > 0).filter((r) => {
+    const carried = new Set(all.filter((c) => c.titled && c.id === r.id && c.start < r.start).flatMap((c) => c.sectionText.match(/§[\w.]+/g) || []));
+    return r.sectionText.match(/§[\w.]+/g).some((s) => !carried.has(s));
+  });
+  return result(
+    failing.length === 0,
+    failing.length === 0
+      ? 'each section is first referred to in a citation'
+      : `${failing.length} references refer to a section before a citation gives it: ${failing.map((r) => r.excerpt).join('; ')}`,
+  );
 }
 
 export function sectionBeforeTitle(output, context) {
@@ -124,8 +163,7 @@ function listedUnderACitation(lines, n) {
   return false;
 }
 
-// What sits beneath line n: the section numbers on the list lines under it,
-// and whether a code block (a quote) opens there.
+// F-20261028-1mkt §6: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
 function beneath(raw, lines, n) {
   const own = indent(lines[n]);
   const numbers = new Set();
@@ -159,8 +197,18 @@ export function sectionsListedUnder(output, context) {
   const lineOf = (at) => lineStarts.findLastIndex((s) => s <= at);
   const named = new Set();
   const missing = [];
+  const carriedOn = new Map();
+  for (const c of all.filter((c) => c.titled)) {
+    const n = lineOf(c.start);
+    if (!carriedOn.has(n)) carriedOn.set(n, new Set());
+    (c.sectionText.match(/§[\w.]+/g) || []).forEach((m) => carriedOn.get(n).add(m.replace(/[.:]+$/, '')));
+  }
+  for (const [n, carried] of carriedOn) {
+    const extra = [...beneath(raw, lines, n).numbers].filter((m) => !carried.has(m));
+    if (extra.length) missing.push(`${lines[n].trim().slice(0, 100)} (lists ${extra.join(', ')}, which it does not cite)`);
+  }
   for (const c of all) {
-    if (c.sections === 0) continue;
+    if (c.sections === 0 || !c.titled) continue;
     const fresh = c.sectionText.match(/§[\w.]+/g).map((m) => m.replace(/[.:]+$/, '')).filter((m) => !named.has(`${c.id} ${m}`));
     if (fresh.length === 0) continue;
     fresh.forEach((m) => named.add(`${c.id} ${m}`));
@@ -235,6 +283,8 @@ export function noSectionsOfARecordNotOnDisk(output, context) {
 }
 
 const orgLink = /\[\[[^\]]+\]\[[^\]]+\]\]/g;
+// F-20261028-1mkt §10: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+const quotedPhrase = /["“]([^"”\n]+)["”]/g;
 const quotedSentence = /["“]([^"”\n]*\bshall\b[^"”\n]*)["”]|^[ \t]*>([^\n]*\bshall\b[^\n]*)/gm;
 
 function normal(text) {
@@ -268,7 +318,13 @@ export function quotesInCodeBlocks(output, context) {
     const words = normal(m[1] ?? m[2]).replace(/[.,;:!?\s]+$/, '').trim();
     return words.length > 0 && records.includes(words);
   });
-  const hits = [...plain.matchAll(orgLink), ...quotes].map((m) => m[0].trim().slice(0, 100));
+  const taken = new Set(quotes.map((m) => m.index));
+  const phrases = [...plain.matchAll(quotedPhrase)].filter((m) => {
+    if (taken.has(m.index)) return false;
+    const words = normal(m[1]).replace(/[.,;:!?\s]+$/, '').trim();
+    return words.split(' ').length >= 4 && records.includes(words);
+  });
+  const hits = [...plain.matchAll(orgLink), ...quotes, ...phrases].map((m) => m[0].trim().slice(0, 100));
   return result(
     hits.length === 0,
     hits.length === 0 ? 'every quote of a record\'s text is in a code block' : `${hits.length} lines quote a record's text outside a code block: ${hits.join('; ')}`,

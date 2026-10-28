@@ -302,10 +302,18 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # F-20261028-1mkt §1, §2: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §1: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: exact titles
         value: file://checks/citing-records.js:exactTitles
+      # F-20261028-1mkt §2, §3: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      - type: javascript
+        metric: again by citation or title
+        value: file://checks/citing-records.js:againByCitationOrTitle
+      # F-20261028-1mkt §4: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      - type: javascript
+        metric: sections first cited
+        value: file://checks/citing-records.js:sectionsFirstCited
       # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
       - type: javascript
         metric: section before title

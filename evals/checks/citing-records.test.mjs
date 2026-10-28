@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { exactTitles, noSectionsOfARecordNotOnDisk, quotesInCodeBlocks, sectionBeforeTitle, sectionsInOneCitation, sectionsInRecordOrder, sectionsListedUnder } from './citing-records.js';
+import { againByCitationOrTitle, exactTitles, noSectionsOfARecordNotOnDisk, sectionsFirstCited, quotesInCodeBlocks, sectionBeforeTitle, sectionsInOneCitation, sectionsInRecordOrder, sectionsListedUnder } from './citing-records.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const fixture = path.join(here, '..', 'cases', 'citing-records-to-the-record-keeper', 'fixture');
@@ -103,11 +103,17 @@ test('what a section says on the citation\'s own line fails', () => {
 });
 
 test('a section referred to again after its line needs none', () => {
-  assert.equal(listed(`\`F-1 §2: ${whole}\`\n- §2: refuses a reserved book\n\nThe code already enforces \`F-1 §2\`.`).pass, true);
+  assert.equal(listed(`\`F-1 §2: ${whole}\`\n- §2: refuses a reserved book\n\nThe code already enforces \`${whole} §2\`.`).pass, true);
 });
 
-test('a section first referred to by identifier after the record\'s citation needs its line', () => {
-  assert.equal(listed(`\`F-1: ${whole}\` gets a successor.\n\nThe code misses \`F-1 §3\`.`).pass, false);
+test('a section listed under a citation of the whole record fails', () => {
+  const r = listed(`\`F-1: ${whole}\`\n- §2: refuses a reserved book\n`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /§2/);
+});
+
+test('a section listed under a citation that carries it passes', () => {
+  assert.equal(listed(`\`F-1 §2: ${whole}\` and \`MSG-1: A reserved book cannot be renewed\`\n- §2: refuses a reserved book\n`).pass, true);
 });
 
 test('a record cited whole needs no line', () => {
@@ -257,4 +263,50 @@ test('a record referred to by its identifier before the reply cites it fails', (
 
 test('an identifier after a full citation of another record fails', () => {
   assert.equal(titles(`\`MSG-1: A reserved book cannot be renewed\` stands, and \`F-1\` changes.`).pass, false);
+});
+
+test('a phrase of a record quoted inline fails', () => {
+  assert.equal(quoted(`\`UL-3: Loan period\` is "set by the library", like the limit would be.`).pass, false);
+});
+
+test('a single word in quotes passes', () => {
+  assert.equal(quoted(`\`UL-2: Reservation\` defines "reservation" and never "reserved".`).pass, true);
+});
+
+test('a record first referred to by its title fails', () => {
+  const r = titles(`\`${whole}\` gets a successor.\n\n\`F-1: ${whole}\` stays until then.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, new RegExp(whole));
+});
+
+const again = run(againByCitationOrTitle);
+
+test('a record referred to again by its title passes', () => {
+  assert.equal(again(`\`F-1: ${whole}\` gets a successor; \`${whole}\` stays until then.`).pass, true);
+});
+
+test('a record referred to again by its identifier fails', () => {
+  const r = again(`\`F-1: ${whole}\` gets a successor; \`F-1\` stays until then.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /^1 of 2 citations/);
+});
+
+test('a section referred to again by its identifier fails', () => {
+  assert.equal(again(`\`F-1 §2: ${whole}\`\n- §2: refuses a reserved book\n\nThe code enforces \`F-1 §2\`.`).pass, false);
+});
+
+test('a section referred to again by its record\'s title and the section passes', () => {
+  assert.equal(again(`\`F-1 §2: ${whole}\`\n- §2: refuses a reserved book\n\nThe code enforces \`${whole} §2\`.`).pass, true);
+});
+
+const firstCited = run(sectionsFirstCited);
+
+test('a section first referred to by its record\'s title and the section fails', () => {
+  const r = firstCited(`\`F-1: ${whole}\` gets a successor, and \`${whole} §3\` changes.`);
+  assert.equal(r.pass, false);
+  assert.match(r.reason, /^1 references /);
+});
+
+test('a section referred to by title and section after its citation passes', () => {
+  assert.equal(firstCited(`\`F-1 §3: ${whole}\`\n- §3: refuses a renewal past the limit\n\n\`${whole} §3\` changes.`).pass, true);
 });

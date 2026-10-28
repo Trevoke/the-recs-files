@@ -78,3 +78,18 @@ export function citations(text, titles) {
     };
   });
 }
+
+// F-20261028-1mkt §2, §3: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+export function titleReferences(text, titles) {
+  const plain = unfenced(text);
+  const refs = [];
+  for (const [id, title] of titles) {
+    const words = title.split(/\s+/).map(escaped).join('\\s+');
+    const re = new RegExp(`\`${words}((?:[ \\t]+§${name}(?:,[ \\t]*§${name})*)?)\``, 'g');
+    for (const m of plain.matchAll(re)) {
+      const sectionText = m[1].trim();
+      refs.push({ id, start: m.index, end: m.index + m[0].length, sectionText, sections: sectionText ? sectionText.split(',').length : 0, excerpt: m[0] });
+    }
+  }
+  return refs.sort((a, b) => a.start - b.start);
+}
