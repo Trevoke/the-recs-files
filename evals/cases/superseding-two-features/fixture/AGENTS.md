@@ -285,7 +285,7 @@ Writing software is about managing combinations of decisions.
 When the record keeper wants to make a change, check the existing records. When
 you need to talk to the record keeper about it, cite the records.
 
-A citation is a record's number, every section of it the statement means,
+A citation is a record's number, every section of it the sentence means,
 each written out and in the record's order, and its title as the record's
 heading carries it, in that order, in backticks, on one line:
 `X-8: Frobnicate the widgets`, `X-8 §2: Frobnicate the widgets`,
@@ -295,10 +295,11 @@ messages, working notes included. The record keeper reads a record by its
 title, so `X-8` or `X-8 §2` before the reply has cited the record reaches them
 as no record at all. Once a reply has cited a record, it names it again by its
 citation or by its number, in backticks: `X-8`, `X-8 §2`. Several sections
-of one record meant together are named together, after the number, in
-either form. The first time a reply names a section, a line of its own under
-the line that names it says what that section says, the section's number
-beside it, or a quote of the section sits there instead. A record not yet on disk has no
+of one record a sentence means are named together, in one citation, after the
+number, in either form. The first time a reply names a section, a list item
+of its own directly under the line that names it gives § and the section's
+number, then what that section says, or a quote of the section sits there
+instead. A record not yet on disk has no
 sections to number: name what its sections say. A quote of a record's text is
 a code block under the line that names what it quotes, exactly as the file
 holds it. Everything you say reaches the record keeper, what you say while you
