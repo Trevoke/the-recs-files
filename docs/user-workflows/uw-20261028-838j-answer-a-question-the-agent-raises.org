@@ -12,6 +12,9 @@
   agent means. They read a record by its title: referred to only by its
   identifier, one record is impossible for them to tell from another.
 - Agent: gets an answer it can act on, resting on the records it cited.
+- An interface that shows the record keeper's conversation with the agent:
+  recognizes each citation, the record and every section it carries, so it
+  can take the record keeper to that record and section.
 ** Trigger
 The agent comes to a situation that needs the record keeper's decision, in a
 brainstorm, a clarification or a conversation, or the record keeper asks
