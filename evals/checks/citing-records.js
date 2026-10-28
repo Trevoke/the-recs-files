@@ -68,7 +68,7 @@ function citedFirst(output, context) {
   return (r) => firstCited.has(r.id) && firstCited.get(r.id) < r.start;
 }
 
-// F-20261028-1mkt §1: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+// F-20261028-1mkt §1: The agent cites a record
 export function exactTitles(output, context) {
   const all = cited(output, context);
   if (all.length === 0) return result(false, 'no citation of a record on disk');
@@ -82,13 +82,13 @@ export function exactTitles(output, context) {
   );
 }
 
-// F-20261028-1mkt §2, §3: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+// F-20261028-1mkt §2, §3: The agent cites a record
 export function againByCitationOrTitle(output, context) {
   const citedBefore = citedFirst(output, context);
   return every(output, context, (c) => c.titled || !citedBefore(c), 'refer to a record again by its identifier');
 }
 
-// F-20261028-1mkt §4: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+// F-20261028-1mkt §4: The agent cites a record
 export function sectionsFirstCited(output, context) {
   const all = cited(output, context);
   if (all.length === 0) return result(false, 'no citation of a record on disk');
@@ -163,7 +163,7 @@ function listedUnderACitation(lines, n) {
   return false;
 }
 
-// F-20261028-1mkt §6: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+// F-20261028-1mkt §6: The agent cites a record
 function beneath(raw, lines, n) {
   const own = indent(lines[n]);
   const numbers = new Set();
@@ -283,7 +283,7 @@ export function noSectionsOfARecordNotOnDisk(output, context) {
 }
 
 const orgLink = /\[\[[^\]]+\]\[[^\]]+\]\]/g;
-// F-20261028-1mkt §10: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+// F-20261028-1mkt §10: The agent cites a record
 const quotedPhrase = /["“]([^"”\n]+)["”]/g;
 const quotedSentence = /["“]([^"”\n]*\bshall\b[^"”\n]*)["”]|^[ \t]*>([^\n]*\bshall\b[^\n]*)/gm;
 

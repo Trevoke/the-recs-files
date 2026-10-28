@@ -52,7 +52,7 @@ test('this repository\'s records are whole and refer to records by links', () =>
     const text = fs.readFileSync(path.join(repo, rel), 'utf8');
     assert.deepEqual(lineFaults(rel, text), [], rel);
     assert.deepEqual(deadLinks(repo, rel, text), [], rel);
-    if (!/the-agent-cites-a-record-(to-the-record-keeper|the-first-time)|a-record-is-written-with-its-identifier/.test(rel)) assert.deepEqual(plainNames(rel, text), [], rel);
+    if (!/the-agent-cites-a-record(-to-the-record-keeper|\.org)|a-record-is-written-with-its-identifier/.test(rel)) assert.deepEqual(plainNames(rel, text), [], rel);
   }
 });
 

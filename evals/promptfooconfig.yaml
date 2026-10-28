@@ -302,47 +302,47 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # F-20261028-1mkt §1: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §1: The agent cites a record
       - type: javascript
         metric: exact titles
         value: file://checks/citing-records.js:exactTitles
-      # F-20261028-1mkt §2, §3: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §2, §3: The agent cites a record
       - type: javascript
         metric: again by citation or title
         value: file://checks/citing-records.js:againByCitationOrTitle
-      # F-20261028-1mkt §4: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §4: The agent cites a record
       - type: javascript
         metric: sections first cited
         value: file://checks/citing-records.js:sectionsFirstCited
-      # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §5: The agent cites a record
       - type: javascript
         metric: section before title
         value: file://checks/citing-records.js:sectionBeforeTitle
-      # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §5: The agent cites a record
       - type: javascript
         metric: sections in one citation
         value: file://checks/citing-records.js:sectionsInOneCitation
-      # F-20261028-1mkt §5: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §5: The agent cites a record
       - type: javascript
         metric: sections in record order
         value: file://checks/citing-records.js:sectionsInRecordOrder
-      # F-20261028-1mkt §6: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §6: The agent cites a record
       - type: javascript
         metric: sections listed under their citation
         value: file://checks/citing-records.js:sectionsListedUnder
-      # F-20261028-1mkt §9: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §9: The agent cites a record
       - type: javascript
         metric: no sections of a record not on disk
         value: file://checks/citing-records.js:noSectionsOfARecordNotOnDisk
-      # F-20261028-1mkt §10: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §10: The agent cites a record
       - type: javascript
         metric: quotes in code blocks
         value: file://checks/citing-records.js:quotesInCodeBlocks
-      # F-20261028-1mkt §7: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §7: The agent cites a record
       - type: javascript
         metric: in backticks
         value: file://checks/citing-records.js:inBackticks
-      # F-20261028-1mkt §8: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+      # F-20261028-1mkt §8: The agent cites a record
       - type: javascript
         metric: one line
         value: file://checks/citing-records.js:oneLine

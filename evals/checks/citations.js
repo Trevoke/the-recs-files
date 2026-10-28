@@ -79,7 +79,7 @@ export function citations(text, titles) {
   });
 }
 
-// F-20261028-1mkt §2, §3: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title
+// F-20261028-1mkt §2, §3: The agent cites a record
 export function titleReferences(text, titles) {
   const plain = unfenced(text);
   const refs = [];

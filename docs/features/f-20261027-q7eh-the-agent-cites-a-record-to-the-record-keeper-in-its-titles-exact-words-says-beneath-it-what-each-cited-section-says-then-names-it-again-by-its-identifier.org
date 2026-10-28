@@ -1,6 +1,6 @@
 * F-20261027-q7eh The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier
 :PROPERTIES:
-:STATUS: Superseded by [[./f-20261028-1mkt-the-agent-cites-a-record-the-first-time-a-reply-refers-to-it-says-beneath-it-what-each-cited-section-says-then-refers-to-it-again-by-its-title.org][F-20261028-1mkt: The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title]]
+:STATUS: Superseded by [[./f-20261028-1mkt-the-agent-cites-a-record.org][F-20261028-1mkt: The agent cites a record]]
 :SUPERSEDES: [[./f-20261027-4zx7-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-then-names-it-again-by-its-identifier.org][F-20261027-4zx7: The agent cites a record to the record keeper in its title's exact words, then names it again by its identifier]]
 :END:
 1. When the agent first names a record in a reply to the record keeper, the
