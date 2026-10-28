@@ -372,3 +372,14 @@ false init ok | Failed to authenticate. API Error: 401 OAuth access token is inv
 With the copies, the init event offers the thirteen `recs-*` skills and the
 `recs-code-reviewer` agent; without them, neither. A project skill is offered
 under its bare name, with no plugin prefix.
+
+* A print run with no tools and a JSON schema returns its answer as `structured_output`
+Given the prompt on stdin, `claude -p --model claude-opus-5-5 --tools ""
+--setting-sources "" --no-session-persistence --output-format json
+--json-schema '{"type":"object","properties":{"n":{"type":"integer"}},"required":["n"]}'`,
+run with `HOME` and `CLAUDE_CONFIG_DIR` in a fresh directory and
+`CLAUDE_CODE_OAUTH_TOKEN` set, printed one JSON object whose
+`structured_output` was `{"n":3}`, whose `result` was the same object as a
+string, and whose `is_error` was `false`; its `modelUsage` named
+`claude-opus-5-5` (run, 2026-10-28, Claude Code 2.1.312). The eval's judge,
+`evals/checks/judge.js`, asks its question this way.
