@@ -298,15 +298,23 @@ means written after the identifier, each written out and in the record's
 order, in backticks, on one line: `X-8: Frobnicate the widgets`,
 `X-8 §2: Frobnicate the widgets`, `X-8 §1, §3: Frobnicate the widgets`. A
 reference is any mention of a record: by its record name, its identifier, its
-title, or a description of it. The first time a reply refers to a record, it
-cites it; a reply is everything you say between two of the record keeper's
-messages, working notes included. The record name bounds what you say to that
-record and gives its context, so `X-8`, `X-8 §2` or "the frobnication feature"
-before the reply has cited the record reaches them as no record at all. Once a
-reply has cited a record, it refers to it again by its citation or by its
-title, in backticks: `Frobnicate the widgets`, `Frobnicate the widgets §2`. The
-first time a reply refers to a section, it gives the section in a citation,
-and every section of one record a sentence means goes in that one citation.
+title, or a description of it.
+
+The record keeper reads a record by its title. A citation bounds what you say
+to that record and gives its context, and each later reference by title keeps
+that context in front of them, so they follow and answer from the record
+itself. An identifier is a code they would look up; a title tells them which record it
+is and what it is about. The first
+time a reply refers to a record, it cites it; a reply is everything you say
+between two of the record keeper's messages, working notes included. `X-8`,
+`X-8 §2` or "the frobnication feature" before the reply has cited the record
+reaches them as no record at all. Once a reply has cited a record, it refers
+to it again by its citation or by its title, in backticks:
+`Frobnicate the widgets`, `Frobnicate the widgets §2`; `X-8` or `X-8 §2` after
+the citation hands them the code to look up again, and the record's context
+goes with it. The first time a reply refers to a section, it gives the section
+in a citation, and every section of one record a sentence means goes in that
+one citation.
 Directly under the line that cites it, a list item of its own gives § and the
 section's number, then what that section says, or a quote of the section sits
 there instead. A record not yet on disk has no sections to number: refer to its
@@ -335,6 +343,19 @@ Good:
 - §3: refuses a widget past its frobnication limit
 ```
 Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
+Good: "`X-8: Frobnicate the widgets` says what a frobnicated widget becomes; it says nothing about how the widget is stored, so `src/widgets.py` conforms to `Frobnicate the widgets`"
+Good:
+```
+`whirl` in `src/widgets.py` edits the widget in place, which `X-9: Whirl the widgets` rules out.
+The test of `whirl` asserts the edit, so it misses `Whirl the widgets` too.
+```
+Good:
+```
+`X-8 §3: Frobnicate the widgets` has no code yet.
+- §3: refuses a widget past its frobnication limit
+
+This bears on where we stopped: `Frobnicate the widgets §3` is the frobnication limit, and `X-9: Whirl the widgets` has no step that reaches it.
+```
 Good:
 ```
 `X-8 §2, §3: Frobnicate the widgets` gets a successor:
@@ -354,6 +375,7 @@ Good:
 Bad: "`X-8` gets a successor" or "`X-8 §2` becomes two requirements", as a reply's first reference to the record
 Bad: "I'll open the frobnication feature and the terms it uses", as a reply's first reference to those records
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
+Bad: "`X-8` keeps the refusal of a reserved widget", after the reply cited `X-8: Frobnicate the widgets`
 Bad: "`X-8 §2` has no test yet", after the reply cited `X-8 §2: Frobnicate the widgets`
 Bad: "`X-8: Frobnicate the widgets`" with "- §2: refuses a reserved widget" under it, as the reply's first reference to §2
 Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over"
