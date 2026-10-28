@@ -302,6 +302,11 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
+      # UW-20261028-838j §1, §3, §5: Answer a question the agent raises
+      # F-20261028-1mkt §1, §4, §6, §9, §10: The agent cites a record
+      - type: javascript
+        metric: judged meaning
+        value: file://checks/judge.js:judgedMeaning
       # F-20261028-1mkt §1: The agent cites a record
       - type: javascript
         metric: exact titles

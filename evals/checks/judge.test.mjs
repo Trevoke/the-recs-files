@@ -18,6 +18,7 @@ test('an empty passage is dropped', () => {
 test('the prompt carries the feature record from disk, the terms, the records and the reply', () => {
   const p = judgePrompt('THE REPLY', '=== docs/features.org\nRECORDS');
   assert.match(p, /\* F-20261028-1mkt The agent cites a record/);
+  assert.match(p, /\* UW-20261028-838j Answer a question the agent raises/);
   assert.match(p, /\* UL-20261028-tk52 Reference/);
   assert.match(p, /RECORDS/);
   assert.match(p, /<reply>\nTHE REPLY\n<\/reply>/);

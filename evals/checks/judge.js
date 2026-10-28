@@ -35,7 +35,7 @@ const schema = {
       items: {
         type: 'object',
         properties: {
-          section: { type: 'string', enum: ['§1', '§4', '§6', '§9', '§10'] },
+          section: { type: 'string', enum: ['UW-20261028-838j §1', 'UW-20261028-838j §5', 'F-20261028-1mkt §1', 'F-20261028-1mkt §4', 'F-20261028-1mkt §6', 'F-20261028-1mkt §9', 'F-20261028-1mkt §10'] },
           passage: { type: 'string' },
           why: { type: 'string' },
         },
@@ -47,12 +47,15 @@ const schema = {
 };
 
 export function judgePrompt(reply, records) {
-  return `You grade one reply that an agent gave to the record keeper of a project, against a feature record that says how the agent cites records. Read the feature record, the terms it uses, the project's records the agent could read, then the reply.
+  return `You grade one reply that an agent gave to the record keeper of a project. The project keeps records as its source of truth, and two of its records say how the agent should speak to the record keeper: a user workflow, which says what the record keeper needs and why, and a feature, which says how the agent cites records. Read both, the terms they use, the project's records the agent could read, then the reply.
 
-# The feature record
+# The user workflow
+
+${repoRecord('user-workflows', 'UW-20261028-838j')}
+# The feature
 
 ${repoRecord('features', 'F-20261028-1mkt')}
-# The terms it uses
+# The terms they use
 
 ${['UL-20261028-tk52', 'UL-20261028-wm45', 'UL-20261028-chtt', 'UL-20261015-aycy', 'UL-20261027-1z2h'].map((id) => repoRecord('ubiquitous-language', id)).join('\n')}
 # The project's records, as the agent found them
@@ -64,18 +67,20 @@ ${records}
 ${reply}
 </reply>
 
-# What to report
+# What to judge
 
-Scripts already check every reference made by an identifier (\`F-1\`, \`F-1 §2\`), every title in backticks, backticks, line breaks, the order of sections, a list item's place, and text set in quote marks. Report only what a script cannot read: the meaning of the reply's words.
+The intent behind both records: when the agent brings the record keeper a situation, it gives and bounds the context, by citing the records and sections the situation rests on, and shows the situation concretely, so the record keeper answers from their own records without working out what the agent means.
 
-Report a fault, with the section of the feature record it breaks, for each of these:
-- §1: the reply refers to a record by a description of it or by a paraphrase of its title ("the two features", "the decision", "the loan period term", "the renewal workflow") at a point where the reply has not yet cited that record.
-- §4: the reply refers to a section of a record by a description or by its number in words ("step 3", "the third requirement", "extension 2a", "its Consequences") at a point where no citation in the reply has yet carried that section.
-- §6: a list item "§N: …" set under a citation says something section N of that record does not say, or says nothing of what it says.
-- §9: the reply gives section numbers to a record that is not among the project's records.
-- §10: the reply reproduces a record's text outside a code block and without quote marks, a clause or more of it word for word.
+Scripts already read every reference by an identifier (\`F-1\`, \`F-1 §2\`), every title in backticks, backticks, line breaks, the order of sections, where a list item sits, and text in quote marks. Judge only what needs the meaning of the words. Report a fault, under the section it breaks, for each of these:
+- UW-20261028-838j §1: the reply brings the record keeper a situation to decide, or answers their question about one, and does not start from the user workflow the situation is in (or each, where it is in more than one) with the step or extension that applies, where a user workflow holds it. Quote the reply's opening.
+- UW-20261028-838j §5: the reply brings a situation to decide and gives no example of it concrete enough to show what the decision is about. Quote the question it asks.
+- F-20261028-1mkt §1: the reply refers to a particular record by a description or a paraphrase of its title ("the two features", "the decision", "the renewal workflow") before it has cited that record.
+- F-20261028-1mkt §4: the reply refers to a particular section by a description or its number in words ("step 3", "the third requirement", "extension 2a") before a citation in the reply has carried it.
+- F-20261028-1mkt §6: a list item "§N: …" under a citation says something section N of that record does not say, or nothing of what it says.
+- F-20261028-1mkt §9: the reply gives section numbers to a record that is not among the project's records.
+- F-20261028-1mkt §10: the reply presents text as a record's own words and the text differs from what the record's file holds.
 
-A reference is a mention of a record itself. A word used for the thing a record defines or decides ("the loan", "a reservation", "the due date") is the domain speaking, and refers to no record. These are references that hold: a description of a record after the reply has cited it; the vision, referred to as the vision; a record the agent proposes, not on disk, referred to by what it says.
+These hold, and are no fault: a description of a record or section after the reply has cited it; a mention of a projection or a category ("the message catalog", "the features"); counting or summing up a record's sections ("it has two refusals"); a record's wording used in the reply's own sentences; the vision, referred to as the vision; a record the agent proposes, not on disk, referred to by what it says; a word for the thing a record defines ("the loan", "a reservation"), which refers to no record. A reply that only reports facts the record keeper asked for, and brings no situation to decide, needs no workflow and no example.
 
 For each fault, copy the passage from the reply character for character, as short as shows the fault, and say in one sentence why it breaks that section. A reply with no fault gets an empty list.`;
 }

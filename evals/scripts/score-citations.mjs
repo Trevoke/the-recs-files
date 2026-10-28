@@ -15,7 +15,9 @@ function budget(said) {
   const known = citations(said || '', fixtureTitles).filter((c) => c.known);
   return { records: new Set(known.map((c) => c.id)).size, citations: known.filter((c) => c.titled).length, namings: known.length };
 }
-const checks = ['exact titles', 'again by citation or title', 'sections first cited', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
+// UW-20261028-838j: Answer a question the agent raises
+const supporting = ['sections in record order', 'quotes in code blocks'];
+const checks = ['judged meaning', 'exact titles', 'again by citation or title', 'sections first cited', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
 
 function options(argv) {
   const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null, keep: null, label: null, question: null };
@@ -51,7 +53,7 @@ function counts(reason) {
   if (failing) return { faults: Number(failing[1]), total: Number(failing[2]), excerpts: failing[3].split('; ') };
   const holding = /^all (\d+) citations hold$/.exec(reason);
   if (holding) return { faults: 0, total: Number(holding[1]), excerpts: [] };
-  const faulty = /^(\d+) (?:sentences|lines|citations|references) [^:]*: (.*)$/s.exec(reason);
+  const faulty = /^(\d+) (?:sentences|lines|citations|references|faults) [^:]*: (.*)$/s.exec(reason);
   if (faulty) return { faults: Number(faulty[1]), total: null, excerpts: faulty[2].split('; ') };
   if (/^(?:each|every) /.test(reason)) return { faults: 0, total: null, excerpts: [] };
   return null;
@@ -71,7 +73,8 @@ function reply(result) {
     if (found?.excerpts.length) excerpts[check] = found.excerpts;
   }
   const sum = Object.values(faults).reduce((a, b) => a + b, 0);
-  return { scenario, total: titles.total, faults, score: sum / titles.total, pass: result.success === true, excerpts, budget: budget(result.response?.metadata?.said) };
+  const bounds = checks.filter((c) => !supporting.includes(c)).every((c) => faults[c] === 0) && !(byCheck['judged meaning'] && !byCheck['judged meaning'].pass);
+  return { scenario, total: titles.total, faults, score: sum / titles.total, pass: result.success === true, bounds, excerpts, budget: budget(result.response?.metadata?.said) };
 }
 
 function mean(xs) {
@@ -97,6 +100,7 @@ function summary(replies, opts) {
     score: scores.length ? mean(scores) : null,
     standardError: standardError(scores),
     passing: scored.filter((r) => r.pass).length,
+    bounding: scored.filter((r) => r.bounds).length,
     scenarios: Object.fromEntries(Object.entries(scenarios).map(([k, v]) => {
       const spent = scored.filter((r) => r.scenario === k && r.budget).map((r) => r.budget);
       const most = (key) => Math.max(...spent.map((b) => b[key]));
