@@ -2,4 +2,5 @@
 :PROPERTIES:
 :STATUS: Proposed
 :END:
-A record's identifier and its title, together.
+A record's identifier and its title, together: what bounds what is said to
+that record and gives its context.

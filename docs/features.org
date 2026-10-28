@@ -13,3 +13,6 @@
 - F-20261027-q7eh :: [[./features/f-20261027-q7eh-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-says-beneath-it-what-each-cited-section-says-then-names-it-again-by-its-identifier.org][The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier]]
 - F-20261027-v2mt :: [[./features/f-20261027-v2mt-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][A sweep repoints or removes citations, and leaves plans as written]]
 
+
+* Proposed
+- F-20261028-1mkt :: [[./features/f-20261028-1mkt-the-agent-cites-a-record-the-first-time-a-reply-refers-to-it-says-beneath-it-what-each-cited-section-says-then-refers-to-it-again-by-its-title.org][The agent cites a record the first time a reply refers to it, says beneath it what each cited section says, then refers to it again by its title]]

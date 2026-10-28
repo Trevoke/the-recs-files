@@ -32,4 +32,5 @@
 
 * Proposed
 - UL-20261028-chtt :: [[./ubiquitous-language/ul-20261028-chtt-title.org][Title]]
+- UL-20261028-tk52 :: [[./ubiquitous-language/ul-20261028-tk52-reference.org][Reference]]
 - UL-20261028-wm45 :: [[./ubiquitous-language/ul-20261028-wm45-record-name.org][Record name]]
