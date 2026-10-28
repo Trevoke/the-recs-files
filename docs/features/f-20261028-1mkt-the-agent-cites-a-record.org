@@ -4,11 +4,16 @@
 :SUPERSEDES: [[./f-20261027-q7eh-the-agent-cites-a-record-to-the-record-keeper-in-its-titles-exact-words-says-beneath-it-what-each-cited-section-says-then-names-it-again-by-its-identifier.org][F-20261027-q7eh: The agent cites a record to the record keeper in its title's exact words, says beneath it what each cited section says, then names it again by its identifier]]
 :END:
 1. When the agent first refers to a record in a reply to the record keeper,
-   the agent shall cite it, giving its record name as the record's heading
-   carries it.
+   other than in the words the record keeper used for it, the agent shall
+   cite it, giving its record name as the record's heading carries it.
    - The one where the agent, about to open the feature on sweeps, writes
      that it will open
      `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`.
+   - The one where the record keeper asks what the sweep feature says about
+     plans, and the agent writes that it will look for the sweep feature,
+     then cites
+     `F-20261027-v2mt: A sweep repoints or removes citations, and leaves plans as written`
+     before it says anything the record holds.
 2. When the agent refers again to a record that the reply has cited, the
    agent shall refer to it in words that make plain to the record keeper
    which cited record is meant: its citation, its title, or a description

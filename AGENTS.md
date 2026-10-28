@@ -310,7 +310,7 @@ is and what it is about. The first
 time a reply refers to a record, it cites it; a reply is everything you say
 between two of the record keeper's messages, working notes included. `X-8`,
 `X-8 §2` or "the frobnication feature" before the reply has cited the record
-reaches them as no record at all. Once a reply has cited a record, it refers to it again by its citation, by its
+reaches them as no record at all, unless it repeats the words they used for it. Once a reply has cited a record, it refers to it again by its citation, by its
 title in backticks (`Frobnicate the widgets`, `Frobnicate the widgets §2`), or
 by a description of it, such as "the frobnication feature"; `X-8` or `X-8 §2` after
 the citation hands them the code to look up again, and the record's context
@@ -375,7 +375,7 @@ Good:
 ```
 ````
 Bad: "`X-8` gets a successor" or "`X-8 §2` becomes two requirements", as a reply's first reference to the record
-Bad: "I'll open the frobnication feature and the terms it uses", as a reply's first reference to those records
+Bad: "I'll open the frobnication feature and the terms it uses", as a reply's first reference to those records, where the record keeper did not call it that
 Bad: "I'll open X-8, X-9 and the terms X-8 uses"
 Bad: "`X-8` keeps the refusal of a reserved widget", after the reply cited `X-8: Frobnicate the widgets`
 Bad: "`X-8 §2` has no test yet", after the reply cited `X-8 §2: Frobnicate the widgets`
