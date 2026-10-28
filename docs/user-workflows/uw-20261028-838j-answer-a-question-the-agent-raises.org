@@ -12,7 +12,9 @@
   agent means.
 - Agent: gets an answer it can act on, resting on the records it cited.
 ** Trigger
-The agent comes to a situation that needs the record keeper's decision.
+The agent comes to a situation that needs the record keeper's decision, in a
+brainstorm, a clarification or a conversation, or the record keeper asks
+about one.
 ** Minimal guarantee
 The agent acts on nothing the question leaves to the record keeper before
 they answer.
@@ -20,9 +22,9 @@ they answer.
 The record keeper decides the question from the records cited, and the agent
 knows which records and sections the answer rests on.
 ** Main success scenario
-*** 1. Agent finds the user workflow the situation is in, and the step or extension of it that applies
+*** 1. Agent finds the user workflow the situation is in, or each of them where it is in more than one, and the step or extension of each that applies
 *** 2. Agent finds every other record that bears on the situation, and the sections of each that do
-*** 3. Agent cites the workflow and its step or extension, then each record that bears, with what each cited section says ([[../features/f-20261028-1mkt-the-agent-cites-a-record.org][F-20261028-1mkt: The agent cites a record]])
+*** 3. Agent cites each workflow and its step or extension, then each record that bears, with what each cited section says ([[../features/f-20261028-1mkt-the-agent-cites-a-record.org][F-20261028-1mkt: The agent cites a record]])
 *** 4. Agent states the situation in the words the records have for it
 *** 5. Agent gives at least one example of the situation, concrete enough to show what the decision is about
 *** 6. Agent asks the question, and waits
