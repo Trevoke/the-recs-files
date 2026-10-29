@@ -1,0 +1,100 @@
+#+TITLE: Guidance for every reply goes where the harness loads it every session
+
+*What it establishes.* Guidance an agent must follow in every reply belongs
+where its harness loads it at the start of every session: the system
+prompt, or the project instruction file (AGENTS.md, CLAUDE.md). A skill, or
+a file other text points to, reaches the agent only when the agent judges
+it relevant. The order, best first: the system prompt; the project
+instruction file; one file that each skill points to.
+
+*On the sources.* Vendor documentation, fetched 2026-10-28; the sources are
+listed at the end. Nothing here was measured by this project.
+
+* The system prompt ranks above the conversation
+
+#+begin_quote
+Setting a role in the system prompt focuses Claude's behavior and tone for
+your use case. [Anthropic, Prompting]
+#+end_quote
+
+OpenAI's Model Spec orders authority Platform ("system messages") >
+Developer > User > Guideline [OpenAI, Model Spec]. Wallace et al. train
+models to give privileged instructions priority, because untrained models
+"often consider system prompts … to be the same priority as text from
+untrusted users and third parties" [Wallace].
+
+* A project instruction file is loaded every session, below the system prompt
+
+In Claude Code, CLAUDE.md is loaded whole at every session's start, and is
+not part of the system prompt:
+
+#+begin_quote
+CLAUDE.md content is delivered as a user message after the system prompt,
+not as part of the system prompt itself. Claude reads it and tries to
+follow it, but there's no guarantee of strict compliance, especially for
+vague or conflicting instructions. [Anthropic, Memory]
+#+end_quote
+
+#+begin_quote
+Keep it to facts Claude should hold in every session: build commands,
+conventions, project layout, "always do X" rules. If an entry is a
+multi-step procedure or only matters for one part of the codebase, move it
+to a skill or a path-scoped rule instead. [Anthropic, Memory]
+#+end_quote
+
+For instructions at the system prompt's level, Claude Code takes
+=--append-system-prompt= [Anthropic, Memory]. Codex builds its chain of
+AGENTS.md files once per run, and stops adding files at 32 KiB by default
+[OpenAI, Codex]. The AGENTS.md site says "explicit user chat prompts
+override everything" [AGENTS.md].
+
+* A skill's body reaches the agent only when the agent loads it
+
+#+begin_quote
+In a regular session, skill descriptions are loaded into context so Claude
+knows what's available, but full skill content only loads when invoked.
+[Anthropic, Skills]
+#+end_quote
+
+#+begin_quote
+Claude matches your task against skill descriptions to decide which are
+relevant. If descriptions are vague or overlap, Claude may load the wrong
+skill or miss one that would help. [Anthropic, Extend]
+#+end_quote
+
+A file a skill refers to is read "only when referenced" [Anthropic, Agent
+Skills]. After compaction, Claude Code re-attaches an invoked skill's first
+5,000 tokens, within 25,000 for all skills, so "older skills can be dropped
+entirely after compaction" [Anthropic, Skills].
+
+* No placement enforces guidance, and length dilutes it
+
+#+begin_quote
+An instruction like "never edit `.env`" in CLAUDE.md or a skill is a
+request, not a guarantee. … If a rule must hold every time, make it a hook
+rather than a prompt instruction. [Anthropic, Extend]
+#+end_quote
+
+Anthropic advises a CLAUDE.md "under 200 lines per CLAUDE.md file. Longer
+files consume more context and reduce adherence" [Anthropic, Memory].
+
+* Sources
+
+- Anthropic. "How Claude remembers your project". Cited [Anthropic, Memory].
+  https://code.claude.com/docs/en/memory
+- Anthropic. "Extend Claude Code". Cited [Anthropic, Extend].
+  https://code.claude.com/docs/en/features-overview
+- Anthropic. "Skills". Cited [Anthropic, Skills].
+  https://code.claude.com/docs/en/skills
+- Anthropic. "Agent Skills". Cited [Anthropic, Agent Skills].
+  https://platform.claude.com/docs/en/agents-and-tools/agent-skills/overview
+- Anthropic. "Prompting best practices". Cited [Anthropic, Prompting].
+  https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/claude-prompting-best-practices
+- AGENTS.md. https://agents.md/ Cited [AGENTS.md].
+- OpenAI. "AGENTS.md" (Codex). Cited [OpenAI, Codex].
+  https://learn.chatgpt.com/docs/agent-configuration/agents-md
+- OpenAI. Model Spec, 2025-04-11. Cited [OpenAI, Model Spec].
+  https://model-spec.openai.com/2025-04-11.html
+- Wallace et al. "The Instruction Hierarchy: Training LLMs to Prioritize
+  Privileged Instructions", arXiv:2404.13208, 2024-04-19. Cited [Wallace];
+  the quote was cut short by the fetch and is unchecked against the paper.
