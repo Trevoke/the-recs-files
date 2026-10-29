@@ -229,6 +229,8 @@ The one where Mara reserves Ola's widget while Ola is still whirling it
 
 Question: at step 2, is Ola told that Mara's reservation ends her frobnication,
 or only at step 4?
+
+Also open: no record says how long a reservation holds a widget.
 ```
 
 Where the decision is a choice between options, the one example is played out
@@ -236,6 +238,12 @@ under each option with the same actors, values and dates, so that only the
 option changes: the one where Ola frobnicates widget 17 a fourth time, step 4
 refusing under a fixed limit of three and frobnicating under a limit the
 record keeper sets at five.
+
+Where more than one situation needs the record keeper's decision, one is
+brought framed in full: the one the record keeper's question is about, or,
+where it is about none of them, the one the work stops on. Each other
+situation is listed as open, in one sentence that says what it is about, with
+no example, and the record keeper picks which to frame next.
 
 The workflow comes first because it is what the user is trying to achieve; the
 other records are what constrain it. A question that opens on a feature, a

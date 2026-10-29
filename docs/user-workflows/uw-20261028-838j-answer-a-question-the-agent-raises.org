@@ -26,19 +26,23 @@ they answer.
 The record keeper decides the question from the records cited, and the agent
 knows which records and sections the answer rests on.
 ** Main success scenario
-*** 1. Agent finds the user workflow the situation is in, or each of them where it is in more than one, and the step or extension of each that applies ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]])
-*** 2. Agent finds every other record that bears on the situation, and the sections of each that do ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]])
+*** 1. Agent finds the user workflow the situation is in, or each of them where it is in more than one, and the step or extension of each that applies ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]])
+*** 2. Agent finds every other record that bears on the situation, and the sections of each that do ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]])
 *** 3. Agent cites each workflow and its step or extension, then each record that bears, with what each cited section says ([[../features/f-20261028-1mkt-the-agent-cites-a-record.org][F-20261028-1mkt: The agent cites a record]])
-*** 4. Agent states the situation in the words the records have for it ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]])
-*** 5. Agent gives at least one example of the situation, concrete enough to show what the decision is about ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]])
-*** 6. Agent asks the question, and waits ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]])
+*** 4. Agent states the situation in the words the records have for it ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]])
+*** 5. Agent gives at least one example of the situation, concrete enough to show what the decision is about ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]])
+*** 6. Agent asks the question, and waits ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]])
 *** 7. Record keeper answers
 ** Extensions
 *** 1a. No user workflow holds the situation
-**** 1a1. Agent says so ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]]), and frames the question from the records that bear; continue at 2
+**** 1a1. Agent says so ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]]), and frames the question from the records that bear; continue at 2
 *** 4a. The records have no word for the situation
 **** 4a1. Agent proposes candidate words and waits for the record keeper to agree to one; continue at 4
+*** 4b. More than one situation needs the record keeper's decision
+**** 4b1. Agent brings the one the record keeper's question is about, or the one the work stops on, and lists each other as open ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]]); continue at 5
 *** 7a. The answer needs a record change
 **** 7a1. Agent raises it as a record change ([[./uw-20261014-8c8f-create-a-record.org][UW-20261014-8c8f: Create a record]]; [[./uw-20261014-wewg-supersede-a-record.org][UW-20261014-wewg: Supersede a record]]; [[./uw-20261014-q1yj-clarify-a-record.org][UW-20261014-q1yj: Clarify a record]])
 *** 7b. Record keeper cannot answer from what the question gives
-**** 7b1. Agent brings the record, the section or the example that is missing ([[../features/f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]]); back to 6
+**** 7b1. Agent brings the record, the section or the example that is missing ([[../features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]]); back to 6
+*** 7c. Record keeper picks a situation listed as open
+**** 7c1. Agent brings it; back to 1

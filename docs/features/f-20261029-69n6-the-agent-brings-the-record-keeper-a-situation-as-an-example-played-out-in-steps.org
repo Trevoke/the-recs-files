@@ -1,6 +1,6 @@
 * F-20261029-69n6 The agent brings the record keeper a situation as an example played out in steps
 :PROPERTIES:
-:STATUS: Accepted
+:STATUS: Superseded by [[./f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][F-20261029-sn02: The agent brings the record keeper one situation at a time, as an example played out in steps]]
 :END:
 1. When the agent brings the record keeper a situation that needs their
    decision, the agent shall cite the user workflow the situation is in, or
