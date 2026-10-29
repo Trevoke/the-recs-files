@@ -16,9 +16,9 @@
   recognizes each citation, the record and every section it carries, so it
   can take the record keeper to that record and section.
 ** Trigger
-The agent comes to a situation that needs the record keeper's decision, in a
-brainstorm, a clarification or a conversation, or the record keeper asks
-about one.
+The agent's work — a plan, a feature, a brainstorm, a clarification — comes
+to a situation that needs the record keeper's decision, and the agent stops;
+or the record keeper asks about one.
 ** Minimal guarantee
 The agent acts on nothing the question leaves to the record keeper before
 they answer.
