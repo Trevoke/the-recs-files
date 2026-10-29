@@ -30,4 +30,4 @@ cd "$project"
 trap 'docker rm -f "$(basename "$project")" "$(basename "$project")-leash" >/dev/null 2>&1 || true' EXIT
 TMPDIR="$work/tmp" LEASH_WORK_DIR="$work/work" "$here/node_modules/.bin/leash" -I --policy "$policy" \
   -e CLAUDE_CODE_OAUTH_TOKEN -e IS_SANDBOX=1 \
-  claude -p --permission-mode bypassPermissions "$brief"
+  claude -p --model "${WRITER_MODEL:-claude-fable-5-1}" --permission-mode bypassPermissions "$brief"
