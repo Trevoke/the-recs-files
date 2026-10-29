@@ -38,8 +38,10 @@ COMPARE: run the training questions; compare question by question
   evals. The failure is the baseline: its score with its error, and the
   count of each fault.
 
-**GREEN — the text.** The writer makes the one change the plan names, from
-the records, not from the failure. A template shapes a reply better than a
+**GREEN — the text.** The writer, run with `leash/write-skill-text.sh` and
+never as a subagent
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`),
+makes the one change the plan names, from the records, not from the failure. A template shapes a reply better than a
 prohibition; naming a situation in the text brings that situation on.
 
 **COMPARE.** The training questions, the same number of runs as the
@@ -53,6 +55,7 @@ run only at verification.
 ## Never
 
 - change the text and the check in one attempt;
-- read a reply or a question when you are the writer;
+- run the writer as a subagent; under leash it is refused the questions,
+  the replies and the runs, and nothing else refuses it;
 - hand a writer a question, a reply, or a run;
 - keep an attempt the margin does not clear.

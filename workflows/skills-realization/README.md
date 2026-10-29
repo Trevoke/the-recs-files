@@ -16,10 +16,29 @@ realization modality, one skill to a step:
 What the flow holds to, in every skill: the records are the only source of
 intent, and a score is evidence about the text, never the goal; the agent that
 writes skill text is given the records, the current text and its failures as
-record sections, and never the eval's questions, replies or runs; the eval
-case or check changes first and is seen to fail on the current text; a
-decision no record holds is raised as a record change and never written on
-the agent's own.
+record sections, and never the eval's questions, replies or runs; it runs
+under leash with `leash/write-skill-text.sh`, never as a subagent, so that
+leash refuses it every read of `the-recs-files-evals` and of the history of
+`evals/cases/`
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`);
+the eval case or check changes first and is seen to fail on the current
+text; a decision no record holds is raised as a record change and never
+written on the agent's own.
+
+## Setting up
+
+The writer runs with `leash/write-skill-text.sh <project dir> <brief file>`:
+`claude -p` under leash, in the project directory, with the brief as its
+prompt. Before the first run:
+
+- `npm install` in `workflows/skills-realization/`; `package.json` pins
+  leash.
+- Docker running. Docker Desktop mounts only the directories under Settings → Resources → File Sharing, so the project's directory must be among them.
+- `CLAUDE_CODE_OAUTH_TOKEN` set in the environment; the script passes it in.
+
+The questions are not in the writer's container; `.git/` and `evals/runs/`
+are refused there, so a read of either fails with "Permission denied"; and
+it cannot run git, so the agent running the loop reads the diff and commits.
 
 These skills are not shipped: `packaging/` builds from `skills/` alone. They
 are used in this repository by a link from `.claude/skills/<name>` to

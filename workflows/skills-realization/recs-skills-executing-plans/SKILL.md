@@ -7,7 +7,9 @@ description: Use when a plan for a change to this project's skill text is writte
 
 Carries `UW-20261015-nkb5 §5: Realize a change to the system` and its
 extensions 5a and 5b. The agent that runs the plan is the orchestrating
-agent; it holds the eval, and dispatches a subagent to write the text.
+agent; it holds the eval, and runs the agent that writes the text with
+`leash/write-skill-text.sh`, never as a subagent
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`).
 
 **Core principle:** the writer never sees what it is scored on. The
 orchestrator holds the questions, the replies and the runs, and hands the
@@ -22,16 +24,16 @@ disk. Where the plan and a record disagree, stop and raise it.
 **2. For each attempt, in the plan's order:**
 1. The eval first: `recs-skills-test-driven-development`, until the case or
    check is written and seen to fail on the current text.
-2. Dispatch the writer with: the reading list, the current text, the one
-   change and the section it realizes, each failure as a record section with
-   the fault in the records' words, the house style from AGENTS.md "Making a
-   record change", and the instruction to write files only and read nothing
-   under `evals/runs/`, nor the history of `evals/cases/`; the questions are
-   not in the tree
-   (`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`).
-   It writes one change across the files that carry the sentence.
+2. Write the writer's brief to a file: the reading list, the current text,
+   the one change and the section it realizes, each failure as a record
+   section with the fault in the records' words, the house style from
+   AGENTS.md "Making a record change", and the instruction to write files
+   only. Run it with `leash/write-skill-text.sh <project dir> <brief file>`;
+   leash refuses it every read of `the-recs-files-evals`, of `evals/runs/`
+   and of the history of `evals/cases/`. It writes one change across the
+   files that carry the sentence; read the diff when it returns.
 3. Commit the attempt alone, with the section it realizes in the body. Only
-   this agent runs `git add` and `git commit`.
+   this agent runs `git add` and `git commit`; the writer cannot run git.
 4. Run and compare as the plan says; keep or revert.
 5. Log the attempt: commit, the change in a sentence, the score with its
    error, the verdict, and what moved.
