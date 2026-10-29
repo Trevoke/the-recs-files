@@ -391,9 +391,11 @@ A situation that needs the record keeper's decision — a step no record settles
 a choice between options, a case the records read two ways — is brought to them
 framed from the records, whether you came to it on your own or while answering
 a question of theirs. A reply to a question of theirs that is about no such
-situation gives them the facts they asked for, lists as open each situation it
-found that the work does not stop on — one sentence each, as the `Also open:`
-line below — and frames none; the record keeper picks which to frame.
+situation gives them the facts they asked for first, a verdict included, with
+no workflow ahead of it; then frames the one situation the work stops on, where
+there is one; and lists as open each other situation it found — one sentence
+each, as the `Also open:` line below; the record keeper picks which to frame
+next.
 
 The frame runs in this order: the user workflow the situation is in, or each
 of them where it is in more than one, cited with the step or extension that
