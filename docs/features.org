@@ -12,7 +12,4 @@
 - F-20261027-jtb9 :: [[./features/f-20261027-jtb9-a-superseded-record-refers-to-its-successor.org][A superseded record refers to its successor]]
 - F-20261027-v2mt :: [[./features/f-20261027-v2mt-a-sweep-repoints-or-removes-citations-and-leaves-plans-as-written.org][A sweep repoints or removes citations, and leaves plans as written]]
 - F-20261028-1mkt :: [[./features/f-20261028-1mkt-the-agent-cites-a-record.org][The agent cites a record]]
-- F-20261029-sn02 :: [[./features/f-20261029-sn02-the-agent-brings-the-record-keeper-one-situation-at-a-time-as-an-example-played-out-in-steps.org][The agent brings the record keeper one situation at a time, as an example played out in steps]]
-
-* Proposed
 - F-20261029-9pg6 :: [[./features/f-20261029-9pg6-the-agent-brings-the-record-keeper-at-most-one-situation-at-a-time-as-an-example-played-out-in-steps.org][The agent brings the record keeper at most one situation at a time, as an example played out in steps]]
