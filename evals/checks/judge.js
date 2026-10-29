@@ -4,6 +4,7 @@ import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { result, workingDir } from './workspace.js';
+import { question as asked } from '../providers/question.js';
 
 const repoDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..');
 
@@ -129,7 +130,7 @@ export function verified(faults, reply) {
 }
 
 function question(request) {
-  return request.startsWith('file://') ? fs.readFileSync(path.join(repoDir, 'evals', request.slice(7)), 'utf8').trim() : request;
+  return request.startsWith('file://') ? fs.readFileSync(path.join(repoDir, 'evals', request.slice(7)), 'utf8').trim() : asked(request);
 }
 
 export async function judgedMeaning(output, context) {

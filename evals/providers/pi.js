@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { question } from './question.js';
 
 const evalsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const skillsDir = path.join(evalsDir, '..', 'skills');
@@ -128,6 +129,12 @@ export default class PiProvider {
 
   async callApi(prompt, context) {
     const caseName = context?.vars?.case;
+    let request;
+    try {
+      request = question(prompt);
+    } catch (error) {
+      return { error: error.message };
+    }
     const dirs = prepare(caseName, this.config.skills);
     const { root, project, agentDir } = dirs;
     // docs/knowledge-base/pi-as-an-eval-harness.org: `--no-skills --skill <dir>` loads exactly that directory's skills
@@ -136,7 +143,7 @@ export default class PiProvider {
       '--no-skills', '--no-extensions', '--no-prompt-templates', '--no-themes', '--offline',
       ...(this.config.skills ? ['--skill', path.join(project, '.agents', 'skills')] : []),
       '--model', this.config.model,
-      '--', prompt,
+      '--', request,
     ];
     // docs/knowledge-base/pi-as-an-eval-harness.org: `PI_CODING_AGENT_DIR` moves settings, models and auth
     const env = { ...identity, PI_CODING_AGENT_DIR: agentDir, OPENROUTER_API_KEY: process.env.OPENROUTER_API_KEY ?? '' };

@@ -3,6 +3,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { question } from './question.js';
 
 const evalsDir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const repoDir = path.join(evalsDir, '..');
@@ -221,6 +222,12 @@ export default class ClaudeCodeProvider {
     } catch (error) {
       return { error: `the run could not be prepared: ${error.message}` };
     }
+    let request;
+    try {
+      request = question(prompt);
+    } catch (error) {
+      return { error: error.message };
+    }
     const expected = this.config.skills ? recsSkills() : [];
     const expectedAgents = this.config.skills ? recsAgents() : [];
     const args = [
@@ -228,7 +235,7 @@ export default class ClaudeCodeProvider {
       // docs/knowledge-base/claude-code-as-an-eval-harness.org: Inside bubblewrap, bypassing permissions is the sandbox's to confine
       '--permission-mode', 'bypassPermissions',
       '--model', this.config.model,
-      '--', prompt,
+      '--', request,
     ];
     // docs/knowledge-base/claude-code-as-an-eval-harness.org: `CLAUDE_CODE_OAUTH_TOKEN` authenticates a run on the subscription
     const env = { ...identity, CLAUDE_CODE_OAUTH_TOKEN: token };

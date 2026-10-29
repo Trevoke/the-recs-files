@@ -19,6 +19,16 @@ report of its own run is not evidence.
 
 ## Evals
 
+Each case's question is kept in `the-recs-files-evals`, checked out beside
+this repository, and read from the directory `RECS_EVALS_QUESTIONS` names
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`);
+a run fails without it.
+
+```sh
+git clone git@github.com:Trevoke/the-recs-files-evals.git ../the-recs-files-evals
+export RECS_EVALS_QUESTIONS="$PWD/../the-recs-files-evals"
+```
+
 `evals/` runs each case under `evals/cases/` with promptfoo, on each model in
 `evals/promptfooconfig.yaml`, with the skills installed and without. Every
 model runs in the same harness, pi (`evals/providers/pi.js`), reached through
