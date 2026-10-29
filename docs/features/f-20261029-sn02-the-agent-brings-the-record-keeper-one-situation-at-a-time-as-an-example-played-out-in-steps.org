@@ -1,0 +1,55 @@
+* F-20261029-sn02 The agent brings the record keeper one situation at a time, as an example played out in steps
+:PROPERTIES:
+:STATUS: Proposed
+:SUPERSEDES: [[./f-20261029-69n6-the-agent-brings-the-record-keeper-a-situation-as-an-example-played-out-in-steps.org][F-20261029-69n6: The agent brings the record keeper a situation as an example played out in steps]]
+:END:
+1. When the agent brings the record keeper a situation that needs their
+   decision, the agent shall cite the user workflow the situation is in, or
+   each of them where it is in more than one, with the step or extension of
+   each that applies.
+   - The one where the agent, unsure whether a clarification keeps a
+     record's intent, first cites the step of
+     [[../user-workflows/uw-20261014-q1yj-clarify-a-record.org][UW-20261014-q1yj: Clarify a record]]
+     where the record keeper decides it.
+2. If no user workflow holds the situation, then the agent shall say so.
+   - The one where the record keeper asks whether two records use a word
+     the same way, and the agent says that no user workflow holds the
+     question.
+3. When the agent brings the record keeper a situation, the agent shall
+   cite each other record that bears on it, with the sections of each that
+   do.
+4. The agent shall state a situation it brings the record keeper in the
+   words the records have for it.
+5. When the agent brings the record keeper a situation, the agent shall
+   give at least one example of it: a phrase that names it, starting "The
+   one where", then numbered steps, each one thing that an actor or the
+   system does, with concrete actors, values and dates.
+   - The one where a borrower's renewal is refused because another
+     borrower reserved the book an hour after the loan, played out in five
+     steps from the loan on 1 October at 10:00 to the refusal on 10 October.
+6. When the agent brings the record keeper a choice between options, the
+   agent shall play out one example under each option, with the same
+   actors, values and dates.
+   - The one where a fourth renewal of the same loan is refused under a
+     fixed limit of three, and extended under a limit the library sets at
+     five.
+7. When the agent asks the record keeper about a situation, the agent shall
+   point the question to the step of the example whose outcome no record
+   settles.
+8. When the agent has asked the record keeper about a situation, the agent
+   shall act on nothing the question leaves to them before they answer.
+9. If the record keeper cannot answer from what the agent brought, then the
+   agent shall bring the record, the section or the example that is
+   missing.
+10. When the agent finds more than one situation that needs the record
+    keeper's decision, the agent shall bring the one the record keeper's
+    question is about, or, where it is about none of them, the one the work
+    stops on.
+    - The one where the record keeper asks for the wording of a 7-day loan
+      period for new books, and the agent brings the loan period.
+11. When the agent finds more than one situation that needs the record
+    keeper's decision, the agent shall list each situation it does not
+    bring as open, in one sentence that says what it is about, with no
+    example.
+    - The one where the agent, having brought the 7-day loan period, lists
+      as open that no record says what makes a book new.
