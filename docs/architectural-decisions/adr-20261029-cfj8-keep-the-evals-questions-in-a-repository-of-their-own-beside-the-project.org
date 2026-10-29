@@ -1,0 +1,22 @@
+* ADR-20261029-cfj8 Keep the evals' questions in a repository of their own, beside the project
+:PROPERTIES:
+:STATUS: Proposed
+:END:
+** Context
+An eval's question is what the record keeper asks the agent in a case. The
+agent that writes this project's skill text works in the project's tree, so
+any question kept there is one it can read, and text written by an agent
+that has read the questions fits them rather than the records. An
+instruction not to read them is a request, not a guarantee.
+** Decision
+We will keep each eval's questions in the repository
+=the-recs-files-evals=, checked out beside the project, and nowhere in the
+project's tree. The evals read them from the path that the environment
+variable =RECS_EVALS_QUESTIONS= names. The checks, the judge and the
+fixtures stay in the project.
+** Consequences
+An agent working in the project's tree comes across no question. A run
+needs the second checkout and the variable set, and fails without them.
+The questions already in the project's history stay there: =git log= still
+shows them, so the agent that writes skill text is kept from the history
+of =evals/cases/= as well.
