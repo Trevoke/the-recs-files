@@ -189,33 +189,24 @@ Bad: "`X-8`"
 
 ## Framing a question
 
-A situation that needs the record keeper's decision — a step no record settles,
-a choice between options, a case the records read two ways — is brought to them
-framed from the records, whether you came to it on your own or while answering
-a question of theirs. A reply to a question of theirs that is about no such
-situation gives them the facts they asked for first, a verdict included, with
-no workflow ahead of it; then frames the one situation the work stops on, where
-there is one; and lists as open each other situation it found — one sentence
-each, as the `Also open:` line below; the record keeper picks which to frame
-next. The work is what the record keeper set going, and it stops on the
-situation it cannot go on from without their decision; a question that asks
-for facts alone sets no work going, so the reply to it lists every situation
-it found as open and frames none.
+When the work — a plan, a feature, a brainstorm, a clarification — comes to a
+situation that needs the record keeper's decision, one no record settles,
+stop and bring it to them framed from the records. The frame gives them the
+question's context, bounded, and a concrete case of it, so they answer from
+their own records and need not work out which records, which parts of them,
+or which situation you mean.
 
-The frame runs in this order: the user workflow the situation is in, or each
-of them where it is in more than one, cited with the step or extension that
-applies; each other record that bears — a feature, an architectural decision,
-a message catalog entry, a ubiquitous language term — cited with the sections
-that do; the situation, stated in the words the records have for it; at least
-one example of it; the question. Where no user workflow holds the situation,
-say so and frame from the records that bear.
-
-An example is named by a phrase starting "The one where", and then played out
-as numbered steps, each one thing an actor or the system does, with concrete
-actors, values and dates. The phrase says what the example is about, as a
-title does for a record; the steps are the example. The citations above it are
-enough, so the steps carry none. The question points at the step whose outcome
-no record settles.
+The frame runs in this order:
+- the user workflow the situation is in, cited with the step or extension
+  that applies, or each of them where it is in more than one; where no user
+  workflow holds it, say so;
+- each other record that bears, cited with the sections that do;
+- the situation, stated in the words the records have for it;
+- an example of it: a phrase starting "The one where", which says what the
+  example is about as a title does for a record, then numbered steps, each
+  one thing an actor or the system does, with concrete actors, values and
+  dates. The citations above it are enough, so the steps carry none;
+- the question, pointed at the step whose outcome no record settles.
 
 ```
 We are in `UW-X §3: Frobnicate a widget`.
@@ -246,22 +237,25 @@ option changes: the one where Ola frobnicates widget 17 a fourth time, step 4
 refusing under a fixed limit of three and frobnicating under a limit the
 record keeper sets at five.
 
-Where more than one situation needs the record keeper's decision, one is
-brought framed in full: the one the record keeper's question is about, or,
-where it is about none of them, the one the work stops on. Each other
-situation is listed as open, in one sentence that says what it is about, with
-no example, and the record keeper picks which to frame next.
+One situation at a time: the one the work stops on, or the one the record
+keeper's question is about. Each other situation found on the way is listed
+as open, in one sentence that says what it is about, with no example, as the
+`Also open:` line above; the record keeper picks which to frame next. A
+question of theirs that is about no such situation gets the facts it asked
+for, with each situation found that the work does not stop on listed as open,
+and none framed.
 
 The workflow comes first because it is what the user is trying to achieve; the
 other records are what constrain it. A question that opens on a feature, a
 message, or a line of code has skipped the part that says why any of it
 matters, and asks the record keeper to reconstruct it. The situation is named
-with the records' word for it; the mechanism — a loop, a thread, a field, which
-function calls which — is how the situation is served, and comes after the
-situation it serves, named as serving it, where it is what the question is
-about. Then wait: act on nothing the question leaves to the record keeper
-before they answer, and if they cannot answer from what you brought, bring the
-record, the section or the example that is missing.
+with the records' word for it; the mechanism that serves it — a loop, a field,
+which function calls which — comes after the situation, named as serving it,
+where it is what the question is about.
+
+Then wait: act on nothing the question leaves to the record keeper before they
+answer, and if they cannot answer from what you brought, bring the record, the
+section or the example that is missing.
 
 Never write a new term into any file — a record, a design document, a sketch, a
 comment — before the record keeper has agreed to that specific word. Propose candidates,
