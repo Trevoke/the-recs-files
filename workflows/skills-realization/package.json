@@ -1,0 +1,7 @@
+{
+  "name": "recs-skills-realization",
+  "private": true,
+  "devDependencies": {
+    "@strongdm/leash": "1.1.7"
+  }
+}

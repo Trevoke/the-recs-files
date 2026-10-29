@@ -1,2 +1,4 @@
 .worktrees/
 evals/runs/
+workflows/skills-realization/node_modules/
+workflows/skills-realization/.leash/
