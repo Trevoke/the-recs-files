@@ -52,7 +52,13 @@ Questions, in `the-recs-files-evals`, under
   in place, against `Keep loans as an append-only ledger of loan events`, is a second situation on the way, listed as
   open (`Answer a question the agent raises` 4b).
 
-Neither question restates an example from a record, nor one of the existing
+- A third question, held out: building a feature, its gap inside a step of
+  `Renew a loan before its due date`, so the frame opens on the workflow
+  (`Answer a question the agent raises` §1). The orchestrator holds its
+  file name and its situation; this plan, which the writer reads, says no
+  more of it.
+
+No question restates an example from a record, nor one of the existing
 questions: `releasing-a-held-copy` asks whether the borrower is told of a
 release, and `paused-on-a-contradiction` asks about the in-place edit itself.
 
@@ -80,9 +86,9 @@ baseline is re-judged with the new judge before any comparison.
 
 ## 5. The comparison
 
-- Both new questions train. No held-out question covers this situation yet:
-  a third question, held out, is a decision to bring to the record keeper
-  before any attempt is kept.
+- `building-holds` and `carrying-out-the-ledger-plan` train; the third
+  question is held out, run at the baseline and at verification, never for
+  an attempt.
 - 12 runs a question, the baseline on the current text.
 - An attempt is compared question by question against twice the standard
   error, pooled when inside the margin, as
