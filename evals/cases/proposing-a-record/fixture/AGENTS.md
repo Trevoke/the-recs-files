@@ -189,34 +189,64 @@ Bad: "`X-8`"
 
 ## Framing a question
 
-Every question to the record keeper is framed from the records, and starts from the user workflow the work is in, or each of them where it is in more than one. Refer to each by its record name, and to the step or extension of it that applies. Then bring in whatever else bears — a feature, an
-architectural decision, a message catalog entry, a ubiquitous language term —
-each by its record name. Then state the situation, give at least one example of it, and only then the problem.
+A situation that needs the record keeper's decision — a step no record settles,
+a choice between options, a case the records read two ways — is brought to them
+framed from the records, whether you came to it on your own or while answering
+a question of theirs. A reply that gives them the facts they asked for and
+raises nothing is complete as it is.
+
+The frame runs in this order: the user workflow the situation is in, or each
+of them where it is in more than one, cited with the step or extension that
+applies; each other record that bears — a feature, an architectural decision,
+a message catalog entry, a ubiquitous language term — cited with the sections
+that do; the situation, stated in the words the records have for it; at least
+one example of it; the question. Where no user workflow holds the situation,
+say so and frame from the records that bear.
+
+An example is named by a phrase starting "The one where", and then played out
+as numbered steps, each one thing an actor or the system does, with concrete
+actors, values and dates. The phrase says what the example is about, as a
+title does for a record; the steps are the example. The citations above it are
+enough, so the steps carry none. The question points at the step whose outcome
+no record settles.
 
 ```
-We are working on `UW-X: Frobnicate the widget`.
+We are in `UW-X §3: Frobnicate a widget`.
+- §3: the user frobnicates the widget they whirled
 
-`Section 1b: whirl first` says the user frobnicates after having whirled.
+`X-8 §1, §2: Frobnicate the widgets`
+- §1: frobnicates a whirled widget on request
+- §2: refuses a reserved widget with `MSG-4: A reserved widget cannot be frobnicated`
 
-`F-Y: Frobnication` says that we must whirl only after whooping.
+The situation: no record says what the user is told about a reservation that
+takes away their frobnication.
 
-At the moment, we must whirl before we pool because....
+The one where Mara reserves Ola's widget while Ola is still whirling it
+1. Ola whirls widget 17 on 3 March at 09:00.
+2. Mara reserves widget 17 on 3 March at 09:30.
+3. Ola asks to frobnicate widget 17 on 3 March at 10:00.
+4. The system refuses with `MSG-4: A reserved widget cannot be frobnicated`.
 
-[example]
+Question: at step 2, is Ola told that Mara's reservation ends her frobnication,
+or only at step 4?
 ```
+
+Where the decision is a choice between options, the one example is played out
+under each option with the same actors, values and dates, so that only the
+option changes: the one where Ola frobnicates widget 17 a fourth time, step 4
+refusing under a fixed limit of three and frobnicating under a limit the
+record keeper sets at five.
 
 The workflow comes first because it is what the user is trying to achieve; the
 other records are what constrain it. A question that opens on a feature, a
-message, or a line of code has skipped the part that says why any of it matters,
-and asks the record keeper to reconstruct it.
-
-Then work your way inside the situation, and name it with the word the records
-already have for it — not "a request failed", and not a loop, a thread, a field,
-or which function calls which. The mechanism is how the situation is served; it
-is not the situation, and leading with it makes the record keeper translate back into
-their own domain before they can answer. Where the mechanism is genuinely what
-is being asked about, it comes after the situation it serves, and named as
-serving it.
+message, or a line of code has skipped the part that says why any of it
+matters, and asks the record keeper to reconstruct it. The situation is named
+with the records' word for it; the mechanism — a loop, a thread, a field, which
+function calls which — is how the situation is served, and comes after the
+situation it serves, named as serving it, where it is what the question is
+about. Then wait: act on nothing the question leaves to the record keeper
+before they answer, and if they cannot answer from what you brought, bring the
+record, the section or the example that is missing.
 
 Never write a new term into any file — a record, a design document, a sketch, a
 comment — before the record keeper has agreed to that specific word. Propose candidates,

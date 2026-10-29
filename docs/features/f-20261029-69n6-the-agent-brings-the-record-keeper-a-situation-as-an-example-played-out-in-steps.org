@@ -1,14 +1,15 @@
 * F-20261029-69n6 The agent brings the record keeper a situation as an example played out in steps
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 1. When the agent brings the record keeper a situation that needs their
    decision, the agent shall cite the user workflow the situation is in, or
    each of them where it is in more than one, with the step or extension of
    each that applies.
    - The one where the agent, unsure whether a clarification keeps a
-     record's intent, cites
-     `UW-20261014-q1yj §4: Clarify a record` before anything else.
+     record's intent, first cites the step of
+     [[../user-workflows/uw-20261014-q1yj-clarify-a-record.org][UW-20261014-q1yj: Clarify a record]]
+     where the record keeper decides it.
 2. If no user workflow holds the situation, then the agent shall say so.
    - The one where the record keeper asks whether two records use a word
      the same way, and the agent says that no user workflow holds the
