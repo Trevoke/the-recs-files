@@ -308,3 +308,63 @@ Two things the attempts showed about the skill text:
   citation is written in the record's order"). R3 named "the file you
   opened" among a record's roles, and replies opened with the files they
   opened, by bare identifier.
+
+* No tool runs this loop off the shelf (surveyed 2026-10-29)
+A web survey on 2026-10-29 found no tool that does all of these together:
+optimizes several readable files that an outside agent such as Claude Code
+loads; treats a run as noisy, with repeats and a paired comparison against
+a margin; keeps the test questions from the model that rewrites the text,
+outside its context. Every optimizer found accepts the higher score of one
+run, or a strict improvement on a small batch.
+
+- GEPA =optimize_anything= (https://github.com/gepa-ai/gepa, MIT, v0.1.4,
+  2026-07-15): the text can be named components, one per file; the metric is
+  any program, and it returns failure text to the rewriting model. It
+  accepts a change on a minibatch of two by default, with no repeats or
+  significance test. Its gskill guide applies it to one Claude Code skill.
+- SkillOpt (Microsoft Research, arXiv 2605.23904, 2026-05): one skill
+  document, bounded add/delete/replace edits per round, a buffer of rejected
+  edits, a selection split apart from the test split; no significance test.
+- Anthropic's skill-creator =scripts/run_loop.py=: tunes only a skill's
+  description, for triggering; holds 40% of queries out, runs each three
+  times, and strips test results from what the improving model sees.
+- Arize Prompt Learning (Elastic-2.0): reports improving CLAUDE.md against
+  SWE-bench Lite from written explanations of failures; one string, no
+  held-out split.
+- Inspect AI with inspect_swe (MIT): runs Claude Code in a sandbox with
+  repeats and standard errors; an eval runner, not an optimizer.
+- DSPy, MLflow =optimize_prompts=, Opik Agent Optimizer, promptfoo
+  =optimize=, TextGrad, Trace: built around prompts a program calls itself,
+  or one configured prompt.
+
+The survey was made by a subagent; the claims that OpenAI is closing its
+prompt optimizer and acquired promptfoo come from one secondary source
+(https://www.promptquorum.com/blog/prompt-optimization-market-overview-2026)
+and are unchecked.
+
+* StrongDM keeps its scenarios outside the codebase, as a holdout
+Justin McCarthy, "Software Factories and the Agentic Moment",
+https://factory.strongdm.ai/, 2026-02-06:
+
+#+begin_quote
+A test, stored in the codebase, can be lazily rewritten to match the code.
+#+end_quote
+
+A scenario is an end-to-end user story, "often stored outside the codebase
+(similar to a 'holdout' set in model training)", which an LLM validates;
+success is "of all the observed trajectories through all the scenarios,
+what fraction of them likely satisfy the user"; and per /principles, "The
+loop runs until the holdout scenarios pass (and stay passing)". The pages
+do not say how the scenarios are kept from the agent, nor how the judge is
+calibrated. Simon Willison's account of a visit:
+https://simonwillison.net/2026/Feb/7/software-factory/ (2026-02-07).
+
+Their public repositories (github.com/strongdm, Apache-2.0):
+- attractorbench: Claude Code in Docker against a spec, a deterministic
+  verifier, cost tracking, and a comparison across runs; its README
+  (2026-02-23) holds scores "not valid for ranking" until run-to-run
+  variability is measured.
+- leash: runs coding agents in containers, enforces Cedar policies over every
+  file and network access, and logs them.
+- agate: an orchestrator from a goal through interview, design, plan, and an
+  implement/review loop; it stops for a human answer at the interview.
