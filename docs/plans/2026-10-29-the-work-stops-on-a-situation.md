@@ -29,6 +29,17 @@ becomes one attempt, planned then: the sentence it changes, the section of
 the reading list it realizes, what it states or guides. Where the baseline
 shows no failure, the text stands and nothing changes.
 
+### Attempt 1: the work stops at the first situation it comes to
+
+- File: AGENTS.md "Framing a question", its opening paragraph, and each copy.
+- Realizes `UW-20261028-838j §Trigger, §Minimal guarantee: Answer a question the agent raises`.
+- What it states: the work stops at the first situation it comes to that
+  needs the record keeper's decision, and carries nothing past it, since
+  whatever is built past it rests on an outcome only the record keeper can
+  give.
+- Chosen by the record keeper first among the baseline's causes, over the
+  missing example (`Answer a question the agent raises §5`).
+
 ## 3. The eval cases added
 
 New case `evals/cases/the-work-stops-on-a-situation/`. Its fixture is the
