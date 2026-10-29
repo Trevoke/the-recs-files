@@ -393,7 +393,10 @@ situation gives them the facts they asked for first, a verdict included, with
 no workflow ahead of it; then frames the one situation the work stops on, where
 there is one; and lists as open each other situation it found — one sentence
 each, as the `Also open:` line below; the record keeper picks which to frame
-next.
+next. The work is what the record keeper set going, and it stops on the
+situation it cannot go on from without their decision; a question that asks
+for facts alone sets no work going, so the reply to it lists every situation
+it found as open and frames none.
 
 The frame runs in this order: the user workflow the situation is in, or each
 of them where it is in more than one, cited with the step or extension that
