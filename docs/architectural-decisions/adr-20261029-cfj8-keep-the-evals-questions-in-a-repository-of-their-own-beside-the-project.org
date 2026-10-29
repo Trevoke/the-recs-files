@@ -16,8 +16,8 @@ variable =RECS_EVALS_QUESTIONS= names. The checks, the judge and the
 fixtures stay in the project. The harness that runs the agent that writes
 skill text refuses that agent every read of =the-recs-files-evals= and of
 the history of =evals/cases/=, and tells it it has no access; the refusal
-is the harness's configuration, outside the agent's context. In Claude
-Code it is a hook that runs before each tool call.
+is a policy of leash, which the agent runs under, outside the agent's
+context and whatever harness runs it.
 ** Consequences
 An agent working in the project's tree comes across no question. A run
 needs the second checkout and the variable set, and fails without them.
