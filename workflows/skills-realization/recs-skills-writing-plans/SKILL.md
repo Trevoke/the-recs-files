@@ -53,8 +53,10 @@ loop stops.
 **6. What the writer is given, and what it is kept from.** The writer gets the
 reading list, the current text, the one change, and each failure as a record
 section with the fault in the records' words. It is never given, and is told
-not to read, the eval's questions, their replies or the runs
-(`evals/cases/*/prompts`, `evals/cases/*/prompt.md`, `evals/runs/`).
+not to read, the eval's questions, their replies or the runs: the questions
+are not in the tree
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`),
+and it reads nothing under `evals/runs/`, nor the history of `evals/cases/`.
 
 ## Handoff
 

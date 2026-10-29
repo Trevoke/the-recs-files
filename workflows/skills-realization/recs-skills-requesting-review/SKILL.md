@@ -20,8 +20,9 @@ told so in its prompt.
 - for each changed sentence, the record section the plan says it realizes.
 
 It is not given, and is told not to read, the eval's questions, replies,
-runs or scores (`evals/cases/*/prompts`, `evals/cases/*/prompt.md`,
-`evals/runs/`). A reviewer that knows which question a sentence was tuned
+runs or scores: the questions are not in the tree
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`),
+and it reads nothing under `evals/runs/`, nor the history of `evals/cases/`. A reviewer that knows which question a sentence was tuned
 against cannot tell whether the sentence is fitted to it.
 
 ## The two questions it answers
@@ -47,8 +48,8 @@ it as open.
 
 ```
 You are read-only: read `git diff <BASE>..<HEAD>` and `git show`; run no
-`git add` or `git commit`; read nothing under evals/cases/*/prompts,
-evals/cases/*/prompt.md or evals/runs/. Open each record on this reading
+`git add` or `git commit`; read nothing under evals/runs/, nor the history
+of evals/cases/. Open each record on this reading
 list from disk: <reading list>. For each changed sentence in the diff, with
 the section the plan gives it (<sentence → section>), answer: does it state
 and guide what that section means, with the reason the record gives; is it

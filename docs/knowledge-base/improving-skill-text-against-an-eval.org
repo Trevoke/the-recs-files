@@ -8,7 +8,7 @@ Sources: the runs below, and the papers and tools named under each heading.
 
 * Three runs of a wording cannot tell one wording from another
 The original wording, run 20 times on the question in
-`evals/cases/citing-records-to-the-record-keeper/prompts/renewing-a-reserved-book.md`,
+`cases/citing-records-to-the-record-keeper/prompts/renewing-a-reserved-book.md` in `the-recs-files-evals`,
 left 10 to 30 citations per reply without their title: mean 15.6, standard
 deviation 4.5. No reply passed.
 
@@ -60,7 +60,7 @@ left to the proposer's instructions and to the record keeper's review.
 
 * The loop in use from 2026-10-26
 - Questions :: six on the library-loans fixture,
-  `evals/cases/citing-records-to-the-record-keeper/prompts/`. Four train
+  `cases/citing-records-to-the-record-keeper/prompts/` in `the-recs-files-evals`. Four train
   (renewing a reserved book, auditing the code, mapping a successor, framing
   a complaint). Two are held out (counting renewals, releasing a held copy);
   the proposer never sees them.
@@ -124,8 +124,9 @@ this comparison on 2026-10-26, from attempt 2 on. It was chosen after it
 would change attempt 2's verdict; the held-out check guards the result.
 
 * What the proposer can read
-The held-out questions are in the repository, so the proposer can read
-them; what it is never given is their replies or their failures. Before
+The questions are kept in `the-recs-files-evals`, outside the project's tree
+(`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`);
+the proposer is given neither them, nor their replies, nor their failures. Before
 attempt 3 the proposer read the scorer's raw results under
 `/tmp/score-citations-*`, and one of them held the original wording's
 replies to the held-out questions. That file was moved out of `/tmp` before

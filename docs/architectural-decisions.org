@@ -13,6 +13,4 @@
 - ADR-20261019-m123 :: [[./architectural-decisions/adr-20261019-m123-the-code-realization-skills-are-a-prototype-adapted-from-superpowers.org][The code realization skills are a prototype adapted from superpowers]]
 - ADR-20261026-77gd :: [[./architectural-decisions/adr-20261026-77gd-identify-a-record-by-the-date-it-was-drafted-and-four-random-characters.org][Identify a record by the date it was drafted and four random characters]]
 - ADR-20261026-y9zt :: [[./architectural-decisions/adr-20261026-y9zt-a-record-refers-to-another-record-by-an-org-link-to-its-file.org][A record refers to another record by an org link to its file]]
-
-* Proposed
 - ADR-20261029-cfj8 :: [[./architectural-decisions/adr-20261029-cfj8-keep-the-evals-questions-in-a-repository-of-their-own-beside-the-project.org][Keep the evals' questions in a repository of their own, beside the project]]

@@ -26,7 +26,9 @@ disk. Where the plan and a record disagree, stop and raise it.
    change and the section it realizes, each failure as a record section with
    the fault in the records' words, the house style from AGENTS.md "Making a
    record change", and the instruction to write files only and read nothing
-   under `evals/cases/*/prompts`, `evals/cases/*/prompt.md` or `evals/runs/`.
+   under `evals/runs/`, nor the history of `evals/cases/`; the questions are
+   not in the tree
+   (`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`).
    It writes one change across the files that carry the sentence.
 3. Commit the attempt alone, with the section it realizes in the body. Only
    this agent runs `git add` and `git commit`.

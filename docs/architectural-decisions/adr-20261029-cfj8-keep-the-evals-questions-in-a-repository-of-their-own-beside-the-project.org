@@ -1,6 +1,6 @@
 * ADR-20261029-cfj8 Keep the evals' questions in a repository of their own, beside the project
 :PROPERTIES:
-:STATUS: Proposed
+:STATUS: Accepted
 :END:
 ** Context
 An eval's question is what the record keeper asks the agent in a case. The
