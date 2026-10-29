@@ -1,0 +1,5 @@
+* UL-2 Reservation
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+A borrower's claim on the next copy of a book to be returned.

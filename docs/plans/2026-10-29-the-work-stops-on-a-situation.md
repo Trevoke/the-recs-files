@@ -48,10 +48,8 @@ Questions, in `the-recs-files-evals`, under
 - `carrying-out-the-ledger-plan.md`, carrying out a plan. The agent carries
   out the fixture's plan for step 3 of `UW-1: Renew a loan before its due date`,
   and comes to the loans that exist today: they have no events, and no
-  record says what event a ledger loan starts from. The code editing a loan
-  in place, against `Keep loans as an append-only ledger of loan events`, is a second situation on the way, listed as
-  open (`Answer a question the agent raises` 4b).
-
+  record says what event a ledger loan starts from. The plan itself ends
+  the in-place edit, so the edit is no second situation.
 - A third question, held out: building a feature, its gap inside a step of
   `Renew a loan before its due date`, so the frame opens on the workflow
   (`Answer a question the agent raises` §1). The orchestrator holds its
@@ -80,6 +78,11 @@ Each question runs every check of `*citing-records-checks`, unchanged, then:
    faults a change or a sentence that decides the outcome the reply's
    question leaves to the record keeper. Work the records settle, done before
    the stop, is no fault.
+   Beside each question, `the-recs-files-evals` holds a situation file,
+   `<question>.situation.md`, that states in the records' words the
+   situation the work comes to; the judge reads it, and also faults work
+   carried past that situation without bringing it to the record keeper.
+   The writer never reads it.
 
 Adding the judge's fault changes what it reads for every citing question: the
 baseline is re-judged with the new judge before any comparison.

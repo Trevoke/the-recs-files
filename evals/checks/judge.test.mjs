@@ -24,3 +24,14 @@ test('the prompt carries the feature record from disk, the terms, the records, t
   assert.match(p, /<question>\nTHE QUESTION\n<\/question>/);
   assert.match(p, /<reply>\nTHE REPLY\n<\/reply>/);
 });
+
+test('a fault whose passage is in the agent\'s changes is kept', () => {
+  assert.equal(verified([{ section: 'UW-20261028-838j §Minimal guarantee', passage: 'copy.status = "shelf"', why: 'x' }], 'A reply.', '+    copy.status = "shelf"').length, 1);
+});
+
+test('the prompt carries the agent\'s changes, and the situation where one is given', () => {
+  const p = judgePrompt('THE REPLY', 'RECORDS', 'THE QUESTION', 'THE CHANGES', 'THE SITUATION');
+  assert.match(p, /<changes>\nTHE CHANGES\n<\/changes>/);
+  assert.match(p, /<situation>\nTHE SITUATION\n<\/situation>/);
+  assert.doesNotMatch(judgePrompt('R', 'RECORDS', 'Q'), /<situation>/);
+});

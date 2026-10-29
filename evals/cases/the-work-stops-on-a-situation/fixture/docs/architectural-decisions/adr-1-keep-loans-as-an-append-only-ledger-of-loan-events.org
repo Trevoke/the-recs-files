@@ -1,0 +1,12 @@
+* ADR-1 Keep loans as an append-only ledger of loan events
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+** Context
+A loan's history decides disputes: when it was lent, renewed and returned.
+** Decision
+We will keep every loan as an append-only ledger of loan events, and derive
+a loan's state from them.
+** Consequences
+A renewal is a new event, never an edit. A loan's due date is read from its
+latest event.

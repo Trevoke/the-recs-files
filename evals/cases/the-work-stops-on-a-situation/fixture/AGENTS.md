@@ -1,0 +1,527 @@
+# How to work with this project
+
+This project keeps records as the source of truth for its realization, and uses strict taxonomy and
+terminology. Speak using this language, refer to these concepts. Where a concept
+or a word is missing, first attempt to combine existing concepts, or build on
+top of it (e.g. if there is a "refund policy" and we must make sure this refund
+policy is followed, before saying "checker" try "refund policy validator").
+
+The records are the source of truth for the realization. The people working on the
+project, and their context, are the source of truth for the records; a record
+goes out of date when they move on and it does not, and bringing it back is
+theirs to direct. Make no record change on your own; make one only at the
+record keeper's direction.
+
+## The projections
+
+This project keeps these projections.
+
+- **Vision** — `docs/vision.org`, a single file: no projection, no numbered records
+- **Ubiquitous language** (UL-n) — `docs/ubiquitous-language.org`
+- **Architectural decisions** (ADR-n) — `docs/architectural-decisions.org`
+- **Features** (F-n) — `docs/features.org`
+- **User workflows** (UW-n) — `docs/user-workflows.org`
+- **Message catalog** (MSG-n) — `docs/message-catalog.org`
+
+## The realization modality
+
+This project's realization modality is code: the Python modules under `src/`.
+
+## Making a record change
+
+When making a record change, be brief. Define by defining: state what something is; do not
+compare it to something it isn't.
+
+Examples:
+```
+# Good
+a quote is the price offered for a set of line items, valid until its expiry date, before anything is reserved
+
+# Bad
+a quote offers, it does not oblige
+```
+
+A good record follows the single responsibility principle, that is to say, it
+has one and only one reason to change. The scale of the one thing can vary (and
+therefore its consequences), but it must be one thing. Help the record keeper.
+
+Examples:
+```
+# Good
+X-1: We use pub/sub for notifications
+
+# Bad
+X-1: We use pub/sub for notifications and we also send authentication emails
+```
+
+```
+# Good
+X-1: A user can create a widget
+
+# Bad
+X-1: A user can create a widget and change their password
+```
+
+A record's title is a headline: it states what the record decides, defines,
+lets a user do, or refuses, so a reader who stops at the title knows the
+substance and opens the record only for the detail.
+
+Examples:
+```
+# Good
+X-1: Use pub/sub for job notifications
+
+# Bad
+X-1: The job notifies by message and keeps none
+```
+
+A record lives in a file of its own under its category's directory —
+`docs/features/f-12-<slug>.org` — headed `* F-12 <title>`, the slug made from
+the title. The projection, `docs/features.org`, lists every standing or
+proposed record as `- F-12 :: [[./features/f-12-<slug>.org][<title>]]`, in
+number order, beside the projection's preamble and any section that belongs to
+the projection rather than to one record. A record's status, and the records a
+successor supersedes, are properties in its drawer, `:STATUS:` and
+`:SUPERSEDES:`. A proposed record's line sits under a `* Proposed` heading at the
+end of the projection. A record's file, its line in the projection, and its
+heading carry the same title, and a clarification that gives a record a new
+title changes all three.
+
+A heading, a property, a projection line, a table row and a `#+` keyword line
+are each written on one line, however long it runs; prose may wrap. A record's
+drawer holds each property once. A record refers to another record by an org link to its file, its description the record name, and the link sits whole on
+one line.
+
+Good:
+```org
+* ADR-12 Retry each provider's failed jobs from one queue of its own
+:PROPERTIES:
+:STATUS: Proposed
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]], [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
+:END:
+** Context
+The shared queue lets one provider's outage hold up every other provider's
+retries, as
+[[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]]
+found.
+```
+```org
+- ADR-12 :: [[./architectural-decisions/adr-12-retry-each-providers-failed-jobs-from-one-queue-of-its-own.org][Retry each provider's failed jobs from one queue of its own]]
+```
+
+Bad: the heading wrapped. Org reads "from one queue of its own" as body text,
+and the drawer as no longer the record's, so its status is lost:
+```org
+* ADR-12 Retry each provider's failed jobs
+  from one queue of its own
+:PROPERTIES:
+```
+
+Bad: a property wrapped. Org rejects the whole drawer, status included:
+```org
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry
+  every failed job from one shared queue]]
+```
+
+Bad: a property repeated. Org keeps only the last, and ADR-4 is lost:
+```org
+:SUPERSEDES: [[./adr-4-retry-every-failed-job-from-one-shared-queue.org][ADR-4: Retry every failed job from one shared queue]]
+:SUPERSEDES: [[./adr-5-retry-a-failed-job-three-times-before-giving-up.org][ADR-5: Retry a failed job three times before giving up]]
+```
+
+Bad: a record referred to in plain text, and wrapped. No search for the title finds it:
+```org
+The shared queue lets one provider's outage hold up the rest, as ADR-4: Retry
+every failed job from one shared queue found.
+```
+
+Bad: a projection line wrapped. The title no longer matches the heading:
+```org
+- ADR-12 :: [[./architectural-decisions/adr-12-retry-each-providers-failed-jobs-from-one-queue-of-its-own.org][Retry each
+  provider's failed jobs from one queue of its own]]
+```
+
+A new record is written to its file with `:STATUS: Proposed` and its line under
+`* Proposed`, committed alone, and then shown to the record keeper with every
+sentence it falsifies and the wording that replaces each: they agree to a file
+that exists. Nothing stands before they agree. Accepting it, once they have,
+marks it Accepted, moves its line out from under `* Proposed` and writes the
+replacements, in a commit of its own.
+
+## A feature record's form
+
+A feature record is one feature — authenticating as an admin, printing a tax
+report, buying stocks — stated as a list of requirements in EARS (Mavin's Easy
+Approach to Requirements Syntax). Each requirement is one sentence in one of
+five patterns, its clauses always in this order:
+
+| Pattern | For | Sentence |
+|---|---|---|
+| Ubiquitous | what always holds | The <system> shall <response>. |
+| State driven | what holds while a state lasts | While <state>, the <system> shall <response>. |
+| Event driven | the response to a trigger | When <trigger>, the <system> shall <response>. |
+| Optional feature | what holds where an option is in place | Where <option>, the <system> shall <response>. |
+| Unwanted behaviour | a refusal or a failure | If <condition>, then the <system> shall <response>. |
+
+A requirement may combine the keywords, in the order While, When; If-then
+stands in for When where the trigger is unwanted.
+
+- **One trigger to a sentence.** A sentence with two triggers is two
+  requirements.
+- **The subject of "shall" is the system, or a part of it the ubiquitous
+  language names.**
+- **No sequence.** Each requirement holds in any order and from any user
+  workflow that reaches the feature. The order of things, and what a user may
+  do next, are the user workflow's to say.
+- **A refusal cites its message, never quotes it.** "If the book is reserved,
+  then the library shall refuse the renewal with
+  [[../message-catalog/msg-4-a-reserved-book-cannot-be-renewed.org][MSG-4: A reserved book cannot be renewed]]."
+  The text lives in the message catalog alone.
+- **Examples are optional.** An example sits under the one requirement it
+  illustrates, in plain prose. It decides nothing the requirement does not, so
+  adding or rewording one changes the record without superseding it. Changing,
+  adding or removing a requirement supersedes the record.
+
+### Numbered requirements
+
+Requirements are numbered from 1, and the number is the requirement's section:
+a citation of one requirement is `F-12 §2: A borrower can renew a loan`. A
+number is never reused within its record. A successor numbers its own
+requirements from 1, and its `:SUPERSEDES:` line refers to each record it supersedes by a link:
+`:SUPERSEDES: [[./f-12-a-borrower-can-renew-a-loan.org][F-12: A borrower can renew a loan]]`.
+The sweep of the old identifier repoints each citation of a section of the old
+record to the successor's sections that carry what the citing site rests on.
+
+```org
+* F-12 A borrower can renew a loan
+
+1. When a borrower renews a loan, the library shall set the loan's due date
+   one loan period after the renewal date.
+   - The one where a 14-day loan renewed on 1 October is due on 15 October.
+2. If the book is reserved, then the library shall refuse the renewal with
+   [[../message-catalog/msg-4-a-reserved-book-cannot-be-renewed.org][MSG-4: A reserved book cannot be renewed]].
+3. While a loan is overdue beyond the grace period, the library shall refuse
+   any renewal of it with
+   [[../message-catalog/msg-5-an-overdue-loan-cannot-be-renewed.org][MSG-5: An overdue loan cannot be renewed]].
+4. Where the library sets a renewal limit, the library shall refuse a renewal
+   past it with
+   [[../message-catalog/msg-6-this-loan-has-reached-its-renewal-limit.org][MSG-6: This loan has reached its renewal limit]].
+```
+
+### Where each thing about a feature is held
+
+A feature is read across several records, each holding one kind of thing:
+
+| What | Where it is held |
+|---|---|
+| What the system does, and when | This feature record, one EARS requirement to a sentence |
+| What that looks like in a case | An example, under the requirement it illustrates |
+| What a user does, in what order, and what they may do next | The steps of the user workflow that reaches the feature |
+| What a user gets when it succeeds | That user workflow's success guarantee |
+| Why it matters, and to whom | That user workflow's Stakeholders & Interests |
+| The exact text of a refusal or failure | The message catalog, cited from the requirement |
+| What a word means, or what a thing is declared as | The ubiquitous language |
+| Why it is built this way | An architectural decision |
+
+A sentence drafted into a feature goes where the table puts it: "nothing inside
+the job can raise it" is a requirement, rewritten in EARS in this record;
+"steer without stopping" is a workflow step; "three bad papers out of two
+hundred stop what comes next, rather than quietly producing a summary of the
+rest" is a stakeholder's interest. Moving a sentence to its place is a record
+change like any other: each destination is proposed with its wording, and
+nothing moves before the record keeper agrees.
+
+## Relationships between records
+
+A user workflow record may refer to feature records, message catalog records,
+ubiquitous language records, as well as other user workflow records.
+
+A feature record may refer to message catalog records, ubiquitous language
+records, and other feature records.
+
+An architectural decision record may refer to ubiquitous language records and other
+architectural decision records.
+
+A ubiquitous language record may refer to other ubiquitous language records.
+
+## Records are read from disk
+
+A record's text is in its own file, and is read from there.
+
+Open a record's file before you cite a section of it, measure code, a test, a
+plan or a design against it, assert its text, propose a change to it, or frame
+a question to the record keeper with it. Its title tells you which records bear on the
+work; it is never the evidence that something conforms. Open each record that
+bears, and no others: a record referred to by a task, by a record you opened, or by a
+citation in the code you are changing bears; a title that only sounds near the
+work is opened to find out.
+
+Whatever this file inlines is what a session and every subagent it dispatches
+carry for the rest of it. A session that changes a record therefore carries a stale
+copy of it from the moment it saves. Cite what the file on disk says
+rather than what this one quotes.
+
+# Which category a record belongs in
+
+- **Vision** what the system is for, who it serves, the domain it works in and its bounded contexts.
+- **Ubiquitous language** is taxonomy: what a word means, in a sentence or two, and nothing about behaviour.
+- **Architectural decisions** a pattern the codebase follows, and why.
+- **Features** the surface behavior: what a thing takes and what it produces, as requirements in EARS.
+- **User workflows** what a person is trying to achieve, step by step, with the extensions where it goes otherwise.
+- **Message catalog** the exact text the system gives when it refuses something or something goes wrong. Tests assert this text, so it changes here before it changes in code.
+
+Two tests settle the hard cases. If describing the record names a verb, an
+argument, or a sequence of events, it is a feature and not an architectural
+decision. If a word would survive a change of realization it is ubiquitous
+language; if changing the realization would retire the word, it belongs in an
+architectural decision — "middleware" is the worked example: it names how a
+thing is built, so it lives in the decision that chose to build it that way.
+
+# How to talk to the record keeper
+
+Writing software is about managing combinations of decisions.
+When the record keeper wants to make a change, check the existing records. When
+you need to talk to the record keeper about it, cite the records.
+
+A citation is a record's record name with every section of it the sentence
+means written after the number, each written out and in the record's
+order, in backticks, on one line: `X-8: Frobnicate the widgets`,
+`X-8 §2: Frobnicate the widgets`, `X-8 §1, §3: Frobnicate the widgets`. A
+reference is any mention of a record: by its record name, its number, its
+title, or a description of it.
+
+The record keeper reads a record by its title. A citation bounds what you say
+to that record and gives its context, and each later reference by title keeps
+that context in front of them, so they follow and answer from the record
+itself. An identifier is a code they would look up; a title tells them which record it
+is and what it is about. The first
+time a reply refers to a record, it cites it; a reply is everything you say
+between two of the record keeper's messages, working notes included. `X-8`,
+`X-8 §2` or "the frobnication feature" before the reply has cited the record
+reaches them as no record at all, unless it repeats the words they used for it. Once a reply has cited a record, it refers to it again by its citation, by its
+title in backticks (`Frobnicate the widgets`, `Frobnicate the widgets §2`), or
+by a description of it, such as "the frobnication feature"; `X-8` or `X-8 §2` after
+the citation hands them the code to look up again, and the record's context
+goes with it. The first time a reply refers to a section, it gives the section
+in a citation, and every section of one record a sentence means goes in that
+one citation.
+Directly under the line that cites it, a list item of its own gives § and the
+section's number, then what that section says, or a quote of the section sits
+there instead. A record not yet on disk has no sections to number: refer to its
+sections by what they say. A quote of a record's text is a code block under the
+line that refers to what it quotes, exactly as the file holds it. Everything
+you say reaches the record keeper, what you say while you work included: a
+record you are about to open, or have just opened, is cited the same way, by
+the record name its projection line carries.
+
+Good: "I'll open `X-8: Frobnicate the widgets` and `X-9: Whirl the widgets`"
+Good:
+```
+`src/widgets.py` cites `X-8 §1, §2: Frobnicate the widgets`:
+- §1: frobnicates a widget on request
+- §2: refuses a reserved widget
+
+`Frobnicate the widgets §2` has no test yet.
+```
+Good: "`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is"
+Good:
+```
+`X-8: Frobnicate the widgets` gets a successor; `X-9: Whirl the widgets` stays as it is.
+`X-9 §2: Whirl the widgets` cites `Frobnicate the widgets`, so the sweep repoints it.
+- §2: the user whirls a widget once it is frobnicated
+`src/widgets.py` misses `X-8 §3: Frobnicate the widgets`.
+- §3: refuses a widget past its frobnication limit
+```
+Good: "A successor to `X-8: Frobnicate the widgets` would keep the refusal of a reserved widget and add a requirement that notifies the widget's owner"
+Good: "`X-8: Frobnicate the widgets` says what a frobnicated widget becomes; it says nothing about how the widget is stored, so `src/widgets.py` conforms to `Frobnicate the widgets`"
+Good:
+```
+`whirl` in `src/widgets.py` edits the widget in place, which `X-9: Whirl the widgets` rules out.
+The test of `whirl` asserts the edit, so it misses `Whirl the widgets` too.
+```
+Good:
+```
+`X-8 §3: Frobnicate the widgets` has no code yet.
+- §3: refuses a widget past its frobnication limit
+
+This bears on where we stopped: `Frobnicate the widgets §3` is the frobnication limit, and `X-9: Whirl the widgets` has no step that reaches it.
+```
+Good:
+```
+`X-8 §2, §3: Frobnicate the widgets` gets a successor:
+- §2: refuses a reserved widget
+- §3: refuses a widget past its frobnication limit
+
+The successor would refuse a reserved widget, notify the widget's owner when it does, and refuse a widget past its frobnication limit.
+```
+Good:
+````
+`X-8 §2: Frobnicate the widgets` reads:
+```
+2. If the widget is reserved, then the system shall refuse the frobnication with
+   [[../message-catalog/msg-4-a-reserved-widget-cannot-be-frobnicated.org][MSG-4: A reserved widget cannot be frobnicated]].
+```
+````
+Bad: "`X-8` gets a successor" or "`X-8 §2` becomes two requirements", as a reply's first reference to the record
+Bad: "I'll open the frobnication feature and the terms it uses", as a reply's first reference to those records, where the record keeper did not call it that
+Bad: "I'll open X-8, X-9 and the terms X-8 uses"
+Bad: "`X-8` keeps the refusal of a reserved widget", after the reply cited `X-8: Frobnicate the widgets`
+Bad: "`X-8 §2` has no test yet", after the reply cited `X-8 §2: Frobnicate the widgets`
+Bad: "`X-8: Frobnicate the widgets`" with "- §2: refuses a reserved widget" under it, as the reply's first reference to §2
+Bad: "`X-8 §1: Frobnicate the widgets` and `X-8 §3: Frobnicate the widgets` carry over"
+Bad: "`X-8 §3, §1: Frobnicate the widgets` carry over"
+Bad: "`X-8 §1, §3: Frobnicate the widgets`: §1 carries over, §3 becomes two requirements"
+Bad: "The successor to `X-8: Frobnicate the widgets` adds a new §3"
+
+## Framing a question
+
+When the work — a plan, a feature, a brainstorm, a clarification — comes to a
+situation that needs the record keeper's decision, one no record settles,
+stop and bring it to them framed from the records. The frame gives them the
+question's context, bounded, and a concrete case of it, so they answer from
+their own records and need not work out which records, which parts of them,
+or which situation you mean.
+
+The frame runs in this order:
+- the user workflow the situation is in, cited with the step or extension
+  that applies, or each of them where it is in more than one; where no user
+  workflow holds it, say so;
+- each other record that bears, cited with the sections that do;
+- the situation, stated in the words the records have for it;
+- an example of it: a phrase starting "The one where", which says what the
+  example is about as a title does for a record, then numbered steps, each
+  one thing an actor or the system does, with concrete actors, values and
+  dates. The citations above it are enough, so the steps carry none;
+- the question, pointed at the step whose outcome no record settles.
+
+```
+We are in `UW-X §3: Frobnicate a widget`.
+- §3: the user frobnicates the widget they whirled
+
+`X-8 §1, §2: Frobnicate the widgets`
+- §1: frobnicates a whirled widget on request
+- §2: refuses a reserved widget with `MSG-4: A reserved widget cannot be frobnicated`
+
+The situation: no record says what the user is told about a reservation that
+takes away their frobnication.
+
+The one where Mara reserves Ola's widget while Ola is still whirling it
+1. Ola whirls widget 17 on 3 March at 09:00.
+2. Mara reserves widget 17 on 3 March at 09:30.
+3. Ola asks to frobnicate widget 17 on 3 March at 10:00.
+4. The system refuses with `MSG-4: A reserved widget cannot be frobnicated`.
+
+Question: at step 2, is Ola told that Mara's reservation ends her frobnication,
+or only at step 4?
+
+Also open: no record says how long a reservation holds a widget.
+```
+
+Where the decision is a choice between options, the one example is played out
+under each option with the same actors, values and dates, so that only the
+option changes: the one where Ola frobnicates widget 17 a fourth time, step 4
+refusing under a fixed limit of three and frobnicating under a limit the
+record keeper sets at five.
+
+One situation at a time: the one the work stops on, or the one the record
+keeper's question is about. Each other situation found on the way is listed
+as open, in one sentence that says what it is about, with no example, as the
+`Also open:` line above; the record keeper picks which to frame next. A
+question of theirs that is about no such situation gets the facts it asked
+for, with each situation found that the work does not stop on listed as open,
+and none framed.
+
+The workflow comes first because it is what the user is trying to achieve; the
+other records are what constrain it. A question that opens on a feature, a
+message, or a line of code has skipped the part that says why any of it
+matters, and asks the record keeper to reconstruct it. The situation is named
+with the records' word for it; the mechanism that serves it — a loop, a field,
+which function calls which — comes after the situation, named as serving it,
+where it is what the question is about.
+
+Then wait: act on nothing the question leaves to the record keeper before they
+answer, and if they cannot answer from what you brought, bring the record, the
+section or the example that is missing.
+
+Never write a new term into any file — a record, a design document, a sketch, a
+comment — before the record keeper has agreed to that specific word. Propose candidates,
+wait, and then sweep the agreed word everywhere in one pass. Check each
+candidate against words the taxonomy already owns.
+
+# How to work on the realization
+
+Two kinds of comment are valid in code, and no third. One points at a record, by its record name. The other points at a heading of `docs/knowledge-base/`,
+where the code performs a technical operation whose reason the code does not
+show.
+
+A comment is the citation and nothing else. It carries no prose of its own — no
+sentence explaining the mechanism, naming a constraint, giving an order
+dependency, naming an idiom, warning a reader, or rejecting an alternative.
+Each of those is either a heading in the knowledge base to point at, or it is
+not said. A comment therefore asserts nothing about code elsewhere, since a
+citation asserts nothing at all: what some other module does is a record's to
+say, or the knowledge base's.
+
+What a citation must never do is restate what it points at. A restatement can go
+obsolete where the record or the entry it copies cannot, and a citation standing
+beside a copy does not redeem the copy: the citation is what carries the
+content, and the paraphrase beside it is what drifts. The rule binds a test's
+comments as it binds the code's, and applies at every site.
+
+A citation is laid out one record to a line —
+`ADR-13 §Consequences: One retry queue per provider` — and
+where a comment points at several, the citations lead it. A citation refers to the section carrying the claim the comment makes, not the record's most familiar
+section. And citing what refuses a rule does not discharge the rule: where the
+claim rests on a feature's rule, the feature is cited, whatever message catalog
+entry stands beside it.
+
+Assume any other comment is wrong. On coming across one, dispatch a subagent to
+find whether a record can be pointed to. If one can, the comment is replaced by
+the citation; if none can, the comment is removed.
+
+A test's check message is a comment for this rule: a record it rests on is a
+citation line above the check, and the message says what the check asserts.
+
+`docs/knowledge-base/` holds what this project has established about its
+subject and its tools: the source taxonomy it borrows from, how a library it is
+built on actually behaves, anything concrete that took work to find out. An
+entry says what it establishes and where that came from — a manual, a
+specification, a run — and where the thing can be executed it carries the code
+that shows it and the output that code produced. Headings say what an entry
+establishes, so a reader finds one by what they need to know.
+
+Read what is there before writing a comment that explains a mechanism, and add
+to it when a fact costs you a run to establish.
+
+Only one agent at a time may run `git add` or `git commit` in a worktree. The
+index is shared, so two agents touching disjoint files are still unsafe: one
+agent's `git add` lands inside the other's commit. Reviewers are read-only,
+should be told so explicitly, and can read a frozen SHA with `git show` while a
+writer works.
+
+A second worktree gives a second index and does not, on its own, give a second
+copy of the code under test. Where the ecosystem links a package to one path,
+every test run resolves it there whatever directory it starts in, and a
+worktree's tests read the main tree's modules, reporting green or red for code
+the run never touched. Close that the way the ecosystem allows — record here
+how this project does it. With both, two agents may write at once; with only
+the index, the second is testing the first's code and nothing says so.
+
+A worktree sits under a directory `.gitignore` holds. It is a second checkout of
+this project: the same file names, the same shapes, and no appearance in any
+`git status` but its own. A sweep walking the tree from the root therefore
+edits a branch nobody is working on while the main tree reports clean. Confine
+a sweep to the directories it means — the source tree, `docs/` — rather than to
+the repository root. Repair reaches the other worktree with `git -C <path>` from
+this one.
+
+# Which skills to use
+
+This project's development flow lives in the `recs-*` skills. Where a `recs-*`
+skill and a `superpowers:*` skill share a purpose — brainstorming, writing
+plans, executing plans, subagent-driven development, TDD, systematic debugging,
+requesting and receiving code review, verification before completion, finishing
+a development branch, git worktrees — use the `recs-*` one.
+`superpowers:dispatching-parallel-agents` and `superpowers:writing-skills` have
+no `recs-*` counterpart and are used as-is. A new record, and any sweep of an
+agreed term, goes through `recs-writing-records`.

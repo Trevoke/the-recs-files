@@ -1,0 +1,5 @@
+* UL-3 Loan period
+:PROPERTIES:
+:STATUS: Accepted
+:END:
+The number of days a loan runs before it is due, set by the library.

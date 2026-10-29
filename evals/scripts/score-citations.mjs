@@ -17,7 +17,7 @@ function budget(said) {
 }
 // UW-20261028-838j: Answer a question the agent raises
 const supporting = ['sections in record order', 'quotes in code blocks'];
-const checks = ['judged meaning', 'exact titles', 'again by citation or title', 'sections first cited', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line'];
+const checks = ['judged meaning', 'exact titles', 'again by citation or title', 'sections first cited', 'section before title', 'sections in one citation', 'sections listed under their citation', 'sections in record order', 'no sections of a record not on disk', 'quotes in code blocks', 'in backticks', 'one line', 'records unchanged'];
 
 function options(argv) {
   const opts = { split: 'train', repeat: 3, jobs: 2, out: null, against: null, log: null, from: null, pool: null, keep: null, label: null, question: null };
@@ -64,7 +64,8 @@ function reply(result) {
   const components = result.gradingResult?.componentResults || [];
   const byCheck = Object.fromEntries(components.map((c) => [c.assertion?.metric, c]));
   const titles = byCheck['exact titles'] && counts(byCheck['exact titles'].reason || '');
-  if (!titles) return { scenario, error: result.error || 'no citation of a record on disk' };
+  if (components.length === 0) return { scenario, error: result.error || 'no check ran' };
+  const total = titles?.total || 1;
   const faults = {};
   const excerpts = {};
   for (const check of checks) {
@@ -73,8 +74,9 @@ function reply(result) {
     if (found?.excerpts.length) excerpts[check] = found.excerpts;
   }
   const sum = Object.values(faults).reduce((a, b) => a + b, 0);
+  if (!titles && sum === 0) return { scenario, error: result.error || 'no citation of a record on disk' };
   const bounds = checks.filter((c) => !supporting.includes(c)).every((c) => faults[c] === 0) && !(byCheck['judged meaning'] && !byCheck['judged meaning'].pass);
-  return { scenario, total: titles.total, faults, score: sum / titles.total, pass: result.success === true, bounds, excerpts, budget: budget(result.response?.metadata?.said) };
+  return { scenario, total, faults, score: sum / total, pass: result.success === true, bounds, excerpts, budget: budget(result.response?.metadata?.said) };
 }
 
 function mean(xs) {
