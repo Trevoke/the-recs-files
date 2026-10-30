@@ -13,9 +13,9 @@ A loan's due date changes only on a renewal the library allows.
 The loan is due one loan period after the renewal date.
 ** Main success scenario
 *** 1. Borrower asks to renew a loan
-*** 2. Library finds no reservation on the book (F-1: A borrower renews a loan for one more loan period unless the book is reserved)
+*** 2. Library finds no reservation on the book ([[../features/f-1-a-borrower-renews-a-loan-for-one-more-loan-period-unless-the-book-is-reserved.org][F-1: A borrower renews a loan for one more loan period unless the book is reserved]])
 *** 3. Library sets the new due date
 *** 4. Borrower sees the new due date
 ** Extensions
 *** 2a. The book is reserved
-**** 2a1. Library refuses the renewal with MSG-1: A reserved book cannot be renewed; the use case ends
+**** 2a1. Library refuses the renewal with [[../message-catalog/msg-1-a-reserved-book-cannot-be-renewed.org][MSG-1: A reserved book cannot be renewed]]; the use case ends

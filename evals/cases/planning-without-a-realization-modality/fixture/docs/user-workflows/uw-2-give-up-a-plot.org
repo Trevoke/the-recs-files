@@ -14,7 +14,7 @@ The gardener holds no plot, and the plot is held by the next gardener on
 the waiting list, or is free.
 ** Main success scenario
 *** 1. Gardener tells the coordinator they are giving up their plot
-*** 2. Coordinator records the plot given up (F-2: A gardener can give up a plot)
+*** 2. Coordinator records the plot given up ([[../features/f-2-a-gardener-can-give-up-a-plot.org][F-2: A gardener can give up a plot]])
 ** Extensions
 *** 2a. The waiting list is empty
 **** 2a1. The plot stays free; the use case ends
