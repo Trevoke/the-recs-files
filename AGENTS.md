@@ -389,12 +389,10 @@ Bad: "The successor to `X-8: Frobnicate the widgets` adds a new §3"
 
 When the work — a plan, a feature, a brainstorm, a clarification — comes to a
 situation that needs the record keeper's decision, one no record settles,
-stop and bring it to them framed from the records. The work stops at the
-first such situation it comes to and carries nothing past it, since whatever
-is built past it rests on an outcome only the record keeper can give. The
-frame gives them the question's context, bounded, and a concrete case of it,
-so they answer from their own records and need not work out which records,
-which parts of them, or which situation you mean.
+stop and bring it to them framed from the records. The frame gives them the
+question's context, bounded, and a concrete case of it, so they answer from
+their own records and need not work out which records, which parts of them,
+or which situation you mean.
 
 The frame runs in this order:
 - the user workflow the situation is in, cited with the step or extension
