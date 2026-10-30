@@ -119,3 +119,17 @@ given the questions, their replies or the runs. It runs under leash with
 `workflows/skills-realization/leash/write-skill-text.sh`, never as a subagent
 (`ADR-20261029-cfj8: Keep the evals' questions in a repository of their own, beside the project`).
 This plan names the questions and quotes none of them.
+
+### Attempt 2: a situation listed as open is left undecided too
+
+Attempt 1 was reverted: the replies that decided an earlier situation in code
+saw it, said no record settled it, picked an outcome, and listed it as open.
+The text's "Each other situation found on the way is listed as open" reads
+as leave to build past it.
+
+- File: AGENTS.md "Framing a question", the paragraph "One situation at a
+  time", and each copy.
+- Realizes `UW-20261028-838j 4b, §Minimal guarantee: Answer a question the agent raises`.
+- What it states: a situation listed as open is the record keeper's to
+  decide as much as the one framed, so the work builds nothing on it either;
+  listing it says what is left undecided, not what was decided.
