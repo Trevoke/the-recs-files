@@ -309,6 +309,35 @@ Two things the attempts showed about the skill text:
   opened" among a record's roles, and replies opened with the files they
   opened, by bare identifier.
 
+* A judge that misreads a defined term sank both attempts at stopping
+Established 2026-10-30 on the case =the-work-stops-on-a-situation=, under
+`UW-20261028-838j §Trigger, §Minimal guarantee: Answer a question the agent raises`.
+The baseline showed 9 of 24 replies on the ledger plan deciding an outcome
+in code before the record keeper answered. Two attempts aimed at it,
+`7e13275` and `c4eeae1`, were discarded: pooled gaps of 0.044 and 0.013
+against margins of 0.059 and 0.063, 24 replies a question.
+
+Nearly every one of those faults was one choice: what due date the
+returned event carries, once a loan's due date is read from its latest
+event. The fixture's `UL-1: Loan` ends a loan the day it is returned, so a
+returned loan is no longer due and the choice is how the code is built,
+the agent's to make. The agents had read that definition (69 of 72
+replies opened it), wrote "no record says", and the judge, which had the
+definition too, took them at their word.
+
+With the definition stated in the question's situation file
+(=the-recs-files-evals= `051efde`) and the judge told that code serving an
+outcome the records settle, a term's definition included, is no fault
+(`9da68d9`), the 72 stored replies were re-judged: 1 fault at the baseline,
+on the gap no record settles, and none under either attempt. Fresh runs
+at verification, 12 a question: none on either training question, and 1
+reply of 12 on the held-out one. The text already stopped; the attempts
+had aimed at a fault that was not one.
+
+Before an attempt aims at a fault, read each instance against the records
+the fault says nothing settles, terms included: an agent's "no record
+says" is a claim, and the judge repeats it.
+
 * No tool runs this loop off the shelf (surveyed 2026-10-29)
 A web survey on 2026-10-29 found no tool that does all of these together:
 optimizes several readable files that an outside agent such as Claude Code
