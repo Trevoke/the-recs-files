@@ -302,7 +302,7 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # UW-20261028-838j §Minimal guarantee, §1, §3, §5: Answer a question the agent raises
+      # UW-20261028-838j §Trigger, §Minimal guarantee, §1, §3, §5: Answer a question the agent raises
       # F-20261028-1mkt §1, §4, §6, §9, §10: The agent cites a record
       - type: javascript
         metric: judged meaning
@@ -399,7 +399,7 @@ tests:
       - type: javascript
         metric: cites records
         value: file://checks/citing-records.js:citesRecords
-      # UW-20261028-838j §Minimal guarantee, §1, §3, §5: Answer a question the agent raises
+      # UW-20261028-838j §Trigger, §Minimal guarantee, §1, §3, §5: Answer a question the agent raises
       # F-20261028-1mkt §1, §4, §6, §9, §10: The agent cites a record
       - type: javascript
         metric: judged meaning
@@ -449,6 +449,7 @@ tests:
         metric: one line
         value: file://checks/citing-records.js:oneLine
       # UW-20261028-838j §Minimal guarantee: Answer a question the agent raises
+      # F-20261014-pbwk §1: A record change is agreed before it stands
       - type: javascript
         metric: records unchanged
         value: file://checks/stopping.js:recordsUnchanged

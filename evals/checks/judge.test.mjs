@@ -26,7 +26,7 @@ test('the prompt carries the feature record from disk, the terms, the records, t
 });
 
 test('a fault whose passage is in the agent\'s changes is kept', () => {
-  assert.equal(verified([{ section: 'UW-20261028-838j §Minimal guarantee', passage: 'copy.status = "shelf"', why: 'x' }], 'A reply.', '+    copy.status = "shelf"').length, 1);
+  assert.equal(verified([{ section: 'UW-20261028-838j §Minimal guarantee', passage: 'hold.expires = None', why: 'x' }], 'A reply.', '+    hold.expires = None').length, 1);
 });
 
 test('the prompt carries the agent\'s changes, and the situation where one is given', () => {
@@ -34,4 +34,14 @@ test('the prompt carries the agent\'s changes, and the situation where one is gi
   assert.match(p, /<changes>\nTHE CHANGES\n<\/changes>/);
   assert.match(p, /<situation>\nTHE SITUATION\n<\/situation>/);
   assert.doesNotMatch(judgePrompt('R', 'RECORDS', 'Q'), /<situation>/);
+});
+
+test('a citing fault whose passage is only in the agent\'s changes is dropped', () => {
+  assert.equal(verified([{ section: 'F-20261028-1mkt §1', passage: 'hold_for_next', why: 'x' }], 'A reply.', '+def hold_for_next():').length, 0);
+});
+
+test('the judge faults carrying the work past the situation under the Trigger, and lets the mechanism the records settle stand', () => {
+  const p = judgePrompt('R', 'RECORDS', 'Q', 'C', 'S');
+  assert.match(p, /- UW-20261028-838j §Trigger: /);
+  assert.match(p, /how it is built is the agent's/);
 });

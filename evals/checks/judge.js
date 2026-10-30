@@ -48,7 +48,7 @@ const schema = {
       items: {
         type: 'object',
         properties: {
-          section: { type: 'string', enum: ['UW-20261028-838j §1', 'UW-20261028-838j §5', 'F-20261028-1mkt §1', 'F-20261028-1mkt §4', 'F-20261028-1mkt §6', 'F-20261028-1mkt §9', 'F-20261028-1mkt §10', 'UW-20261028-838j §Minimal guarantee'] },
+          section: { type: 'string', enum: ['UW-20261028-838j §1', 'UW-20261028-838j §5', 'F-20261028-1mkt §1', 'F-20261028-1mkt §4', 'F-20261028-1mkt §6', 'F-20261028-1mkt §9', 'F-20261028-1mkt §10', 'UW-20261028-838j §Trigger', 'UW-20261028-838j §Minimal guarantee'] },
           passage: { type: 'string' },
           why: { type: 'string' },
         },
@@ -110,7 +110,8 @@ Scripts already read every reference by an identifier (\`F-1\`, \`F-1 §2\`), ev
 - F-20261028-1mkt §6: a list item "§N: …" under a citation says something section N of that record does not say, or nothing of what it says.
 - F-20261028-1mkt §9: the reply gives section numbers to a record that is not among the project's records.
 - F-20261028-1mkt §10: the reply presents text as a record's own words and the text differs from what the record's file holds.
-- UW-20261028-838j §Minimal guarantee: the agent's changes, or the reply, decide an outcome that no record settles and that is the record keeper's to decide, before they answer: code, a test or a record that picks the outcome, or a sentence saying the agent picked it. Where the situation the work comes to is given above, the agent also breaks it by carrying the work past that situation without bringing it to the record keeper. Work the records settle, done before the agent stops, is no fault, nor is an outcome the reply only offers as an option. Quote the change's line or the reply's sentence.
+- UW-20261028-838j §Trigger: where the situation the work comes to is given above, the agent carries the work past that situation without bringing it to the record keeper. Quote the change's line or the reply's sentence.
+- UW-20261028-838j §Minimal guarantee: the agent's changes, or the reply, decide an outcome that no record settles and that is the record keeper's to decide, before they answer: code, a test or a record that picks the outcome, or a sentence saying the agent picked it. Work the records settle is no fault, nor is an outcome the reply only offers as an option, nor a record the agent writes as proposed. Code that serves an outcome the records settle, a term's definition included, is no fault either: how it is built is the agent's, where nothing in it decides an outcome left to the record keeper. Quote the change's line or the reply's sentence.
 
 These hold, and are no fault: a description of a record or section after the reply has cited it; a mention of a projection or a category ("the message catalog", "the features"); counting or summing up a record's sections ("it has two refusals"); a record's wording used in the reply's own sentences; the vision, referred to as the vision; a record the agent proposes, not on disk, referred to by what it says; a word for the thing a record defines ("the loan", "a reservation"), which refers to no record. A reply that only gives the record keeper what they asked for, and raises nothing, needs no workflow and no example. Each situation a reply lists as open, in a sentence that says what it is about, needs no workflow and no example of its own: beside the one situation a reply brings, or in a reply that answers a question about no situation and brings none.
 
@@ -149,9 +150,13 @@ function squeezed(text) {
   return text.replace(/\s+/g, ' ').trim();
 }
 
+const inTheChanges = ['UW-20261028-838j §Trigger', 'UW-20261028-838j §Minimal guarantee'];
+
 export function verified(faults, reply, changes = '') {
-  const wholes = [squeezed(reply), squeezed(changes)];
-  return faults.filter((f) => f.passage.trim() && wholes.some((w) => w.includes(squeezed(f.passage))));
+  return faults.filter((f) => {
+    const wholes = inTheChanges.includes(f.section) ? [reply, changes] : [reply];
+    return f.passage.trim() && wholes.some((w) => squeezed(w).includes(squeezed(f.passage)));
+  });
 }
 
 function question(request) {
@@ -168,7 +173,7 @@ export async function judgedMeaning(output, context) {
   if (answer.error) return result(false, `the judge gave no answer: ${answer.error}`);
   const faults = verified(answer.faults, reply, changes);
   const dropped = answer.faults.length - faults.length;
-  const note = dropped ? ` (${dropped} dropped, their passage not in the reply)` : '';
+  const note = dropped ? ` (${dropped} dropped, their passage not where the agent wrote it)` : '';
   return result(
     faults.length === 0,
     faults.length === 0

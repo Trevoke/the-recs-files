@@ -1,7 +1,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 
-// docs/architectural-decisions/adr-20261029-cfj8-keep-the-evals-questions-in-a-repository-of-their-own-beside-the-project.org
+// ADR-20261029-cfj8 §Decision: Keep the evals' questions in a repository of their own, beside the project
 export function question(request) {
   const named = /^question:(.+)$/.exec(String(request).trim());
   if (!named) return request;
@@ -10,7 +10,7 @@ export function question(request) {
   return fs.readFileSync(path.join(dir, 'cases', named[1]), 'utf8').trim();
 }
 
-// docs/architectural-decisions/adr-20261029-cfj8-keep-the-evals-questions-in-a-repository-of-their-own-beside-the-project.org
+// ADR-20261029-cfj8 §Decision: Keep the evals' questions in a repository of their own, beside the project
 export function situation(request) {
   const named = /^question:(.+)\.md$/.exec(String(request).trim());
   const dir = process.env.RECS_EVALS_QUESTIONS;
