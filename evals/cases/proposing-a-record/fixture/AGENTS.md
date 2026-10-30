@@ -243,7 +243,10 @@ as open, in one sentence that says what it is about, with no example, as the
 `Also open:` line above; the record keeper picks which to frame next. A
 question of theirs that is about no such situation gets the facts it asked
 for, with each situation found that the work does not stop on listed as open,
-and none framed.
+and none framed. A situation listed as open is the record keeper's to decide
+as much as the one framed, so the work builds nothing on it either: listing
+it tells them what is left undecided, and an outcome already built on it
+would be one they never chose.
 
 The workflow comes first because it is what the user is trying to achieve; the
 other records are what constrain it. A question that opens on a feature, a
