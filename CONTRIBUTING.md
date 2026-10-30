@@ -58,10 +58,13 @@ run `claude setup-token`, export what it prints as `CLAUDE_CODE_OAUTH_TOKEN`,
 and run `npm run eval:claude-code`. A model in the run can read that token, so
 keep its transcripts on your machine.
 
-`npm run score:citations` scores the `citing-records-to-the-record-keeper`
-questions in Claude Code: faults per citation under the four checks, per
-question and overall, and with `--against` whether a wording beats another
-question by question. How it is used to improve the skills' wording is in
+`npm run score:citations` scores the questions of
+`citing-records-to-the-record-keeper` and `the-work-stops-on-a-situation` in
+Claude Code: faults per citation under every check, per question and
+overall, and with `--against` whether a wording beats another question by
+question. Its judge runs the `claude` CLI, so it needs
+`CLAUDE_CODE_OAUTH_TOKEN` too, and `RECS_EVALS_QUESTIONS` for the questions
+and their situation files. How it is used to improve the skills' wording is in
 `docs/knowledge-base/improving-skill-text-against-an-eval.org`.
 
 ## Releasing
